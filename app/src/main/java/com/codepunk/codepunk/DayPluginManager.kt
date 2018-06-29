@@ -2,7 +2,7 @@ package com.codepunk.codepunk
 
 import android.content.Context
 import android.widget.Toast
-import com.codepunk.codepunk.util.plugin.PluginManager
+import com.codepunk.codepunklib.util.plugin.PluginManager
 import java.util.*
 
 interface DayPlugin {
@@ -11,7 +11,11 @@ interface DayPlugin {
 
 class BaseDayPlugin: DayPlugin {
     override fun showGreeting(context: Context) {
-        // No action
+        Toast.makeText(
+                context,
+                "At least it's not Monday!",
+                Toast.LENGTH_LONG)
+                .show()
     }
 }
 
