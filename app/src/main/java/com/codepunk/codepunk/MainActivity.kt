@@ -6,6 +6,10 @@ import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
+    private val dayPluginManager: DayPluginManager by lazy {
+        DayPluginManager(this)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -13,6 +17,6 @@ class MainActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-        DayPluginManager().get(Calendar.getInstance()).showGreeting(this)
+        dayPluginManager.get(Calendar.getInstance()).showGreeting()
     }
 }

@@ -5,12 +5,13 @@ import android.widget.Toast
 import com.codepunk.codepunklib.util.plugin.PluginManager
 import java.util.*
 
-interface DayPlugin {
-    fun showGreeting(context: Context)
+abstract class DayPlugin(_context: Context) {
+    val context: Context = _context
+    abstract fun showGreeting()
 }
 
-class BaseDayPlugin: DayPlugin {
-    override fun showGreeting(context: Context) {
+class BaseDayPlugin(_context: Context): DayPlugin(_context) {
+    override fun showGreeting() {
         Toast.makeText(
                 context,
                 "At least it's not Monday!",
@@ -19,8 +20,8 @@ class BaseDayPlugin: DayPlugin {
     }
 }
 
-class MondayPlugin: DayPlugin {
-    override fun showGreeting(context: Context) {
+class MondayPlugin(_context: Context): DayPlugin(_context) {
+    override fun showGreeting() {
         Toast.makeText(
                 context,
                 "Looks like someone has a case of the Mondays!",
@@ -29,16 +30,21 @@ class MondayPlugin: DayPlugin {
     }
 }
 
-class DayPluginManager: PluginManager<DayPlugin, Calendar>() {
-    override fun isPluginStale(state: Calendar?): Boolean {
-        return isMonday(activeState) != isMonday(state)
+class DayPluginManager(
+        _context: Context,
+        _pluginListener: PluginListener<DayPlugin, Calendar>? = null):
+        PluginManager<DayPlugin, Calendar>(_pluginListener) {
+    private val context: Context = _context
+
+    override fun isPluginStale(state: Calendar): Boolean {
+        return activeState == null || isMonday(activeState!!) != isMonday(state)
     }
 
-    override fun newPlugin(state: Calendar?): DayPlugin {
-        return if (isMonday(state)) MondayPlugin() else BaseDayPlugin()
+    override fun newPlugin(state: Calendar): DayPlugin {
+        return if (isMonday(state)) MondayPlugin(context) else BaseDayPlugin(context)
     }
 
-    private fun isMonday(calendar: Calendar?): Boolean {
-        return calendar?.get(Calendar.DAY_OF_WEEK) == Calendar.MONDAY
+    private fun isMonday(calendar: Calendar): Boolean {
+        return calendar.get(Calendar.DAY_OF_WEEK) == Calendar.MONDAY
     }
 }
