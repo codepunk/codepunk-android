@@ -1,9 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <Preference
+        android:key="key_developer_options"
+        android:icon="@drawable/ic_preference_developer_options"
+        android:title="@string/title_developer_options"
         android:selectable="true"
         android:enabled="true"
+        android:order="100"/>
+    <Preference
         android:key="key_version"
+        android:icon="@drawable/ic_preference_info"
         android:title="@string/title_about"
-        android:icon="@drawable/ic_preference_info" />
+        android:selectable="true"
+        android:enabled="true"
+        android:order="200"/>
 </PreferenceScreen>
