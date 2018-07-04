@@ -20,12 +20,14 @@ android {
             versionNameSuffix "-DEBUG"
             buildConfigField("String", "CLIENT_ID", "\"2\"")
             buildConfigField("String", "CLIENT_SECRET", "\"EWB9n4SkJ9EAjgmzoyCfw3evXXRVaAA8UQacE35d\"")
+            buildConfigField("com.codepunk.codepunk.api.environment.ApiEnvironment", "DEFAULT_API_ENVIRONMENT", "com.codepunk.codepunk.api.environment.ApiEnvironment.valueOf(\"LOCAL\")")
         }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             buildConfigField("String", "CLIENT_ID", "\"2\"")
             buildConfigField("String", "CLIENT_SECRET", "\"EWB9n4SkJ9EAjgmzoyCfw3evXXRVaAA8UQacE35d\"")
+            buildConfigField("com.codepunk.codepunk.api.environment.ApiEnvironment", "DEFAULT_API_ENVIRONMENT", "com.codepunk.codepunk.api.environment.ApiEnvironment.valueOf(\"PROD\")")
         }
     }
 }

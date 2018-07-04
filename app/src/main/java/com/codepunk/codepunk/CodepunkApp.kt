@@ -4,8 +4,7 @@ import android.app.Application
 
 /*
  * TODO NEXT:
- * Choose a default api environment for Debug and Release builds
- * Really go over my code to catch null things, exceptions etc.
+ * Create a login for enabling developer mode
  * MVVM stuff
  */
 

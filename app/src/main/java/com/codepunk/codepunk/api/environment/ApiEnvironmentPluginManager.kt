@@ -11,7 +11,7 @@ object ApiEnvironmentPluginManager: PluginManager<ApiEnvironmentPlugin, ApiEnvir
     }
 
     override fun newPlugin(state: ApiEnvironment): ApiEnvironmentPlugin {
-        return ApiEnvironmentPlugin.create(state)
+        return ApiEnvironmentPlugin.newInstance(state)
     }
 
     //endregion Inherited methods

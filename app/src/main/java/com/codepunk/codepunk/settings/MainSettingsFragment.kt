@@ -1,17 +1,13 @@
 package com.codepunk.codepunk.settings
 
-
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.preference.Preference
-import android.support.v7.preference.PreferenceFragmentCompat
 import android.widget.Toast
 import com.codepunk.codepunk.R
 import com.codepunk.codepunk.util.EXTRA_SETTINGS_TYPE
-import com.codepunk.codepunk.util.PreferenceKey.*
-import com.codepunk.codepunk.util.getKey
 
-class MainSettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClickListener {
+class MainSettingsFragment : BaseSettingsFragment() {
 
     //region Nested classes
 
@@ -29,10 +25,9 @@ class MainSettingsFragment : PreferenceFragmentCompat(), Preference.OnPreference
     private var developer = false
         set(value) {
             field = value
-
             preferenceManager.sharedPreferences
                     .edit()
-                    .putBoolean(preferenceManager.getKey(DEVELOPER), value)
+                    .putBoolean(developerPreferenceKey, value)
                     .apply()
             if (value) {
                 preferenceScreen.addPreference(developerOptionsPreference)
@@ -44,23 +39,11 @@ class MainSettingsFragment : PreferenceFragmentCompat(), Preference.OnPreference
     private var developerClickCount: Int = 0
 
     private val developerOptionsPreference: Preference by lazy {
-        val pref = findPreference(preferenceManager.getKey(DEVELOPER_OPTIONS))
-        pref.onPreferenceClickListener = this
-        pref
-    }
-
-    private val versionName: String? by lazy {
-        activity
-                ?.packageManager
-                ?.getPackageInfo(activity?.packageName, 0)
-                ?.versionName
+        findPreference(developerOptionsPreferenceKey)
     }
 
     private val versionPreference: Preference by lazy {
-        val pref = findPreference(preferenceManager.getKey(VERSION))
-        pref.summary = getString(R.string.settings_version_summary, versionName)
-        pref.onPreferenceClickListener = this
-        pref
+        findPreference(versionPreferenceKey)
     }
 
     //endregion Fields
@@ -85,17 +68,14 @@ class MainSettingsFragment : PreferenceFragmentCompat(), Preference.OnPreference
         setPreferencesFromResource(R.xml.preferences_main, rootKey)
 
         // Trigger lazy instantiation
-        developerOptionsPreference
-        versionPreference
+        developerOptionsPreference.onPreferenceClickListener = this
+        versionPreference.summary = getString(
+                R.string.settings_version_summary,
+                activity?.packageManager?.getPackageInfo(activity?.packageName, 0)?.versionName)
+        versionPreference.onPreferenceClickListener = this
 
-        developer = preferenceManager.sharedPreferences.getBoolean(
-                preferenceManager.getKey(DEVELOPER),
-                false)
+        developer = preferenceManager.sharedPreferences.getBoolean(developerPreferenceKey, false)
     }
-
-    //endregion Inherited methods
-
-    //region Implemented methods
 
     override fun onPreferenceClick(preference: Preference?): Boolean {
         return when (preference) {
@@ -134,10 +114,10 @@ class MainSettingsFragment : PreferenceFragmentCompat(), Preference.OnPreference
                 true
             }
             else -> {
-                false
+                super.onPreferenceClick(preference)
             }
         }
     }
 
-    //endregion Implemented methods
+    //endregion Inherited methods
 }
