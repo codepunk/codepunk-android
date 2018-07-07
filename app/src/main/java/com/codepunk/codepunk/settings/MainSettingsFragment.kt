@@ -68,7 +68,7 @@ class MainSettingsFragment : BaseSettingsFragment(), OnPasscodeResultListener {
 
         if (preferenceManager.sharedPreferences.contains(validatedDeveloperOptionsPasscodeHashKey)) {
             val passcode =  preferenceManager.sharedPreferences.getString(validatedDeveloperOptionsPasscodeHashKey, "")
-            if (passcode == BuildConfig.DEVELOPER_OPTIONS_PASSCODE) {
+            if (passcode == BuildConfig.DEVELOPER_OPTIONS_PASSCODE_HASH) {
                 // Add the developer options preference back in
                 preferenceScreen.addPreference(developerOptionsPreference)
             } else if (savedInstanceState == null) {
@@ -159,10 +159,11 @@ class MainSettingsFragment : BaseSettingsFragment(), OnPasscodeResultListener {
         // TODO Put in setter
     }
 
-    override fun onPasscodeSuccess() {
+    override fun onPasscodeSuccess(passcode: String, hash:String) {
+        // TODO Send the actual hash in the method and don't use BuildConfig
         preferenceManager.sharedPreferences
                 .edit()
-                .putString(validatedDeveloperOptionsPasscodeHashKey, BuildConfig.DEVELOPER_OPTIONS_PASSCODE)
+                .putString(validatedDeveloperOptionsPasscodeHashKey, hash)
                 .apply()
         preferenceScreen.addPreference(developerOptionsPreference)
         // TODO Put in setter

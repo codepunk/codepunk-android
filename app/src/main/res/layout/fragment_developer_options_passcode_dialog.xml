@@ -15,16 +15,21 @@
         android:layout_height="wrap_content"
         android:text="@string/settings_developer_options_passcode_dialog_message"/>
 
-    <com.chaos.view.PinView
-        android:id="@+id/pin_passcode"
-        android:layout_width="wrap_content"
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/layout_passcode"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:passwordToggleEnabled="true"
         android:layout_marginTop="@dimen/space_baseline"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/txt_message"
-        app:itemCount="@integer/settings_developer_options_passcode_length"
-        android:enabled="true"
-        android:inputType="numberPassword"/>
+        app:layout_constraintTop_toBottomOf="@id/txt_message">
+
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/input_passcode"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/settings_passcode_hint"
+            android:inputType="textPassword"/>
+
+    </android.support.design.widget.TextInputLayout>
 
 </android.support.constraint.ConstraintLayout>
