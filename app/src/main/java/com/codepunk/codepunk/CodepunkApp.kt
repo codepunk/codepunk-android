@@ -10,11 +10,4 @@ import android.app.Application
 
 class CodepunkApp: Application() {
 
-    //region Lifecycle methods
-
-    override fun onCreate() {
-        super.onCreate()
-    }
-
-    //endregion Lifecycle methods
 }

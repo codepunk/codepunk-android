@@ -26,4 +26,11 @@
     <string name="settings_now_developer">You are now a developer!</string>
     <string name="settings_steps_from_developer">You are now %d steps away from being a developer!</string>
 
+    <string name="settings_developer_options_passcode_dialog_title">Developer Options</string>
+    <string name="settings_developer_options_passcode_dialog_message">Enter the passcode to enable developer options:</string>
+    <string name="settings_developer_options_passcode_dialog_message_changed">The developer options passcode has changed. Enter the new passcode to enable developer options:</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
 </resources>

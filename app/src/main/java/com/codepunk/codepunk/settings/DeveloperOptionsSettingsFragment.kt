@@ -1,14 +1,14 @@
 package com.codepunk.codepunk.settings
 
+import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.support.v7.preference.ListPreference
-import com.codepunk.codepunk.BuildConfig
 import com.codepunk.codepunk.BuildConfig.DEFAULT_API_ENVIRONMENT
 import com.codepunk.codepunk.R
 import com.codepunk.codepunk.api.environment.ApiEnvironment
-import com.codepunk.codepunk.util.populate
 import com.codepunk.codepunk.util.enumValueOf
+import com.codepunk.codepunk.util.populate
 
 class DeveloperOptionsSettingsFragment : BaseSettingsFragment() {
 

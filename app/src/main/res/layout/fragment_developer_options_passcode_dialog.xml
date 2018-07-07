@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingTop="@dimen/space_baseline"
+    android:paddingBottom="@dimen/space_baseline"
+    android:paddingStart="?dialogPreferredPadding"
+    android:paddingEnd="?dialogPreferredPadding">
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/txt_message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/settings_developer_options_passcode_dialog_message"/>
+
+    <com.chaos.view.PinView
+        android:id="@+id/pin_passcode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_baseline"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/txt_message"
+        app:itemCount="@integer/settings_developer_options_passcode_length"
+        android:enabled="true"
+        android:inputType="numberPassword"/>
+
+</android.support.constraint.ConstraintLayout>

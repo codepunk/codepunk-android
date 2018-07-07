@@ -20,10 +20,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         dayPluginManager.get(Calendar.getInstance()).showGreeting()
-    }
 
-    override fun onStart() {
-        super.onStart()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
