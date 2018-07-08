@@ -5,5 +5,12 @@
         android:title="@string/settings_api_environment_title"
         android:selectable="true"
         android:enabled="true"
-        android:order="100"/>
+        android:order="100" />
+
+    <Preference
+        android:key="@string/preference_key_disable_developer_options"
+        android:title="@string/settings_disable_developer_options_title"
+        android:selectable="true"
+        android:enabled="true"
+        android:order="200" />
 </PreferenceScreen>

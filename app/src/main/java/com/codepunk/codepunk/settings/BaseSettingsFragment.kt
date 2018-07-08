@@ -26,6 +26,10 @@ abstract class BaseSettingsFragment:
         getString(R.string.preference_key_developer_options)
     }
 
+    protected val disableDeveloperOptionsPreferenceKey: String by lazy {
+        getString(R.string.preference_key_disable_developer_options)
+    }
+
     // TODO Rename this! Ugh.
     protected val validatedDeveloperOptionsPasscodeHashKey: String by lazy {
         getString(R.string.preference_key_validated_developer_options_passcode_hash)

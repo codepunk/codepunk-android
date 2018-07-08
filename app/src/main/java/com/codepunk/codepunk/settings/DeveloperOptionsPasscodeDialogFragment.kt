@@ -1,15 +1,13 @@
 package com.codepunk.codepunk.settings
 
-import android.animation.AnimatorSet
 import android.app.Dialog
 import android.content.DialogInterface
 import android.os.Bundle
 import android.support.annotation.StringRes
 import android.support.design.widget.TextInputEditText
+import android.support.design.widget.TextInputLayout
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatDialogFragment
-import android.support.v7.widget.AppCompatEditText
-import android.support.v7.widget.AppCompatTextView
 import android.view.View
 import com.codepunk.codepunk.BuildConfig
 import com.codepunk.codepunk.R
@@ -27,7 +25,8 @@ class DeveloperOptionsPasscodeDialogFragment: AppCompatDialogFragment() {
     }
 
     companion object {
-        val FRAGMENT_TAG = DeveloperOptionsPasscodeDialogFragment::class.java.simpleName + ".FRAGMENT_TAG"
+        val FRAGMENT_TAG =
+                DeveloperOptionsPasscodeDialogFragment::class.java.simpleName + ".FRAGMENT_TAG"
 
         @JvmStatic
         fun newInstance(resId: Int, listener: OnPasscodeResultListener? = null):
@@ -44,21 +43,15 @@ class DeveloperOptionsPasscodeDialogFragment: AppCompatDialogFragment() {
     @StringRes private var messageResId: Int =
             R.string.settings_developer_options_passcode_dialog_message
     set(value) {
-        messageView?.setText(value)
+        (dialog as AlertDialog?)?.setMessage(resources.getString(value))
         field = value
     }
 
-    private var messageView: AppCompatTextView? = null
-    set(value) {
-        value?.setText(messageResId)
-        field = value
-    }
+    private var passcodeLayout: TextInputLayout? = null
 
     private var passcodeInput: TextInputEditText? = null
 
     var onPasscodeResultListener: OnPasscodeResultListener? = null
-
-    var shakeAnimator: AnimatorSet? = null
 
     //region Lifecycle methods
 
@@ -74,12 +67,16 @@ class DeveloperOptionsPasscodeDialogFragment: AppCompatDialogFragment() {
     //region Inherited methods
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val view: View = View.inflate(context, R.layout.fragment_developer_options_passcode_dialog, null)
-        messageView = view.findViewById(R.id.txt_message)
+        val view: View = View.inflate(
+                context,
+                R.layout.fragment_developer_options_passcode_dialog,
+                null)
+        passcodeLayout = view.findViewById(R.id.layout_passcode)
         passcodeInput = view.findViewById(R.id.input_passcode)
         val dialog: AlertDialog = AlertDialog.Builder(context!!)
                 .setView(view)
                 .setTitle(R.string.settings_developer_options_passcode_dialog_title)
+                .setMessage(messageResId)
                 .setPositiveButton(android.R.string.ok, null)
                 .setNegativeButton(android.R.string.cancel) { _, _ -> dialog.cancel() }
                 .setCancelable(true)
@@ -94,33 +91,10 @@ class DeveloperOptionsPasscodeDialogFragment: AppCompatDialogFragment() {
     }
 
     override fun onCancel(dialog: DialogInterface?) {
-        //Log.d(DeveloperOptionsPasscodeDialogFragment::class.java.simpleName, "onCancel!!!!!!!!")
-        //super.onCancel(dialog)
         onPasscodeResultListener?.onCancel(dialog)
     }
 
-
-
     //endregion Inherited methods
-
-    /*
-    override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?):
-            View? {
-        return inflater.inflate(
-                R.layout.fragment_developer_options_passcode_dialog,
-                container,
-                false)
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-//        messageView = view.findViewById(R.id.txt_message)
-        passcodeView.addTextChangedListener(this)
-    }
-    */
 
     //region Private methods
 
@@ -130,6 +104,7 @@ class DeveloperOptionsPasscodeDialogFragment: AppCompatDialogFragment() {
             dialog.dismiss()
             onPasscodeResultListener?.onPasscodeSuccess(passcode, hash)
         } else {
+            passcodeLayout?.error = resources.getString(R.string.settings_incorrect_passcode)
             dialog.window.decorView.shake()
         }
     }

@@ -9,19 +9,14 @@
     android:paddingStart="?dialogPreferredPadding"
     android:paddingEnd="?dialogPreferredPadding">
 
-    <android.support.v7.widget.AppCompatTextView
-        android:id="@+id/txt_message"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/settings_developer_options_passcode_dialog_message"/>
-
     <android.support.design.widget.TextInputLayout
         android:id="@+id/layout_passcode"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:passwordToggleEnabled="true"
+        app:errorEnabled="true"
         android:layout_marginTop="@dimen/space_baseline"
-        app:layout_constraintTop_toBottomOf="@id/txt_message">
+        app:layout_constraintTop_toTopOf="parent">
 
         <android.support.design.widget.TextInputEditText
             android:id="@+id/input_passcode"

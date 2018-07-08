@@ -20,6 +20,7 @@
     <string name="settings_about_title">About</string>
     <string name="settings_api_environment_title">API environment</string>
     <string name="settings_developer_options_title">Developer options</string>
+    <string name="settings_disable_developer_options_title">Disable developer options</string>
     <string name="settings_version_summary">Version %s</string>
 
     <string name="settings_already_developer">No need, you are already a developer</string>
@@ -31,6 +32,10 @@
     <string name="settings_developer_options_passcode_dialog_message_changed">The developer options passcode has changed. Enter the new passcode to enable developer options:</string>
 
     <string name="settings_passcode_hint">Passcode</string>
+    <string name="settings_incorrect_passcode">Invalid passcode.</string>
+    <string name="settings_confirm_disable_developer_options_title">Disable developer options?</string>
+    <string name="settings_confirm_disable_developer_options">Are you sure? The app will reset and be reverted to the Production API environment.</string>
+    <string name="settings_disable_developer_options_positive_button">Continue</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

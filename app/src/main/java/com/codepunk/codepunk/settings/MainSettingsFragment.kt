@@ -93,7 +93,6 @@ class MainSettingsFragment : BaseSettingsFragment(), OnPasscodeResultListener {
         setPreferencesFromResource(R.xml.preferences_main, rootKey)
         preferenceScreen.removePreference(developerOptionsPreference)
 
-        // Trigger lazy instantiation
         developerOptionsPreference.onPreferenceClickListener = this
         versionPreference.summary = getString(
                 R.string.settings_version_summary,

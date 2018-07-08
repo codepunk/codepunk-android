@@ -7,7 +7,6 @@ inline fun <reified T : Enum<T>> enumContains(name: String): Boolean {
 inline fun <reified T : Enum<T>> enumValueOf(name: String, defaultValue: T): T {
     return try {
         enumValueOf(name)
-        // enumValues<T>().first { it.name == name }
     } catch (e: NoSuchElementException) {
         defaultValue
     }
