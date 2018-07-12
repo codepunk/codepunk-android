@@ -12,8 +12,7 @@
         android:enabled="true"
         android:order="100" />
 
-    <!--suppress AndroidDomInspection -->
-    <com.codepunk.codepunklib_staging.preference.DeveloperPasswordEditTextPreference
+    <com.codepunk.codepunklibstaging.preference.DeveloperPasswordEditTextPreference
         android:key="@string/pref_key_version"
         android:icon="@drawable/ic_preference_info"
         android:title="@string/pref_about_title"
