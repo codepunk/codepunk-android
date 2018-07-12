@@ -1,6 +1,3 @@
 [submodule "libraries/codepunklib"]
 	path = libraries/codepunklib
 	url = https://github.com/codepunk/codepunk-lib-android.git
-[submodule "libraries/codepunklib_staging"]
-	path = libraries/codepunklib_staging
-	url = https://github.com/codepunk/codepunk-lib-staging-android.git
