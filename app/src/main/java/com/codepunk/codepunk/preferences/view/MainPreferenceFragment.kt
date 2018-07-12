@@ -5,6 +5,7 @@ import android.arch.lifecycle.ViewModelProviders
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
+import android.support.v7.preference.EditTextPreference
 import android.support.v7.preference.Preference
 import android.support.v7.preference.PreferenceFragmentCompat
 import android.widget.Toast
@@ -41,7 +42,7 @@ class MainPreferenceFragment:
     }
 
     private val aboutPreference by lazy {
-        findPreference(BuildConfig.PREF_KEY_VERSION)
+        findPreference(BuildConfig.PREF_KEY_VERSION) as EditTextPreference
     }
 
     private val developerPasswordDialogFragment: DeveloperPasswordDialogFragment?
@@ -109,10 +110,12 @@ class MainPreferenceFragment:
     /* Preference.OnPreferenceClickListener */
     override fun onPreferenceClick(preference: Preference?): Boolean {
         return when (preference) {
+            /*
             aboutPreference -> {
                 developerPreferencesViewModel.unlockDeveloperOptions()
                 true
             }
+            */
             developerOptionsPreference -> {
                 val extras = Bundle()
                 extras.putSerializable(EXTRA_PREFERENCES_TYPE, PreferencesType.DEVELOPER_OPTIONS)

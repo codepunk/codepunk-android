@@ -4,7 +4,7 @@
     android:title="@string/pref_dev_opts_title">
 
     <!--suppress AndroidDomInspection -->
-    <ListPreference
+    <android.support.v7.preference.ListPreference
         android:key="@string/pref_key_api_environment"
         android:title="@string/pref_api_env_title"
         android:selectable="true"
