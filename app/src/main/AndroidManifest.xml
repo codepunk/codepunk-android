@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          xmlns:tools="http://schemas.android.com/tools"
           package="com.codepunk.codepunk">
-
-    <uses-sdk tools:overrideLibrary="com.chaos.view" />
 
     <application
         android:name=".CodepunkApp"
@@ -23,8 +20,13 @@
         </activity>
 
         <activity
-            android:name=".settings.SettingsActivity"
+            android:name=".preferences.PreferencesActivity"
             android:label="@string/settings_main_activity_title">
+            <intent-filter>
+                <action android:name="${applicationId}.intent.action.SETTINGS" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
         </activity>
 
     </application>

@@ -5,14 +5,14 @@ import com.codepunk.codepunk.R
 
 enum class ApiEnvironment(@StringRes val nameResId: Int, val baseUrl: String) {
     PROD(
-            R.string.app_api_environment_name_prod,
+            R.string.api_env_production,
             "" /* TODO */),
 
     DEV(
-            R.string.app_api_environment_name_dev,
+            R.string.api_env_development,
             "" /* TODO */),
 
     LOCAL(
-            R.string.app_api_environment_name_local,
+            R.string.api_env_local,
             "https://codepunk.test")
 }

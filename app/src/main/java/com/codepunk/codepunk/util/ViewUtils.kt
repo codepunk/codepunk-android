@@ -7,6 +7,9 @@ import com.codepunk.codepunk.R
 
 private var shakeAnimator: Animator? = null
 
+// TODO Don't know if I like this global var thing
+// TODO Move to codepunklib
+
 fun View.shake(
         distance: Float = context.resources.getDimension(R.dimen.default_shake_distance),
         duration: Long = context.resources.getInteger(android.R.integer.config_mediumAnimTime).toLong(),

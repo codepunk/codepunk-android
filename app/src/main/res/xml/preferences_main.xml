@@ -1,17 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:title="@string/pref_main_title">
+
+    <!--suppress AndroidDomInspection -->
     <Preference
-        android:key="@string/preference_key_developer_options"
+        android:key="@string/pref_key_dev_opts"
         android:icon="@drawable/ic_preference_developer_options"
-        android:title="@string/settings_developer_options_title"
+        android:title="@string/pref_dev_opts_title"
         android:selectable="true"
         android:enabled="true"
         android:order="100"/>
+
+    <!--suppress AndroidDomInspection -->
     <Preference
-        android:key="@string/preference_key_version"
+        android:key="@string/pref_key_version"
         android:icon="@drawable/ic_preference_info"
-        android:title="@string/settings_about_title"
+        android:title="@string/pref_about_title"
         android:selectable="true"
         android:enabled="true"
         android:order="200"/>
+
 </PreferenceScreen>

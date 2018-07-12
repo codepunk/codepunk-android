@@ -4,6 +4,8 @@ import android.animation.TimeInterpolator
 import android.view.animation.CycleInterpolator
 import android.view.animation.Interpolator
 
+// TODO Move to codepunklib
+
 class ShakeInterpolator(
         frequency: Int = 3,
         private val amplitudeInterpolator: Interpolator? = CycleInterpolator(0.5f)):

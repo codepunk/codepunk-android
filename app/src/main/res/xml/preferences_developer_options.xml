@@ -1,16 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<android.support.v7.preference.PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:title="@string/pref_dev_opts_title">
+
+    <!--suppress AndroidDomInspection -->
     <ListPreference
-        android:key="@string/preference_key_api_environment"
-        android:title="@string/settings_api_environment_title"
+        android:key="@string/pref_key_api_environment"
+        android:title="@string/pref_api_env_title"
         android:selectable="true"
         android:enabled="true"
         android:order="100" />
 
-    <Preference
-        android:key="@string/preference_key_disable_developer_options"
-        android:title="@string/settings_disable_developer_options_title"
+    <!--suppress AndroidDomInspection -->
+    <com.codepunk.codepunk.preferences.DialogPreference
+        android:key="@string/pref_key_disable_dev_opts"
+        android:title="@string/pref_disable_dev_opts_title"
         android:selectable="true"
         android:enabled="true"
         android:order="200" />
-</PreferenceScreen>
+
+</android.support.v7.preference.PreferenceScreen>

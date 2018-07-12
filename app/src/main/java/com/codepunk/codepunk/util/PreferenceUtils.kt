@@ -2,6 +2,8 @@ package com.codepunk.codepunk.util
 
 import android.support.v7.preference.ListPreference
 
+// TODO Move to codepunklib
+
 fun <E : Enum<E>> ListPreference.populate(
         enumClass: Class<E>,
         entryValue: (enum: E) -> CharSequence? = { it.name },
