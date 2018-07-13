@@ -15,7 +15,9 @@ android {
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
-        buildConfigField("String", "DEV_OPTS_PASSWORD_HASH", "\"cdb3f12612b12e7993aaa8e2cc7de87a02c18c62fb0e94578cadd1846b20e6c4\"")
+        def developer_password_hash = "cdb3f12612b12e7993aaa8e2cc7de87a02c18c62fb0e94578cadd1846b20e6c4"
+        buildConfigField("String", "DEVELOPER_PASSWORD_HASH", "\"" + developer_password_hash + "\"")
+        resValue "string", "developer_password_hash", developer_password_hash
     }
 
     buildTypes {
@@ -42,19 +44,16 @@ android {
         def pref_key_dev_opts = variant.applicationId + ".PREF_KEY_DEV_OPTS"
         def pref_key_dev_password_hash = variant.applicationId + ".PREF_KEY_DEV_PASSWORD_HASH"
         def pref_key_disable_dev_opts = variant.applicationId + ".PREF_KEY_DISABLE_DEV_OPTS"
-        def pref_key_version = variant.applicationId + ".PREF_KEY_VERSION"
 
         variant.buildConfigField("String", "PREF_KEY_API_ENVIRONMENT", "\"" + pref_key_api_environment + "\"")
         variant.buildConfigField("String", "PREF_KEY_DEV_OPTS", "\"" + pref_key_dev_opts + "\"")
         variant.buildConfigField("String", "PREF_KEY_DEV_PASSWORD_HASH", "\"" + pref_key_dev_password_hash + "\"")
         variant.buildConfigField("String", "PREF_KEY_DISABLE_DEV_OPTS", "\"" + pref_key_disable_dev_opts + "\"")
-        variant.buildConfigField("String", "PREF_KEY_VERSION", "\"" + pref_key_version + "\"")
 
         variant.resValue "string", "pref_key_api_environment", pref_key_api_environment
         variant.resValue "string", "pref_key_dev_opts", pref_key_dev_opts
         variant.resValue "string", "pref_key_dev_password_hash", pref_key_dev_password_hash
         variant.resValue "string", "pref_key_disable_dev_opts", pref_key_disable_dev_opts
-        variant.resValue "string", "pref_key_version", pref_key_version
 
         //endregion Preference keys
     }

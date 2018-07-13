@@ -90,7 +90,7 @@ class DeveloperPasswordDialogFragment: AppCompatDialogFragment(),
             okBtn -> {
                 val password = passwordEdit.text.toString()
                 val hash = DigestUtils.sha256Hex(password)
-                if (BuildConfig.DEV_OPTS_PASSWORD_HASH.equals(hash, true)) {
+                if (BuildConfig.DEVELOPER_PASSWORD_HASH.equals(hash, true)) {
                     dialog.dismiss()
                     onPasswordResultListener?.onPasswordSuccess(dialog, password, hash)
                 } else {

@@ -62,7 +62,7 @@ class DeveloperPreferencesViewModel(val app: Application) :
         if (app.defaultSharedPreferences.contains(BuildConfig.PREF_KEY_DEV_PASSWORD_HASH)) {
             val hash = app.defaultSharedPreferences.getString(
                     BuildConfig.PREF_KEY_DEV_PASSWORD_HASH, "")
-            if (BuildConfig.DEV_OPTS_PASSWORD_HASH.equals(hash, true)) {
+            if (BuildConfig.DEVELOPER_PASSWORD_HASH.equals(hash, true)) {
                 developerState.value = DeveloperState.DEVELOPER
             } else {
                 developerState.value = DeveloperState.STALE_PASSWORD
@@ -86,7 +86,7 @@ class DeveloperPreferencesViewModel(val app: Application) :
     }
 
     fun registerDeveloper(hash: String?): Boolean {
-        return if (BuildConfig.DEV_OPTS_PASSWORD_HASH.equals(hash, true)) {
+        return if (BuildConfig.DEVELOPER_PASSWORD_HASH.equals(hash, true)) {
             app.defaultSharedPreferences
                     .edit()
                     .putString(BuildConfig.PREF_KEY_DEV_PASSWORD_HASH, hash)

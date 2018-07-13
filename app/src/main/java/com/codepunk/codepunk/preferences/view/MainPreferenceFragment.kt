@@ -5,9 +5,7 @@ import android.arch.lifecycle.ViewModelProviders
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
-import android.support.v7.preference.EditTextPreference
 import android.support.v7.preference.Preference
-import android.support.v7.preference.PreferenceFragmentCompat
 import android.widget.Toast
 import com.codepunk.codepunk.BuildConfig
 import com.codepunk.codepunk.R
@@ -17,11 +15,14 @@ import com.codepunk.codepunk.preferences.viewmodel.DeveloperPreferencesViewModel
 import com.codepunk.codepunk.preferences.viewmodel.DeveloperPreferencesViewModel.DeveloperState
 import com.codepunk.codepunk.util.ACTION_SETTINGS
 import com.codepunk.codepunk.util.EXTRA_PREFERENCES_TYPE
+import com.codepunk.codepunklibstaging.preference.DeveloperModePreference
+import com.codepunk.codepunklibstaging.preference.ExtendedPreferenceFragmentCompat
 
 class MainPreferenceFragment:
-        PreferenceFragmentCompat(),
+        ExtendedPreferenceFragmentCompat(),
         Preference.OnPreferenceClickListener,
-        DeveloperPasswordDialogFragment.OnPasswordResultListener {
+        DeveloperPasswordDialogFragment.OnPasswordResultListener,
+        DeveloperModePreference.OnRemainingClicksChangeListener {
 
     //region Nested classes
 
@@ -42,12 +43,14 @@ class MainPreferenceFragment:
     }
 
     private val aboutPreference by lazy {
-        findPreference(BuildConfig.PREF_KEY_VERSION) as EditTextPreference
+        findPreference(BuildConfig.PREF_KEY_DEV_PASSWORD_HASH) as DeveloperModePreference
     }
 
+    /*
     private val developerPasswordDialogFragment: DeveloperPasswordDialogFragment?
     get() = requireFragmentManager().findFragmentByTag(
             DeveloperPasswordDialogFragment.FRAGMENT_TAG) as DeveloperPasswordDialogFragment?
+    */
 
     //endregion Fields
 
@@ -59,9 +62,11 @@ class MainPreferenceFragment:
         onDeveloperStateChange(
                 developerPreferencesViewModel.developerState.value ?: DeveloperState.NOT_DEVELOPER)
 
+        /*
         developerPasswordDialogFragment?.apply {
             onPasswordResultListener = this@MainPreferenceFragment
         }
+        */
     }
 
     override fun onStart() {
@@ -83,6 +88,7 @@ class MainPreferenceFragment:
         requireActivity().title = preferenceScreen.title
         developerOptionsPreference.onPreferenceClickListener = this
         aboutPreference.onPreferenceClickListener = this
+        aboutPreference.onRemainingClicksChangeListener = this
 
         developerPreferencesViewModel.appVersion.observe(
                 this,
@@ -94,9 +100,11 @@ class MainPreferenceFragment:
                 Observer { state ->
                     onDeveloperStateChange(state ?: DeveloperState.NOT_DEVELOPER) })
 
+        /*
         developerPreferencesViewModel.nStepsFromDeveloper.observe(
                 this,
                 Observer { steps -> onNStepsFromDeveloper(steps ?: 0) })
+        */
 
         developerPreferencesViewModel.redundantUnlockRequest.observe(
                 this,
@@ -140,6 +148,17 @@ class MainPreferenceFragment:
         developerPreferencesViewModel.registerDeveloper(hash)
     }
 
+    /* DeveloperModePreference.OnRemainingClicksChangeListener */
+    override fun onRemainingClicksChanged(preference: DeveloperModePreference, remainingClicksToUnlock: Int) {
+        if (remainingClicksToUnlock in 1..3) {
+            Toast.makeText(
+                    context,
+                    getString(R.string.pref_dev_opts_steps_from_developer, remainingClicksToUnlock),
+                    Toast.LENGTH_SHORT)
+                    .show()
+        }
+    }
+
     //endregion Implemented methods
 
     //region Private methods
@@ -163,6 +182,8 @@ class MainPreferenceFragment:
                 message = getString(R.string.pref_dev_opts_stale_password)
             }
         }
+
+        /*
         if (showPasswordDialog) {
             var fragment = developerPasswordDialogFragment
             if (fragment == null) {
@@ -173,6 +194,7 @@ class MainPreferenceFragment:
                 fragment.message = message
             }
         }
+        */
     }
 
     private fun onRedundantUnlockRequest() {
@@ -183,6 +205,7 @@ class MainPreferenceFragment:
                 .show()
     }
 
+    /*
     private fun onNStepsFromDeveloper(steps: Int) {
         Toast.makeText(
                 context,
@@ -190,6 +213,7 @@ class MainPreferenceFragment:
                 Toast.LENGTH_SHORT)
                 .show()
     }
+    */
 
     //endregion Private methods
 }

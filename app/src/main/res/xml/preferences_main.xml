@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.preference.PreferenceScreen
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:title="@string/pref_main_title">
 
     <!--suppress AndroidDomInspection -->
@@ -12,15 +13,15 @@
         android:enabled="true"
         android:order="100" />
 
-    <com.codepunk.codepunklibstaging.preference.DeveloperPasswordEditTextPreference
-        android:key="@string/pref_key_version"
+    <com.codepunk.codepunklibstaging.preference.DeveloperModePreference
+        android:key="@string/pref_key_dev_password_hash"
         android:icon="@drawable/ic_preference_info"
         android:title="@string/pref_about_title"
         android:selectable="true"
         android:enabled="true"
         android:dialogTitle="@string/pref_dev_opts_title"
         android:dialogMessage="@string/pref_dev_opts_enter_password"
-        android:dialogLayout="@layout/custom_edit_text_preference_layout"
+        app:passwordHash="@string/developer_password_hash"
         android:order="200" />
 
 </android.support.v7.preference.PreferenceScreen>
