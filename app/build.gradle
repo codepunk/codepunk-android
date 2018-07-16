@@ -15,6 +15,7 @@ android {
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
+//        def developer_password_hash = "cdb3f12612b12e7993aaa8e2cc7de87a02c18c62fb0e94578cadd1846b20e6c4"
         def developer_password_hash = "cdb3f12612b12e7993aaa8e2cc7de87a02c18c62fb0e94578cadd1846b20e6c4"
         buildConfigField("String", "DEVELOPER_PASSWORD_HASH", "\"" + developer_password_hash + "\"")
         resValue "string", "developer_password_hash", developer_password_hash

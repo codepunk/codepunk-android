@@ -6,19 +6,17 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v7.preference.ListPreference
 import android.support.v7.preference.Preference
-import android.support.v7.preference.PreferenceFragmentCompat
 import com.codepunk.codepunk.BuildConfig
 import com.codepunk.codepunk.R
 import com.codepunk.codepunk.api.environment.ApiEnvironment
-import com.codepunk.codepunk.preferences.ConfirmDialogFragment
-import com.codepunk.codepunk.preferences.TestFragment
 import com.codepunk.codepunk.preferences.viewmodel.DeveloperPreferencesViewModel
-import com.codepunk.codepunk.preferences.viewmodel.DeveloperPreferencesViewModel.DeveloperState
 import com.codepunk.codepunk.util.populate
 import com.codepunk.codepunk.util.startLaunchActivity
+import com.codepunk.codepunklibstaging.preference.DeveloperModePreference.DeveloperState
+import com.codepunk.codepunklibstaging.preference.ExtendedPreferenceFragmentCompat
 
 class DeveloperOptionsPreferenceFragment:
-        PreferenceFragmentCompat(),
+        ExtendedPreferenceFragmentCompat(),
         Preference.OnPreferenceClickListener {
 
     //region Nested classes
@@ -63,6 +61,7 @@ class DeveloperOptionsPreferenceFragment:
                     onDeveloperStateChange(state ?: DeveloperState.NOT_DEVELOPER) })
     }
 
+    /*
     override fun onDisplayPreferenceDialog(preference: Preference?) {
         when (preference) {
             disableDeveloperOptionsPreference -> {
@@ -75,17 +74,16 @@ class DeveloperOptionsPreferenceFragment:
                 super.onDisplayPreferenceDialog(preference)
             }
         }
-        /*
-        when (preference) {
-            disableDeveloperOptionsPreference -> {
-                val fragment = TestFragment.newInstance(preference?.key ?: "")
-                fragment.setTargetFragment(this, 0)
-                fragment.show(requireFragmentManager(), "android.support.v7.preference.PreferenceFragment.DIALOG")
-            }
-            else -> { super.onDisplayPreferenceDialog(preference) }
-        }
-        */
+//        when (preference) {
+//            disableDeveloperOptionsPreference -> {
+//                val fragment = TestFragment.newInstance(preference?.key ?: "")
+//                fragment.setTargetFragment(this, 0)
+//                fragment.show(requireFragmentManager(), "android.support.v7.preference.PreferenceFragment.DIALOG")
+//            }
+//            else -> { super.onDisplayPreferenceDialog(preference) }
+//        }
     }
+    */
 
     //endregion Inherited methods
 
@@ -95,7 +93,7 @@ class DeveloperOptionsPreferenceFragment:
         return when (preference) {
             disableDeveloperOptionsPreference -> {
                 // TODO Show confirm disable fragment
-                val fragment = ConfirmDialogFragment.newInstance()
+//                val fragment = ConfirmDialogFragment.newInstance()
                 /*.also {
                     it.alertDialog?.apply {
                         setTitle(R.string.pref_dev_confirm_disable_developer_options_title)

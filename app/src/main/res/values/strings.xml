@@ -25,8 +25,6 @@
     <string name="pref_disable_dev_opts_title">Disable developer options</string>
     <string name="pref_main_title">Settings</string>
 
-    <string name="pref_dev_opts_enter_password">Enter the password to enable developer options:</string>
-    <string name="pref_dev_opts_stale_password">The developer options password has changed. Enter the new password to re-enable developer options:</string>
     <string name="pref_dev_opts_redundant_unlock_request">No need, you are already a developer</string>
     <string name="pref_dev_opts_steps_from_developer">You are now %d steps away from being a developer!</string>
     <string name="pref_dev_opts_incorrect_password">Incorrect password</string>
@@ -35,6 +33,8 @@
     <string name="pref_dev_confirm_disable_developer_options_message">If you click \'Continue\', all connections will be reset and the app will return to the launch screen.</string>
     <string name="pref_dev_confirm_disable_developer_options_positive_button">Continue</string>
 
+    <string name="pref_dev_mode_disable_dialog_title">Disable developer options?</string>
+    <string name="pref_dev_mode_disable_dialog_message">If you disable developer options, all connections will be reset and the app will revert to the launch screen.</string>
 
 
 

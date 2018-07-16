@@ -19,8 +19,6 @@
         android:title="@string/pref_about_title"
         android:selectable="true"
         android:enabled="true"
-        android:dialogTitle="@string/pref_dev_opts_title"
-        android:dialogMessage="@string/pref_dev_opts_enter_password"
         app:passwordHash="@string/developer_password_hash"
         android:order="200" />
 

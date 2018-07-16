@@ -1,27 +1,24 @@
 package com.codepunk.codepunk.preferences.viewmodel
 
-import android.annotation.SuppressLint
 import android.app.Application
 import android.arch.lifecycle.AndroidViewModel
 import android.arch.lifecycle.MutableLiveData
+import android.content.SharedPreferences
 import com.codepunk.codepunk.BuildConfig
-import com.codepunk.codepunk.util.SingleLiveEvent
+import com.codepunk.codepunklibstaging.preference.DeveloperModePreference
+import com.codepunk.codepunklibstaging.preference.DeveloperModePreference.DeveloperState
 import org.jetbrains.anko.defaultSharedPreferences
 
+/*
 private const val DEVELOPER_REQUEST_COUNT_UNLOCK: Int = 7
 private const val DEVELOPER_REQUEST_COUNT_MSG: Int = 4
+*/
 
 class DeveloperPreferencesViewModel(val app: Application) :
-        AndroidViewModel(app) {
+        AndroidViewModel(app),
+        SharedPreferences.OnSharedPreferenceChangeListener {
 
     //region Nested classes
-
-    enum class DeveloperState {
-        NOT_DEVELOPER,
-        AWAITING_PASSWORD,
-        STALE_PASSWORD,
-        DEVELOPER
-    }
 
     companion object {
         private val TAG = DeveloperPreferencesViewModel::class.java.simpleName
@@ -35,11 +32,15 @@ class DeveloperPreferencesViewModel(val app: Application) :
 
     var developerState = MutableLiveData<DeveloperState>()
 
+    var persistedPasswordHash = MutableLiveData<String>()
+
+    /*
     var nStepsFromDeveloper = SingleLiveEvent<Int>()
 
     var redundantUnlockRequest = SingleLiveEvent<Void>()
 
     private var unlockRequestCount = 0
+    */
 
     //endregion Fields
 
@@ -51,27 +52,47 @@ class DeveloperPreferencesViewModel(val app: Application) :
                 .packageManager.getPackageInfo(app.applicationContext.packageName, 0)
                 .versionName
 
+        persistedPasswordHash.value =
+                app.defaultSharedPreferences.getString(BuildConfig.PREF_KEY_DEV_PASSWORD_HASH, null)
+
+        // TODO Check if persisted developer hash (if any) is stale. If it is, I guess we need to
+        // start the settings activity (if we haven't already)
+
+
+        app.defaultSharedPreferences.registerOnSharedPreferenceChangeListener(this)
+
         refreshState()
     }
 
     //endregion Constructors
 
-    //region Methods
+    //region Implemented methods
+    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
+        when (key) {
+            BuildConfig.PREF_KEY_DEV_PASSWORD_HASH ->  {
+                persistedPasswordHash.value =
+                        sharedPreferences?.getString(BuildConfig.PREF_KEY_DEV_PASSWORD_HASH, null)
 
-    fun refreshState() {
-        if (app.defaultSharedPreferences.contains(BuildConfig.PREF_KEY_DEV_PASSWORD_HASH)) {
-            val hash = app.defaultSharedPreferences.getString(
-                    BuildConfig.PREF_KEY_DEV_PASSWORD_HASH, "")
-            if (BuildConfig.DEVELOPER_PASSWORD_HASH.equals(hash, true)) {
-                developerState.value = DeveloperState.DEVELOPER
-            } else {
-                developerState.value = DeveloperState.STALE_PASSWORD
+                refreshState()
             }
-        } else {
-            developerState.value = DeveloperState.NOT_DEVELOPER
         }
     }
 
+    //endregion Implemented methods
+
+    //region Methods
+
+    fun refreshState() {
+        developerState.value = when {
+            persistedPasswordHash.value == null -> DeveloperState.NOT_DEVELOPER
+            BuildConfig.DEVELOPER_PASSWORD_HASH.equals(
+                    persistedPasswordHash.value,
+                    true) -> DeveloperState.DEVELOPER
+            else -> DeveloperState.STALE_PASSWORD
+        }
+    }
+
+    /*
     fun unlockDeveloperOptions() {
         if (developerState == DeveloperState.DEVELOPER) {
             redundantUnlockRequest.call()
@@ -107,6 +128,7 @@ class DeveloperPreferencesViewModel(val app: Application) :
                 .commit()
         developerState.value = DeveloperState.NOT_DEVELOPER
     }
+    */
 
     //endregion Methods
 }

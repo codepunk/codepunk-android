@@ -3,7 +3,6 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:title="@string/pref_dev_opts_title">
 
-    <!--suppress AndroidDomInspection -->
     <android.support.v7.preference.ListPreference
         android:key="@string/pref_key_api_environment"
         android:title="@string/pref_api_env_title"
@@ -11,10 +10,13 @@
         android:enabled="true"
         android:order="100" />
 
-    <!--suppress AndroidDomInspection -->
-    <com.codepunk.codepunk.preferences.DialogPreference
+    <com.codepunk.codepunklibstaging.preference.YesNoPreference
         android:key="@string/pref_key_disable_dev_opts"
-        android:title="@string/pref_disable_dev_opts_title"
+        android:title="@string/pref_dev_mode_disable_dialog_title"
+        android:dialogMessage="@string/pref_dev_mode_disable_dialog_message"
+        android:positiveButtonText="@android:string/ok"
+        android:negativeButtonText="@android:string/cancel"
+        android:persistent="false"
         android:selectable="true"
         android:enabled="true"
         android:order="200" />
