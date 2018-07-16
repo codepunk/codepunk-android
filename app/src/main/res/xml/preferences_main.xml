@@ -22,4 +22,16 @@
         app:passwordHash="@string/developer_password_hash"
         android:order="200" />
 
+    <com.codepunk.codepunklibstaging.preference.PasswordPreference
+        android:key="TestKey"
+        android:icon="@drawable/ic_preference_info"
+        android:title="Password Test"
+        android:dialogMessage="Please enter your password."
+        app:messageDigestAlgorithm="sha_256"
+        app:passwordHash="@string/developer_password_hash"
+        app:authToken="@string/developer_auth_token"
+        android:selectable="true"
+        android:enabled="true"
+        android:order="300" />
+
 </android.support.v7.preference.PreferenceScreen>
