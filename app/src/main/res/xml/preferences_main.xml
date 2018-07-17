@@ -14,7 +14,7 @@
         android:order="100" />
 
     <com.codepunk.codepunklibstaging.preference.DeveloperModePreference
-        android:key="@string/pref_key_dev_password_hash"
+        android:key="@string/pref_key_dev_password_hash_old"
         android:icon="@drawable/ic_preference_info"
         android:title="@string/pref_about_title"
         android:selectable="true"
@@ -23,13 +23,12 @@
         android:order="200" />
 
     <com.codepunk.codepunklibstaging.preference.PasswordPreference
-        android:key="TestKey"
+        android:key="@string/pref_key_dev_password_hash"
         android:icon="@drawable/ic_preference_info"
-        android:title="Password Test"
-        android:dialogMessage="Please enter your password."
-        app:messageDigestAlgorithm="sha_256"
+        android:title="@string/pref_about_title"
+        android:dialogTitle="@string/pref_dev_mode_title"
+        android:dialogMessage="@string/pref_dev_mode_enter_password"
         app:passwordHash="@string/developer_password_hash"
-        app:authToken="@string/developer_auth_token"
         android:selectable="true"
         android:enabled="true"
         android:order="300" />

@@ -60,6 +60,12 @@ android {
         variant.resValue "string", "pref_key_dev_password_hash", pref_key_dev_password_hash
         variant.resValue "string", "pref_key_disable_dev_opts", pref_key_disable_dev_opts
 
+        // TODO TEMP
+        def pref_key_dev_password_hash_old = variant.applicationId + ".PREF_KEY_DEV_PASSWORD_HASH_OLD"
+        variant.buildConfigField("String", "PREF_KEY_DEV_PASSWORD_HASH_OLD", "\"" + pref_key_dev_password_hash_old + "\"")
+        variant.resValue "string", "pref_key_dev_password_hash_old", pref_key_dev_password_hash_old
+        // END TEMP
+
         //endregion Preference keys
     }
 }

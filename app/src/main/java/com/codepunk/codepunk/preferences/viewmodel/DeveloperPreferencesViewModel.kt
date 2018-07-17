@@ -5,12 +5,12 @@ import android.arch.lifecycle.AndroidViewModel
 import android.arch.lifecycle.MutableLiveData
 import android.content.SharedPreferences
 import com.codepunk.codepunk.BuildConfig
-import com.codepunk.codepunklibstaging.preference.DeveloperModePreference
+import com.codepunk.codepunk.util.SingleLiveEvent
 import com.codepunk.codepunklibstaging.preference.DeveloperModePreference.DeveloperState
 import org.jetbrains.anko.defaultSharedPreferences
 
+private const val STEPS_TO_UNLOCK_DEVELOPER_MODE: Int = 7
 /*
-private const val DEVELOPER_REQUEST_COUNT_UNLOCK: Int = 7
 private const val DEVELOPER_REQUEST_COUNT_MSG: Int = 4
 */
 
@@ -34,6 +34,10 @@ class DeveloperPreferencesViewModel(val app: Application) :
 
     var persistedPasswordHash = MutableLiveData<String>()
 
+    var stepsToUnlockDeveloperMode = MutableLiveData<Int>()
+
+    var redundantUnlockRequest = SingleLiveEvent<Void>()
+
     /*
     var nStepsFromDeveloper = SingleLiveEvent<Int>()
 
@@ -54,6 +58,8 @@ class DeveloperPreferencesViewModel(val app: Application) :
 
         persistedPasswordHash.value =
                 app.defaultSharedPreferences.getString(BuildConfig.PREF_KEY_DEV_PASSWORD_HASH, null)
+
+        stepsToUnlockDeveloperMode.value = STEPS_TO_UNLOCK_DEVELOPER_MODE
 
         // TODO Check if persisted developer hash (if any) is stale. If it is, I guess we need to
         // start the settings activity (if we haven't already)
@@ -89,6 +95,22 @@ class DeveloperPreferencesViewModel(val app: Application) :
                     persistedPasswordHash.value,
                     true) -> DeveloperState.DEVELOPER
             else -> DeveloperState.STALE_PASSWORD
+        }
+    }
+
+    fun unlockDeveloperMode(): Boolean {
+        return stepsToUnlockDeveloperMode.value!!.let { steps ->
+            when (steps) {
+                0 -> {
+                    redundantUnlockRequest.call()
+                    false
+                }
+                else -> {
+                    val newValue = steps - 1
+                    stepsToUnlockDeveloperMode.value = newValue
+                    newValue == 0
+                }
+            }
         }
     }
 

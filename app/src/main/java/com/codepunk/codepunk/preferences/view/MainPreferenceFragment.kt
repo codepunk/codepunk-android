@@ -16,6 +16,7 @@ import com.codepunk.codepunk.util.EXTRA_PREFERENCES_TYPE
 import com.codepunk.codepunklibstaging.preference.DeveloperModePreference
 import com.codepunk.codepunklibstaging.preference.DeveloperModePreference.DeveloperState
 import com.codepunk.codepunklibstaging.preference.ExtendedPreferenceFragmentCompat
+import com.codepunk.codepunklibstaging.preference.PasswordPreference
 
 class MainPreferenceFragment:
         ExtendedPreferenceFragmentCompat(),
@@ -41,8 +42,12 @@ class MainPreferenceFragment:
         findPreference(BuildConfig.PREF_KEY_DEV_OPTS)
     }
 
-    private val developerModePreference by lazy {
-        findPreference(BuildConfig.PREF_KEY_DEV_PASSWORD_HASH) as DeveloperModePreference
+    private val developerModePreferenceOld by lazy {
+        findPreference(BuildConfig.PREF_KEY_DEV_PASSWORD_HASH_OLD) as DeveloperModePreference
+    }
+
+    private val passwordPreference by lazy {
+        findPreference(BuildConfig.PREF_KEY_DEV_PASSWORD_HASH) as PasswordPreference
     }
 
     /*
@@ -86,28 +91,45 @@ class MainPreferenceFragment:
         setPreferencesFromResource(R.xml.preferences_main, rootKey)
         requireActivity().title = preferenceScreen.title
         developerOptionsPreference.onPreferenceClickListener = this
-        developerModePreference.onPreferenceClickListener = this
-        developerModePreference.onRemainingClicksChangeListener = this
+        developerModePreferenceOld.onPreferenceClickListener = this
+        developerModePreferenceOld.onRemainingClicksChangeListener = this
+        passwordPreference.onPreferenceClickListener = this
 
-        developerPreferencesViewModel.appVersion.observe(
-                this,
-                Observer { version -> developerModePreference.summary =
-                        getString(R.string.pref_about_summary, version) })
+        with (developerPreferencesViewModel) {
+            appVersion.observe(
+                    this@MainPreferenceFragment,
+                    Observer { version ->
+                        val summary = getString(R.string.pref_about_summary, version)
+                        developerModePreferenceOld.summary = summary
+                        passwordPreference.summary = summary
+                    })
 
-        developerPreferencesViewModel.persistedPasswordHash.observe(
-                this,
-                Observer {
-                    // Check if stale
-                    if (it != null && !BuildConfig.DEVELOPER_PASSWORD_HASH.equals(it, true)) {
-                        onStaleDeveloperPassword()
-                    }
-                }
-        )
+            persistedPasswordHash.observe(
+                    this@MainPreferenceFragment,
+                    Observer {
+                        // Check if stale
+                        if (it != null && !BuildConfig.DEVELOPER_PASSWORD_HASH.equals(it, true)) {
+                            onStaleDeveloperPassword()
+                        }
+                    })
 
-        developerPreferencesViewModel.developerState.observe(
-                this,
-                Observer { state ->
-                    onDeveloperStateChange(state ?: DeveloperState.NOT_DEVELOPER) })
+            developerState.observe(
+                    this@MainPreferenceFragment,
+                    Observer { state ->
+                        onDeveloperStateChange(state ?: DeveloperState.NOT_DEVELOPER) })
+
+            stepsToUnlockDeveloperMode.observe(
+                    this@MainPreferenceFragment,
+                    Observer { steps ->
+                        onStepsToUnlockDeveloperModeChange(steps ?: 0) })
+
+            redundantUnlockRequest.observe(
+                    this@MainPreferenceFragment,
+                    Observer { onRedundantUnlockRequest() })
+        }
+
+
+
 
         /*
         developerPreferencesViewModel.nStepsFromDeveloper.observe(
@@ -127,8 +149,8 @@ class MainPreferenceFragment:
     /* Preference.OnPreferenceClickListener */
     override fun onPreferenceClick(preference: Preference?): Boolean {
         return when (preference) {
-            developerModePreference -> {
-                if (developerModePreference.isDeveloper) {
+            developerModePreferenceOld -> {
+                if (developerModePreferenceOld.isDeveloper) {
                     Toast.makeText(
                             context,
                             R.string.pref_dev_opts_redundant_unlock_request,
@@ -136,6 +158,12 @@ class MainPreferenceFragment:
                             .show()
                 }
                 true
+            }
+            passwordPreference -> {
+                if (!developerPreferencesViewModel.unlockDeveloperMode()) {
+                    passwordPreference.suppressDialogOnNextClick()
+                }
+                false
             }
             developerOptionsPreference -> {
                 val extras = Bundle()
@@ -216,10 +244,19 @@ class MainPreferenceFragment:
 
     private fun onStaleDeveloperPassword() {
         Log.d(TAG, "******************* Made it to stale password! *******************")
-        onDisplayPreferenceDialog(developerModePreference)
+        onDisplayPreferenceDialog(developerModePreferenceOld)
     }
 
-    /*
+    private fun onStepsToUnlockDeveloperModeChange(steps: Int) {
+        if (steps in 1..3) {
+            Toast.makeText(
+                    context,
+                    getString(R.string.pref_dev_opts_steps_from_developer, steps),
+                    Toast.LENGTH_SHORT)
+                    .show()
+        }
+    }
+
     private fun onRedundantUnlockRequest() {
         Toast.makeText(
                 context,
@@ -227,7 +264,6 @@ class MainPreferenceFragment:
                 Toast.LENGTH_SHORT)
                 .show()
     }
-    */
 
     /*
     private fun onNStepsFromDeveloper(steps: Int) {
