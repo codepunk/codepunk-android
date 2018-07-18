@@ -13,37 +13,44 @@
 
     <!-- Menus -->
 
-    <string name="menu_settings_title">Settings</string>
+    <string name="menu_prefs_title">Settings</string>
 
     <!-- Preferences -->
 
-    <string name="pref_about_title">About</string>
-    <string name="pref_about_summary">Version %s</string>
-    <string name="pref_api_env_title">API environment</string>
-    <string name="pref_dev_opts_title">Developer options</string>
-    <string name="pref_dev_opts_password_hint">Password</string>
-    <string name="pref_disable_dev_opts_title">Disable developer options</string>
-    <string name="pref_main_title">Settings</string>
+    <string name="prefs_main_title">Settings</string>
+    <string name="prefs_about_title">About</string>
+    <string name="prefs_api_env_title">API environment</string>
+    <string name="prefs_dev_opts_title">Developer options</string>
 
-    <string name="pref_dev_opts_redundant_unlock_request">No need, you are already a developer</string>
-    <string name="pref_dev_opts_steps_from_developer">You are now %d steps away from being a developer!</string>
-    <string name="pref_dev_opts_incorrect_password">Incorrect password</string>
+    <string name="prefs_about_summary">Version %s</string>
 
-    <string name="pref_dev_confirm_disable_developer_options_title">Disable developer options?</string>
-    <string name="pref_dev_confirm_disable_developer_options_message">If you click \'Continue\', all connections will be reset and the app will return to the launch screen.</string>
-    <string name="pref_dev_confirm_disable_developer_options_positive_button">Continue</string>
+    <string name="prefs_dev_opts_password_hint">Password</string>
 
-    <string name="pref_dev_mode_disable_dialog_title">Disable developer options?</string>
-    <string name="pref_dev_mode_disable_dialog_message">If you disable developer options, all connections will be reset and the app will revert to the launch screen.</string>
-
-    <string name="pref_dev_mode_title">Developer mode</string>
-    <string name="pref_dev_mode_enter_password">Enter the password to enable developer mode:</string>
+    <string name="prefs_dev_opts_redundant_unlock_request">No need, developer options have already been unlocked</string>
+    <string name="prefs_dev_opts_steps_from_unlocking">You are now %d steps away from unlocking developer options!</string>
 
 
 
 
     <!-- Settings -->
 
+    <!--
+    <string name="prefs_disable_dev_opts_title">Disable developer options</string>
+    -->
+
+    <string name="prefs_dev_opts_incorrect_password">Incorrect password</string>
+
+    <string name="prefs_dev_confirm_disable_developer_options_title">Disable developer options?</string>
+    <string name="prefs_dev_confirm_disable_developer_options_message">If you click \'Continue\', all connections will be reset and the app will return to the launch screen.</string>
+    <string name="prefs_dev_confirm_disable_developer_options_positive_button">Continue</string>
+
+    <string name="prefs_dev_mode_disable_dialog_title">Disable developer options?</string>
+    <string name="prefs_dev_mode_disable_dialog_message">If you disable developer options, all connections will be reset and the app will revert to the launch screen.</string>
+
+    <string name="prefs_dev_mode_title">Developer mode</string>
+    <string name="prefs_dev_mode_enter_password">Enter the password to enable developer mode:</string>
+
+    <!--
     <string name="settings_main_activity_title">Settings</string>
     <string name="settings_developer_options_activity_title">Developer Options</string>
 
@@ -66,14 +73,16 @@
     <string name="settings_confirm_disable_developer_options_title">Disable developer options?</string>
     <string name="settings_confirm_disable_developer_options">Are you sure? The app will reset and be reverted to the Production API environment.</string>
     <string name="settings_disable_developer_options_positive_button">Continue</string>
+    -->
 
     <!-- Dialogs -->
     <!-- TODO: Can move to codepunklib -->
+    <!--
     <string name="dialog_confirm_default_title">Confirm</string>
     <string name="dialog_confirm_default_message">Are you sure?</string>
     <string name="dialog_confirm_default_positive_button">@android:string/yes</string>
     <string name="dialog_confirm_default_negative_button">@android:string/no</string>
-
+    -->
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

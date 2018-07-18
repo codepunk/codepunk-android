@@ -1,36 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.preference.PreferenceScreen
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:title="@string/pref_main_title">
+    android:title="@string/prefs_main_title">
 
-    <!--suppress AndroidDomInspection -->
     <android.support.v7.preference.Preference
-        android:key="@string/pref_key_dev_opts"
+        android:key="@string/prefs_key_dev_opts"
         android:icon="@drawable/ic_preference_developer_options"
-        android:title="@string/pref_dev_opts_title"
+        android:title="@string/prefs_dev_opts_title"
         android:selectable="true"
         android:enabled="true"
         android:order="100" />
 
-    <com.codepunk.codepunklibstaging.preference.DeveloperModePreference
-        android:key="@string/pref_key_dev_password_hash_old"
+    <android.support.v7.preference.Preference
+        android:key="@string/prefs_key_about"
         android:icon="@drawable/ic_preference_info"
-        android:title="@string/pref_about_title"
-        android:selectable="true"
-        android:enabled="true"
-        app:passwordHash="@string/developer_password_hash"
-        android:order="200" />
-
-    <com.codepunk.codepunklibstaging.preference.PasswordPreference
-        android:key="@string/pref_key_dev_password_hash"
-        android:icon="@drawable/ic_preference_info"
-        android:title="@string/pref_about_title"
-        android:dialogTitle="@string/pref_dev_mode_title"
-        android:dialogMessage="@string/pref_dev_mode_enter_password"
-        app:passwordHash="@string/developer_password_hash"
+        android:title="@string/prefs_about_title"
         android:selectable="true"
         android:enabled="true"
         android:order="300" />
+
+    <!--
+    <com.codepunk.codepunklibstaging.preference.old.PasswordPreference
+        android:key="@string/prefs_key_dev_password_hash"
+        android:icon="@drawable/ic_preference_info"
+        android:title="@string/prefs_about_title"
+        android:dialogTitle="@string/prefs_dev_mode_title"
+        android:dialogMessage="@string/prefs_dev_mode_enter_password"
+        android:selectable="true"
+        android:enabled="true"
+        android:order="300"
+        app:passwordHash="@string/developer_password_hash" />
+    -->
 
 </android.support.v7.preference.PreferenceScreen>

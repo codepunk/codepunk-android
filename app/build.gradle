@@ -45,26 +45,33 @@ android {
     applicationVariants.all { variant ->
         //region Preference keys
 
-        def pref_key_api_environment = variant.applicationId + ".PREF_KEY_API_ENVIRONMENT"
-        def pref_key_dev_opts = variant.applicationId + ".PREF_KEY_DEV_OPTS"
-        def pref_key_dev_password_hash = variant.applicationId + ".PREF_KEY_DEV_PASSWORD_HASH"
-        def pref_key_disable_dev_opts = variant.applicationId + ".PREF_KEY_DISABLE_DEV_OPTS"
+        def prefs_key_about = variant.applicationId + ".PREFS_KEY_ABOUT"
+        def prefs_key_api_environment = variant.applicationId + ".PREFS_KEY_API_ENVIRONMENT"
+        def prefs_key_dev_opts = variant.applicationId + ".PREFS_KEY_DEV_OPTS"
 
-        variant.buildConfigField("String", "PREF_KEY_API_ENVIRONMENT", "\"" + pref_key_api_environment + "\"")
-        variant.buildConfigField("String", "PREF_KEY_DEV_OPTS", "\"" + pref_key_dev_opts + "\"")
-        variant.buildConfigField("String", "PREF_KEY_DEV_PASSWORD_HASH", "\"" + pref_key_dev_password_hash + "\"")
-        variant.buildConfigField("String", "PREF_KEY_DISABLE_DEV_OPTS", "\"" + pref_key_disable_dev_opts + "\"")
+        variant.buildConfigField("String", "PREFS_KEY_ABOUT", "\"" + prefs_key_about + "\"")
+        variant.buildConfigField("String", "PREFS_KEY_API_ENVIRONMENT", "\"" + prefs_key_api_environment + "\"")
+        variant.buildConfigField("String", "PREFS_KEY_DEV_OPTS", "\"" + prefs_key_dev_opts + "\"")
 
-        variant.resValue "string", "pref_key_api_environment", pref_key_api_environment
-        variant.resValue "string", "pref_key_dev_opts", pref_key_dev_opts
-        variant.resValue "string", "pref_key_dev_password_hash", pref_key_dev_password_hash
-        variant.resValue "string", "pref_key_disable_dev_opts", pref_key_disable_dev_opts
+        variant.resValue "string", "prefs_key_about", prefs_key_about
+        variant.resValue "string", "prefs_key_api_environment", prefs_key_api_environment
+        variant.resValue "string", "prefs_key_dev_opts", prefs_key_dev_opts
 
+        /*
         // TODO TEMP
-        def pref_key_dev_password_hash_old = variant.applicationId + ".PREF_KEY_DEV_PASSWORD_HASH_OLD"
-        variant.buildConfigField("String", "PREF_KEY_DEV_PASSWORD_HASH_OLD", "\"" + pref_key_dev_password_hash_old + "\"")
-        variant.resValue "string", "pref_key_dev_password_hash_old", pref_key_dev_password_hash_old
+        def prefs_key_disable_dev_opts = variant.applicationId + ".PREFS_KEY_DISABLE_DEV_OPTS"
+        variant.buildConfigField("String", "PREFS_KEY_DISABLE_DEV_OPTS", "\"" + prefs_key_disable_dev_opts + "\"")
+        variant.resValue "string", "prefs_key_disable_dev_opts", prefs_key_disable_dev_opts
+
+        def prefs_key_dev_password_hash = variant.applicationId + ".PREFS_KEY_DEV_PASSWORD_HASH"
+        variant.buildConfigField("String", "PREFS_KEY_DEV_PASSWORD_HASH", "\"" + prefs_key_dev_password_hash + "\"")
+        variant.resValue "string", "prefs_key_dev_password_hash", prefs_key_dev_password_hash
+
+        def prefs_key_dev_password_hash_old = variant.applicationId + ".PREFS_KEY_DEV_PASSWORD_HASH_OLD"
+        variant.buildConfigField("String", "PREFS_KEY_DEV_PASSWORD_HASH_OLD", "\"" + prefs_key_dev_password_hash_old + "\"")
+        variant.resValue "string", "prefs_key_dev_password_hash_old", prefs_key_dev_password_hash_old
         // END TEMP
+        */
 
         //endregion Preference keys
     }

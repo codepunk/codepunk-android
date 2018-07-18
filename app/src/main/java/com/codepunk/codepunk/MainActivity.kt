@@ -22,6 +22,10 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         dayPluginManager.get(Calendar.getInstance()).showGreeting()
+
+        // TODO TEMP Always open settings
+        startActivity(Intent(ACTION_SETTINGS))
+        // END TEMP
     }
 
     //endregion Lifecycle methods

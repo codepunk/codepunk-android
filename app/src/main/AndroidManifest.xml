@@ -21,7 +21,7 @@
 
         <activity
             android:name=".preferences.PreferencesActivity"
-            android:label="@string/settings_main_activity_title">
+            android:label="@string/prefs_main_title">
             <intent-filter>
                 <action android:name="${applicationId}.intent.action.SETTINGS" />
 
