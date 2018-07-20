@@ -25,7 +25,7 @@ class DeveloperPreferencesViewModel(val app: Application) :
         companion object {
             fun valueFrom(sharedPreferences: SharedPreferences?): DeveloperOptionsState {
                 return sharedPreferences?.run {
-                    enumValueOf(getString(BuildConfig.PREFS_KEY_DEV_OPTS, ""), LOCKED)
+                    enumValueOf(getString(BuildConfig.PREFS_KEY_DEV_OPTS_STATE, ""), LOCKED)
                 } ?: LOCKED
             }
         }
@@ -62,7 +62,7 @@ class DeveloperPreferencesViewModel(val app: Application) :
             developerOptionsState.addSource(stepsToUnlockDeveloperMode) { steps ->
                 val state = if (steps?.compareTo(0) == 1) DeveloperOptionsState.LOCKED
                 else DeveloperOptionsState.UNLOCKED
-                edit().putString(BuildConfig.PREFS_KEY_DEV_OPTS, state.name).apply()
+                edit().putString(BuildConfig.PREFS_KEY_DEV_OPTS_STATE, state.name).apply()
             }
 
             stepsToUnlockDeveloperMode.value =
@@ -84,7 +84,7 @@ class DeveloperPreferencesViewModel(val app: Application) :
     //region Implemented methods
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
         when (key) {
-            BuildConfig.PREFS_KEY_DEV_OPTS -> {
+            BuildConfig.PREFS_KEY_DEV_OPTS_STATE -> {
                 developerOptionsState.value = DeveloperOptionsState.valueFrom(sharedPreferences)
             }
         }

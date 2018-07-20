@@ -2,23 +2,22 @@ package com.codepunk.codepunk.preferences.view
 
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
-import android.content.Intent
+import android.content.Context
 import android.os.Bundle
 import android.support.v7.preference.Preference
 import android.widget.Toast
 import com.codepunk.codepunk.BuildConfig
 import com.codepunk.codepunk.R
+import com.codepunk.codepunk.preferences.PreferencesActivity
 import com.codepunk.codepunk.preferences.PreferencesActivity.PreferencesType
 import com.codepunk.codepunk.preferences.viewmodel.DeveloperPreferencesViewModel
 import com.codepunk.codepunk.preferences.viewmodel.DeveloperPreferencesViewModel.DeveloperOptionsState
-import com.codepunk.codepunk.util.ACTION_SETTINGS
-import com.codepunk.codepunk.util.EXTRA_PREFERENCES_TYPE
-import com.codepunk.codepunklibstaging.preference.old.ExtendedPreferenceFragmentCompat
+import com.codepunk.codepunklib.preference.DialogDelegatePreferenceFragment
 
 const val STEPS_TO_UNLOCK_SHOW_TOAST = 3
 
 class MainPreferenceFragment:
-        ExtendedPreferenceFragmentCompat(),
+        DialogDelegatePreferenceFragment(),
         Preference.OnPreferenceClickListener {
 
     //region Nested classes
@@ -30,6 +29,10 @@ class MainPreferenceFragment:
     //endregion Nested classes
 
     //region Fields
+
+    private val preferencesActivity by lazy {
+        requireActivity() as PreferencesActivity
+    }
 
     private val developerPreferencesViewModel by lazy {
         ViewModelProviders.of(this).get(DeveloperPreferencesViewModel::class.java)
@@ -50,6 +53,17 @@ class MainPreferenceFragment:
     */
 
     //endregion Fields
+
+    // region Lifecycle methods
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+
+        if (context !is PreferencesActivity) {
+            throw IllegalStateException("Activity must be an instance of ${PreferencesActivity::class.java.simpleName}")
+        }
+    }
+
+    // endregion Lifecycle methods
 
     //region Inherited methods
 
@@ -98,11 +112,7 @@ class MainPreferenceFragment:
                 false
             }
             developerOptionsPreference -> {
-                val extras = Bundle()
-                extras.putSerializable(EXTRA_PREFERENCES_TYPE, PreferencesType.DEVELOPER_OPTIONS)
-                val intent = Intent(ACTION_SETTINGS)
-                intent.putExtras(extras)
-                startActivity(intent)
+                preferencesActivity.startActivity(PreferencesType.DEVELOPER_OPTIONS)
                 true
             }
             else -> {

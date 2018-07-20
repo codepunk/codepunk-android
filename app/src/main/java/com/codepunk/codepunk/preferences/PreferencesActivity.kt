@@ -1,11 +1,13 @@
 package com.codepunk.codepunk.preferences
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.preference.PreferenceFragmentCompat
 import android.view.MenuItem
 import com.codepunk.codepunk.preferences.view.DeveloperOptionsPreferenceFragment
 import com.codepunk.codepunk.preferences.view.MainPreferenceFragment
+import com.codepunk.codepunk.util.ACTION_SETTINGS
 import com.codepunk.codepunk.util.EXTRA_PREFERENCES_TYPE
 
 // TODO Maybe move this to main preferences package. Doesn't really need to be in "view"
@@ -13,7 +15,7 @@ import com.codepunk.codepunk.util.EXTRA_PREFERENCES_TYPE
 
 class PreferencesActivity: AppCompatActivity() {
 
-    //region Nested classes
+    // region Nested classes
 
     enum class PreferencesType(private val clazz: Class<out PreferenceFragmentCompat>) {
 
@@ -26,9 +28,9 @@ class PreferencesActivity: AppCompatActivity() {
         }
     }
 
-    //endregion Nested classes
+    // endregion Nested classes
 
-    //region Lifecycle methods
+    // region Lifecycle methods
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,9 +47,9 @@ class PreferencesActivity: AppCompatActivity() {
         }
     }
 
-    //endregion Lifecycle methods
+    // endregion Lifecycle methods
 
-    //region Inherited methods
+    // region Inherited methods
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         return when (item?.itemId) {
@@ -60,5 +62,17 @@ class PreferencesActivity: AppCompatActivity() {
         }
     }
 
-    //endregion Inherited methods
+    // endregion Inherited methods
+    
+    // region Methods
+
+    fun startActivity(type: PreferencesType) {
+        startActivity(Intent(ACTION_SETTINGS).apply {
+            putExtras(Bundle().apply {
+                putSerializable(EXTRA_PREFERENCES_TYPE, type)
+            })
+        })
+    }
+    
+    // endregion Methods
 }

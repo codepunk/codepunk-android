@@ -9,10 +9,10 @@ import com.codepunk.codepunk.R
 import com.codepunk.codepunk.api.environment.ApiEnvironment
 import com.codepunk.codepunk.preferences.viewmodel.DeveloperPreferencesViewModel
 import com.codepunk.codepunk.util.populate
-import com.codepunk.codepunklibstaging.preference.old.ExtendedPreferenceFragmentCompat
+import com.codepunk.codepunklib.preference.DialogDelegatePreferenceFragment
 
 class DeveloperOptionsPreferenceFragment:
-        ExtendedPreferenceFragmentCompat(),
+        DialogDelegatePreferenceFragment(),
         Preference.OnPreferenceClickListener {
 
     //region Nested classes

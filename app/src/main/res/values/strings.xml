@@ -29,6 +29,7 @@
     <string name="prefs_dev_opts_redundant_unlock_request">No need, developer options have already been unlocked</string>
     <string name="prefs_dev_opts_steps_from_unlocking">You are now %d steps away from unlocking developer options!</string>
 
+    <string name="prefs_dev_opts_enter_password">Enter the password to enable developer options:</string>
 
 
 
