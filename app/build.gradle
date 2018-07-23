@@ -47,34 +47,21 @@ android {
 
         def prefs_key_about = variant.applicationId + ".PREFS_KEY_ABOUT"
         def prefs_key_api_environment = variant.applicationId + ".PREFS_KEY_API_ENVIRONMENT"
-        def prefs_key_dev_opts = variant.applicationId + ".PREFS_KEY_DEV_OPTS"
-        def prefs_key_dev_opts_state = variant.applicationId + ".PREFS_KEY_DEV_OPTS_STATE"
+        def prefs_key_dev_opts_authenticated_hash = variant.applicationId + ".PREFS_KEY_DEV_OPTS_AUTHENTICATED_HASH"
+        def prefs_key_dev_opts_enabled = variant.applicationId + ".PREFS_KEY_DEV_OPTS_ENABLED"
+        def prefs_key_dev_opts_unlocked = variant.applicationId + ".PREFS_KEY_DEV_OPTS_UNLOCKED"
 
         variant.buildConfigField("String", "PREFS_KEY_ABOUT", "\"" + prefs_key_about + "\"")
         variant.buildConfigField("String", "PREFS_KEY_API_ENVIRONMENT", "\"" + prefs_key_api_environment + "\"")
-        variant.buildConfigField("String", "PREFS_KEY_DEV_OPTS", "\"" + prefs_key_dev_opts + "\"")
-        variant.buildConfigField("String", "PREFS_KEY_DEV_OPTS_STATE", "\"" + prefs_key_dev_opts_state + "\"")
+        variant.buildConfigField("String", "PREFS_KEY_DEV_OPTS_AUTHENTICATED_HASH", "\"" + prefs_key_dev_opts_authenticated_hash + "\"")
+        variant.buildConfigField("String", "PREFS_KEY_DEV_OPTS_ENABLED", "\"" + prefs_key_dev_opts_enabled + "\"")
+        variant.buildConfigField("String", "PREFS_KEY_DEV_OPTS_UNLOCKED", "\"" + prefs_key_dev_opts_unlocked + "\"")
 
         variant.resValue "string", "prefs_key_about", prefs_key_about
         variant.resValue "string", "prefs_key_api_environment", prefs_key_api_environment
-        variant.resValue "string", "prefs_key_dev_opts", prefs_key_dev_opts
-        variant.resValue "string", "prefs_key_dev_opts_state", prefs_key_dev_opts_state
-
-        /*
-        // TODO TEMP
-        def prefs_key_disable_dev_opts = variant.applicationId + ".PREFS_KEY_DISABLE_DEV_OPTS"
-        variant.buildConfigField("String", "PREFS_KEY_DISABLE_DEV_OPTS", "\"" + prefs_key_disable_dev_opts + "\"")
-        variant.resValue "string", "prefs_key_disable_dev_opts", prefs_key_disable_dev_opts
-
-        def prefs_key_dev_password_hash = variant.applicationId + ".PREFS_KEY_DEV_PASSWORD_HASH"
-        variant.buildConfigField("String", "PREFS_KEY_DEV_PASSWORD_HASH", "\"" + prefs_key_dev_password_hash + "\"")
-        variant.resValue "string", "prefs_key_dev_password_hash", prefs_key_dev_password_hash
-
-        def prefs_key_dev_password_hash_old = variant.applicationId + ".PREFS_KEY_DEV_PASSWORD_HASH_OLD"
-        variant.buildConfigField("String", "PREFS_KEY_DEV_PASSWORD_HASH_OLD", "\"" + prefs_key_dev_password_hash_old + "\"")
-        variant.resValue "string", "prefs_key_dev_password_hash_old", prefs_key_dev_password_hash_old
-        // END TEMP
-        */
+        variant.resValue "string", "prefs_key_dev_opts_authenticated_hash", prefs_key_dev_opts_authenticated_hash
+        variant.resValue "string", "prefs_key_dev_opts_enabled", prefs_key_dev_opts_enabled
+        variant.resValue "string", "prefs_key_dev_opts_unlocked", prefs_key_dev_opts_unlocked
 
         //endregion Preference keys
     }

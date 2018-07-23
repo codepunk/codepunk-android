@@ -1,77 +1,115 @@
 package com.codepunk.codepunk.preferences.view
 
+import android.app.Activity.RESULT_OK
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
-import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.preference.Preference
+import android.util.Log
 import android.widget.Toast
 import com.codepunk.codepunk.BuildConfig
 import com.codepunk.codepunk.R
+import com.codepunk.codepunk.developer.DeveloperPasswordDialogFragment
 import com.codepunk.codepunk.preferences.PreferencesActivity
 import com.codepunk.codepunk.preferences.PreferencesActivity.PreferencesType
 import com.codepunk.codepunk.preferences.viewmodel.DeveloperPreferencesViewModel
-import com.codepunk.codepunk.preferences.viewmodel.DeveloperPreferencesViewModel.DeveloperOptionsState
+import com.codepunk.codepunk.util.EXTRA_DEVELOPER_PASSWORD_HASH
 import com.codepunk.codepunklib.preference.DialogDelegatePreferenceFragment
+import com.codepunk.codepunklibstaging.preference.SwitchTwoTargetPreference
 
-const val STEPS_TO_UNLOCK_SHOW_TOAST = 3
+// region Constants
+
+private const val DEVELOPER_PASSWORD_DIALOG_FRAGMENT_REQUEST_CODE = 0
+
+private const val DEFAULT_STEPS_REMAINING: Int = 7
+private const val STEPS_TO_SHOW_TOAST = 3
+private const val SAVE_STATE_STEPS_REMAINING = "stepsRemaining"
+
+// endregion Constants
 
 class MainPreferenceFragment:
         DialogDelegatePreferenceFragment(),
+        Preference.OnPreferenceChangeListener,
         Preference.OnPreferenceClickListener {
 
-    //region Nested classes
+    // region Nested classes
 
     companion object {
         private val TAG = MainPreferenceFragment::class.java.simpleName
+
+        private val DEVELOPER_PASSWORD_DIALOG_FRAGMENT_TAG =
+                MainPreferenceFragment::class.java.name + ".DEVELOPER_PASSWORD_DIALOG"
     }
 
-    //endregion Nested classes
+    // endregion Nested classes
 
-    //region Fields
+    // region Fields
 
     private val preferencesActivity by lazy {
-        requireActivity() as PreferencesActivity
+        requireActivity() as? PreferencesActivity
+                ?: throw IllegalStateException("Activity must be an instance of " +
+                        PreferencesActivity::class.java.simpleName)
     }
+
+    private var stepsRemaining = 0 // TODO Rename?
 
     private val developerPreferencesViewModel by lazy {
         ViewModelProviders.of(this).get(DeveloperPreferencesViewModel::class.java)
     }
 
     private val developerOptionsPreference by lazy {
-        findPreference(BuildConfig.PREFS_KEY_DEV_OPTS)
+        findPreference(BuildConfig.PREFS_KEY_DEV_OPTS_ENABLED) as SwitchTwoTargetPreference
     }
 
     private val aboutPreference by lazy {
         findPreference(BuildConfig.PREFS_KEY_ABOUT)
     }
 
-    /*
-    private val passwordPreference by lazy {
-        findPreference(BuildConfig.PREFS_KEY_DEV_PASSWORD_HASH) as PasswordPreference
-    }
-    */
-
-    //endregion Fields
+    // endregion Fields
 
     // region Lifecycle methods
-    override fun onAttach(context: Context?) {
-        super.onAttach(context)
-
-        if (context !is PreferencesActivity) {
-            throw IllegalStateException("Activity must be an instance of ${PreferencesActivity::class.java.simpleName}")
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        stepsRemaining = when {
+            savedInstanceState != null ->
+                savedInstanceState.getInt(SAVE_STATE_STEPS_REMAINING, DEFAULT_STEPS_REMAINING)
+            developerPreferencesViewModel.developerOptionsUnlocked.value == true -> 0
+            else -> DEFAULT_STEPS_REMAINING
         }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putInt(SAVE_STATE_STEPS_REMAINING, stepsRemaining)
     }
 
     // endregion Lifecycle methods
 
-    //region Inherited methods
+    // region Inherited methods
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        when (requestCode) {
+            DEVELOPER_PASSWORD_DIALOG_FRAGMENT_REQUEST_CODE -> {
+                when (resultCode) {
+                    RESULT_OK -> {
+                        data?.run {
+                            developerPreferencesViewModel.enableDeveloperOptions(
+                                    getStringExtra(EXTRA_DEVELOPER_PASSWORD_HASH))
+                        }
+                    }
+                }
+            }
+            else -> super.onActivityResult(requestCode, resultCode, data)
+        }
+    }
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.preferences_main, rootKey)
         requireActivity().title = preferenceScreen.title
         aboutPreference.onPreferenceClickListener = this
         developerOptionsPreference.onPreferenceClickListener = this
+        developerOptionsPreference.onPreferenceChangeListener = this
 
         with (developerPreferencesViewModel) {
             appVersion.observe(
@@ -80,39 +118,67 @@ class MainPreferenceFragment:
                         aboutPreference.summary = getString(R.string.prefs_about_summary, version)
                     })
 
-            developerOptionsState.observe(
+            developerOptionsAuthenticatedHash.observe(
                     this@MainPreferenceFragment,
-                    Observer { state ->
-                        onDeveloperOptionsStateChange(state) })
+                    Observer { hash -> onAuthenticatedDeveloperHashChange(hash) })
 
-            stepsToUnlockDeveloperMode.observe(
+            developerOptionsEnabled.observe(
                     this@MainPreferenceFragment,
-                    Observer { steps ->
-                        onStepsToUnlockDeveloperModeChange(steps ?: 0) })
+                    Observer { enabled ->
+                        onDeveloperOptionsEnabledChange(enabled == true)
+                    })
 
-            redundantUnlockRequest.observe(
+            developerOptionsUnlocked.observe(
                     this@MainPreferenceFragment,
-                    Observer { onRedundantUnlockRequest() })
-
-            // Force this to add or remove developer options preference now so we don't see
-            // the animation as the fragment is created
-            onDeveloperOptionsStateChange(developerOptionsState.value)
+                    Observer { unlocked ->
+                        onDeveloperOptionsUnlockedChange(unlocked == true)
+                    })
         }
     }
 
-    //endregion Inherited methods
+    // endregion Inherited methods
 
-    //region Implemented methods
+    // region Implemented methods
 
-    /* Preference.OnPreferenceClickListener */
+    // Preference.OnPreferenceChangeListener
+    override fun onPreferenceChange(preference: Preference?, newValue: Any?): Boolean {
+        return when (preference) {
+            developerOptionsPreference -> {
+                val enabled = newValue as Boolean
+                if (enabled) {
+                    showDeveloperPasswordDialogFragment()
+                    false
+                } else {
+                    // TODO Dialog to ask if user is sure
+                    // TODO TEMP
+                    developerPreferencesViewModel.unlockDeveloperOptions()
+                    // END TEMP
+                    true
+                }
+            }
+            else -> { true }
+        }
+    }
+
+    // Preference.OnPreferenceClickListener
     override fun onPreferenceClick(preference: Preference?): Boolean {
         return when (preference) {
             aboutPreference -> {
-                developerPreferencesViewModel.requestUnlockDeveloperMode()
+                when {
+                    stepsRemaining > 1 -> {
+                        stepsRemaining--
+                        onStepsToShowDeveloperOptionsChange(stepsRemaining)
+                    }
+                    stepsRemaining == 1 -> {
+                        stepsRemaining = 0
+                        developerPreferencesViewModel.unlockDeveloperOptions()
+                    }
+                    else -> onRedundantShowRequest()
+                }
                 false
             }
             developerOptionsPreference -> {
-                preferencesActivity.startActivity(PreferencesType.DEVELOPER_OPTIONS)
+                preferencesActivity.startPreferencesActivity(PreferencesType.DEVELOPER_OPTIONS)
                 true
             }
             else -> {
@@ -121,28 +187,38 @@ class MainPreferenceFragment:
         }
     }
 
-    //endregion Implemented methods
+    // endregion Implemented methods
 
-    //region Private methods
+    // region Private methods
 
-    private fun onDeveloperOptionsStateChange(state: DeveloperOptionsState?) {
-        when (state) {
-            DeveloperOptionsState.UNLOCKED ->
-                preferenceScreen?.addPreference(developerOptionsPreference)
-            else -> preferenceScreen?.removePreference(developerOptionsPreference)
+    private fun onAuthenticatedDeveloperHashChange(hash: String?) {
+        Log.d(TAG, "onAuthenticatedDeveloperHashChange!!! hash=$hash")
+    }
+
+    private fun onDeveloperOptionsEnabledChange(enabled: Boolean) {
+        developerOptionsPreference.isChecked = enabled
+    }
+
+    private fun onDeveloperOptionsUnlockedChange(unlocked: Boolean) {
+        preferenceScreen.apply {
+            if (unlocked) {
+                addPreference(developerOptionsPreference)
+            } else {
+                removePreference(developerOptionsPreference)
+            }
         }
     }
 
-    private fun onRedundantUnlockRequest() {
+    private fun onRedundantShowRequest() {
         Toast.makeText(
                 context,
-                R.string.prefs_dev_opts_redundant_unlock_request,
+                R.string.prefs_dev_opts_redundant_show_request,
                 Toast.LENGTH_SHORT)
                 .show()
     }
 
-    private fun onStepsToUnlockDeveloperModeChange(steps: Int) {
-        if (steps in 1..STEPS_TO_UNLOCK_SHOW_TOAST) {
+    private fun onStepsToShowDeveloperOptionsChange(steps: Int) {
+        if (steps in 1..STEPS_TO_SHOW_TOAST) {
             Toast.makeText(
                     context,
                     getString(R.string.prefs_dev_opts_steps_from_unlocking, steps),
@@ -151,5 +227,19 @@ class MainPreferenceFragment:
         }
     }
 
-    //endregion Private methods
+    private fun showDeveloperPasswordDialogFragment() {
+        with (requireFragmentManager()) {
+            if (findFragmentByTag(DEVELOPER_PASSWORD_DIALOG_FRAGMENT_TAG) != null) {
+                return
+            }
+
+            DeveloperPasswordDialogFragment.newInstance()
+                    .apply { setTargetFragment(
+                            this@MainPreferenceFragment,
+                            DEVELOPER_PASSWORD_DIALOG_FRAGMENT_REQUEST_CODE) }
+                    .show(this, DEVELOPER_PASSWORD_DIALOG_FRAGMENT_TAG)
+        }
+    }
+
+    // endregion Private methods
 }

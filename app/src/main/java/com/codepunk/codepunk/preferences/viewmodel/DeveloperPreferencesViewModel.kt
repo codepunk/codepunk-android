@@ -2,54 +2,36 @@ package com.codepunk.codepunk.preferences.viewmodel
 
 import android.app.Application
 import android.arch.lifecycle.AndroidViewModel
-import android.arch.lifecycle.MediatorLiveData
 import android.arch.lifecycle.MutableLiveData
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
 import com.codepunk.codepunk.BuildConfig
-import com.codepunk.codepunk.util.SingleLiveEvent
-import com.codepunk.codepunk.util.enumValueOf
-
-private const val STEPS_TO_UNLOCK_DEVELOPER_MODE: Int = 7
 
 class DeveloperPreferencesViewModel(val app: Application) :
         AndroidViewModel(app),
         SharedPreferences.OnSharedPreferenceChangeListener {
 
-    //region Nested classes
-
-    enum class DeveloperOptionsState {
-        LOCKED,
-        UNLOCKED;
-
-        companion object {
-            fun valueFrom(sharedPreferences: SharedPreferences?): DeveloperOptionsState {
-                return sharedPreferences?.run {
-                    enumValueOf(getString(BuildConfig.PREFS_KEY_DEV_OPTS_STATE, ""), LOCKED)
-                } ?: LOCKED
-            }
-        }
-    }
+    // region Nested classes
 
     companion object {
         private val TAG = DeveloperPreferencesViewModel::class.java.simpleName
     }
 
-    //endregion Nested classes
+    // endregion Nested classes
 
-    //region Fields
+    // region Fields
 
     var appVersion = MutableLiveData<String>()
 
-    var developerOptionsState =  MediatorLiveData<DeveloperOptionsState>()
+    var developerOptionsAuthenticatedHash = MutableLiveData<String>()
 
-    var redundantUnlockRequest = SingleLiveEvent<Void>()
+    var developerOptionsEnabled = MutableLiveData<Boolean>()
 
-    var stepsToUnlockDeveloperMode = MutableLiveData<Int>()
+    var developerOptionsUnlocked = MutableLiveData<Boolean>()
 
-    //endregion Fields
+    // endregion Fields
 
-    //region Constructors
+    // region Constructors
 
     init {
         appVersion.value = app
@@ -58,18 +40,16 @@ class DeveloperPreferencesViewModel(val app: Application) :
                 .versionName
 
         with (PreferenceManager.getDefaultSharedPreferences(app)) {
-            developerOptionsState.value = DeveloperOptionsState.valueFrom(this)
-            developerOptionsState.addSource(stepsToUnlockDeveloperMode) { steps ->
-                val state = if (steps?.compareTo(0) == 1) DeveloperOptionsState.LOCKED
-                else DeveloperOptionsState.UNLOCKED
-                edit().putString(BuildConfig.PREFS_KEY_DEV_OPTS_STATE, state.name).apply()
-            }
+            this.registerOnSharedPreferenceChangeListener(this@DeveloperPreferencesViewModel)
 
-            stepsToUnlockDeveloperMode.value =
-                    when (developerOptionsState.value) {
-                        DeveloperOptionsState.UNLOCKED -> 0
-                        else -> STEPS_TO_UNLOCK_DEVELOPER_MODE
-                    }
+            developerOptionsAuthenticatedHash.value =
+                    getString(BuildConfig.PREFS_KEY_DEV_OPTS_AUTHENTICATED_HASH, null)
+
+            developerOptionsEnabled.value =
+                    getBoolean(BuildConfig.PREFS_KEY_DEV_OPTS_ENABLED, false)
+
+            developerOptionsUnlocked.value =
+                    getBoolean(BuildConfig.PREFS_KEY_DEV_OPTS_UNLOCKED, false)
 
             registerOnSharedPreferenceChangeListener(this@DeveloperPreferencesViewModel)
         }
@@ -79,29 +59,55 @@ class DeveloperPreferencesViewModel(val app: Application) :
 
     }
 
-    //endregion Constructors
+    // endregion Constructors
 
-    //region Implemented methods
+    // region Implemented methods
+
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
-        when (key) {
-            BuildConfig.PREFS_KEY_DEV_OPTS_STATE -> {
-                developerOptionsState.value = DeveloperOptionsState.valueFrom(sharedPreferences)
+        sharedPreferences?.apply {
+            when (key) {
+                BuildConfig.PREFS_KEY_DEV_OPTS_AUTHENTICATED_HASH ->
+                    developerOptionsAuthenticatedHash.value = getString(key, null)
+
+                BuildConfig.PREFS_KEY_DEV_OPTS_ENABLED ->
+                    developerOptionsEnabled.value = getBoolean(key, false)
+
+                BuildConfig.PREFS_KEY_DEV_OPTS_UNLOCKED ->
+                    developerOptionsUnlocked.value = getBoolean(key, false)
             }
         }
     }
 
-    //endregion Implemented methods
+    // endregion Implemented methods
 
-    //region Methods
+    // region Methods
 
-    fun requestUnlockDeveloperMode() {
-        val steps = stepsToUnlockDeveloperMode.value ?: 0
-        if (steps > 0) {
-            stepsToUnlockDeveloperMode.value = steps - 1
-        } else {
-            redundantUnlockRequest.call()
-        }
+    fun lockDeveloperOptions() {
+        PreferenceManager.getDefaultSharedPreferences(app)
+                .edit()
+                .putBoolean(BuildConfig.PREFS_KEY_DEV_OPTS_UNLOCKED, false)
+                .putBoolean(BuildConfig.PREFS_KEY_DEV_OPTS_ENABLED, false)
+                .putString(BuildConfig.PREFS_KEY_DEV_OPTS_AUTHENTICATED_HASH, null)
+                .apply()
     }
 
-    //endregion Methods
+    fun unlockDeveloperOptions() {
+        PreferenceManager.getDefaultSharedPreferences(app)
+                .edit()
+                .putBoolean(BuildConfig.PREFS_KEY_DEV_OPTS_UNLOCKED, true)
+                .putBoolean(BuildConfig.PREFS_KEY_DEV_OPTS_ENABLED, false)
+                .putString(BuildConfig.PREFS_KEY_DEV_OPTS_AUTHENTICATED_HASH, null)
+                .apply()
+    }
+
+    fun enableDeveloperOptions(hash: String) {
+        PreferenceManager.getDefaultSharedPreferences(app)
+                .edit()
+                .putBoolean(BuildConfig.PREFS_KEY_DEV_OPTS_UNLOCKED, true)
+                .putBoolean(BuildConfig.PREFS_KEY_DEV_OPTS_ENABLED, true)
+                .putString(BuildConfig.PREFS_KEY_DEV_OPTS_AUTHENTICATED_HASH, hash)
+                .apply()
+    }
+
+    // endregion Methods
 }

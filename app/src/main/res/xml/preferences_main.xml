@@ -3,15 +3,10 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:title="@string/prefs_main_title">
 
-    <com.codepunk.codepunklibstaging.preference.PasswordPreference
-        android:key="@string/prefs_key_dev_opts"
+    <com.codepunk.codepunklibstaging.preference.SwitchTwoTargetPreference
+        android:key="@string/prefs_key_dev_opts_enabled"
         android:icon="@drawable/ic_preference_developer_options"
         android:title="@string/prefs_dev_opts_title"
-        android:dialogMessage="@string/prefs_dev_opts_enter_password"
-        android:summary="Summary"
-        android:selectable="true"
-        android:enabled="true"
-        android:layout="@layout/android_preference_two_target"
         android:order="100" />
 
     <android.support.v7.preference.Preference
@@ -21,12 +16,5 @@
         android:selectable="true"
         android:enabled="true"
         android:order="300" />
-
-    <com.codepunk.codepunklib.android.settings.widget.MasterSwitchPreference
-        android:key="MASTER_SWITCH_PREFERENCE"
-        android:icon="@drawable/ic_preference_developer_options"
-        android:title="Master Switch Preference"
-        android:summary="Summary"
-        android:order="400" />
 
 </android.support.v7.preference.PreferenceScreen>

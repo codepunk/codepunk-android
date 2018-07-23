@@ -66,7 +66,7 @@ class PreferencesActivity: AppCompatActivity() {
     
     // region Methods
 
-    fun startActivity(type: PreferencesType) {
+    fun startPreferencesActivity(type: PreferencesType) {
         startActivity(Intent(ACTION_SETTINGS).apply {
             putExtras(Bundle().apply {
                 putSerializable(EXTRA_PREFERENCES_TYPE, type)

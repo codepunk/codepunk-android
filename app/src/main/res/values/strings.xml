@@ -3,6 +3,10 @@
     <!-- Good resource for naming convention:
          https://jeroenmols.com/blog/2016/03/07/resourcenaming/ -->
 
+    <!-- Generic -->
+
+    <string name="incorrect_password">Incorrect password</string>
+
     <!-- Application -->
 
     <string name="app_name">Codepunk</string>
@@ -24,9 +28,11 @@
 
     <string name="prefs_about_summary">Version %s</string>
 
+    <string name="prefs_dev_opts_password_dialog_title">Developer password</string>
+    <string name="prefs_dev_opts_password_dialog_message">Enter the password to enable developer options:</string>
     <string name="prefs_dev_opts_password_hint">Password</string>
 
-    <string name="prefs_dev_opts_redundant_unlock_request">No need, developer options have already been unlocked</string>
+    <string name="prefs_dev_opts_redundant_show_request">No need, developer options are already unlocked</string>
     <string name="prefs_dev_opts_steps_from_unlocking">You are now %d steps away from unlocking developer options!</string>
 
     <string name="prefs_dev_opts_enter_password">Enter the password to enable developer options:</string>
