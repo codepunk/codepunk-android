@@ -17,8 +17,8 @@ import com.codepunk.codepunk.preferences.viewmodel.DeveloperPreferencesViewModel
 import com.codepunk.codepunk.preferences.viewmodel.DeveloperPreferencesViewModel.DeveloperOptionsState
 import com.codepunk.codepunk.util.EXTRA_DEVELOPER_PASSWORD_HASH
 import com.codepunk.codepunk.util.startLaunchActivity
+import com.codepunk.codepunklib.android.settingslib.TwoTargetSwitchPreference
 import com.codepunk.codepunklib.preference.DialogDelegatePreferenceFragment
-import com.codepunk.codepunklib.preference.SwitchTwoTargetPreference
 
 // region Constants
 
@@ -66,7 +66,7 @@ class MainPreferenceFragment:
     }
 
     private val developerOptionsPreference by lazy {
-        findPreference(BuildConfig.PREFS_KEY_DEV_OPTS_ENABLED) as SwitchTwoTargetPreference
+        findPreference(BuildConfig.PREFS_KEY_DEV_OPTS_ENABLED) as TwoTargetSwitchPreference
     }
 
     private val aboutPreference by lazy {
