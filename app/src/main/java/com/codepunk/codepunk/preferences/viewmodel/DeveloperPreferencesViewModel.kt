@@ -2,6 +2,7 @@ package com.codepunk.codepunk.preferences.viewmodel
 
 import android.app.Application
 import android.arch.lifecycle.AndroidViewModel
+import android.arch.lifecycle.MediatorLiveData
 import android.arch.lifecycle.MutableLiveData
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
@@ -12,6 +13,12 @@ class DeveloperPreferencesViewModel(val app: Application) :
         SharedPreferences.OnSharedPreferenceChangeListener {
 
     // region Nested classes
+
+    enum class DeveloperOptionsState {
+        LOCKED,
+        UNLOCKED,
+        ENABLED
+    }
 
     companion object {
         private val TAG = DeveloperPreferencesViewModel::class.java.simpleName
@@ -28,6 +35,25 @@ class DeveloperPreferencesViewModel(val app: Application) :
     var developerOptionsEnabled = MutableLiveData<Boolean>()
 
     var developerOptionsUnlocked = MutableLiveData<Boolean>()
+
+    var developerOptionsState =
+            MediatorLiveData<DeveloperOptionsState>().apply {
+                addSource(developerOptionsUnlocked) { unlocked ->
+                    updateDeveloperOptionsState(
+                            unlocked == true,
+                            developerOptionsAuthenticatedHash.value)
+                }
+                addSource(developerOptionsEnabled) {
+                    updateDeveloperOptionsState(
+                            developerOptionsUnlocked.value == true,
+                            developerOptionsAuthenticatedHash.value)
+                }
+                addSource(developerOptionsAuthenticatedHash) { hash ->
+                    updateDeveloperOptionsState(
+                            developerOptionsUnlocked.value == true,
+                            hash)
+                }
+    }
 
     // endregion Fields
 
@@ -82,32 +108,31 @@ class DeveloperPreferencesViewModel(val app: Application) :
 
     // region Methods
 
-    fun lockDeveloperOptions() {
+    fun updateDeveloperOptions(unlocked: Boolean, hash: String? = null) {
+        val enabled: Boolean = (unlocked && hash != null)
         PreferenceManager.getDefaultSharedPreferences(app)
                 .edit()
-                .putBoolean(BuildConfig.PREFS_KEY_DEV_OPTS_UNLOCKED, false)
-                .putBoolean(BuildConfig.PREFS_KEY_DEV_OPTS_ENABLED, false)
-                .putString(BuildConfig.PREFS_KEY_DEV_OPTS_AUTHENTICATED_HASH, null)
-                .apply()
-    }
-
-    fun unlockDeveloperOptions() {
-        PreferenceManager.getDefaultSharedPreferences(app)
-                .edit()
-                .putBoolean(BuildConfig.PREFS_KEY_DEV_OPTS_UNLOCKED, true)
-                .putBoolean(BuildConfig.PREFS_KEY_DEV_OPTS_ENABLED, false)
-                .putString(BuildConfig.PREFS_KEY_DEV_OPTS_AUTHENTICATED_HASH, null)
-                .apply()
-    }
-
-    fun enableDeveloperOptions(hash: String) {
-        PreferenceManager.getDefaultSharedPreferences(app)
-                .edit()
-                .putBoolean(BuildConfig.PREFS_KEY_DEV_OPTS_UNLOCKED, true)
-                .putBoolean(BuildConfig.PREFS_KEY_DEV_OPTS_ENABLED, true)
-                .putString(BuildConfig.PREFS_KEY_DEV_OPTS_AUTHENTICATED_HASH, hash)
+                .putBoolean(BuildConfig.PREFS_KEY_DEV_OPTS_UNLOCKED, unlocked)
+                .putBoolean(BuildConfig.PREFS_KEY_DEV_OPTS_ENABLED, enabled)
+                .putString(BuildConfig.PREFS_KEY_DEV_OPTS_AUTHENTICATED_HASH,
+                        if (unlocked) hash else null)
                 .apply()
     }
 
     // endregion Methods
+
+    // region Private methods
+
+    private fun updateDeveloperOptionsState(unlocked: Boolean, hash: String? = null) {
+        val newValue = when {
+            !unlocked -> DeveloperOptionsState.LOCKED
+            hash == null -> DeveloperOptionsState.UNLOCKED
+            else -> DeveloperOptionsState.ENABLED
+        }
+        if (developerOptionsState.value != newValue) {
+            developerOptionsState.value = newValue
+        }
+    }
+
+    // endregion Private methods
 }

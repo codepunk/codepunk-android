@@ -8,6 +8,9 @@ import android.app.Application
  * MVVM stuff
  */
 
+/**
+ * The Application class for the Codepunk app.
+ */
 class CodepunkApp: Application() {
 
 }

@@ -15,7 +15,6 @@ android {
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
-//        def developer_password_hash = "cdb3f12612b12e7993aaa8e2cc7de87a02c18c62fb0e94578cadd1846b20e6c4"
         def developer_password_hash = "cdb3f12612b12e7993aaa8e2cc7de87a02c18c62fb0e94578cadd1846b20e6c4"
         buildConfigField("String", "DEVELOPER_PASSWORD_HASH", "\"" + developer_password_hash + "\"")
         resValue "string", "developer_password_hash", developer_password_hash
@@ -43,7 +42,7 @@ android {
     }
 
     applicationVariants.all { variant ->
-        //region Preference keys
+        // region Preference keys
 
         def prefs_key_about = variant.applicationId + ".PREFS_KEY_ABOUT"
         def prefs_key_api_environment = variant.applicationId + ".PREFS_KEY_API_ENVIRONMENT"
@@ -63,14 +62,13 @@ android {
         variant.resValue "string", "prefs_key_dev_opts_enabled", prefs_key_dev_opts_enabled
         variant.resValue "string", "prefs_key_dev_opts_unlocked", prefs_key_dev_opts_unlocked
 
-        //endregion Preference keys
+        // endregion Preference keys
     }
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation "org.jetbrains.anko:anko-commons:$anko_version"
     implementation "android.arch.lifecycle:extensions:$android_lifecycle_version"
     implementation "com.android.support:support-v4:$android_support_version"
     implementation "com.android.support:appcompat-v7:$android_support_version"

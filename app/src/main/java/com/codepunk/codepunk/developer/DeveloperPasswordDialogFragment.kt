@@ -16,7 +16,6 @@ import com.codepunk.codepunk.util.EXTRA_DEVELOPER_PASSWORD_HASH
 import com.codepunk.codepunklibstaging.util.shake
 import org.apache.commons.codec.digest.DigestUtils
 import org.apache.commons.codec.digest.MessageDigestAlgorithms
-import org.jetbrains.anko.findOptional
 
 class DeveloperPasswordDialogFragment: AppCompatDialogFragment(),
         DialogInterface.OnShowListener,
@@ -24,18 +23,12 @@ class DeveloperPasswordDialogFragment: AppCompatDialogFragment(),
 
     // region Nested classes
 
-    interface OnPrepareDialogBuilderListener {
-        fun onPrepareDialogBuilder(builder: AlertDialog.Builder)
-    }
-
     companion object {
         private val TAG = DeveloperPasswordDialogFragment::class.java.simpleName
 
-        fun newInstance(listener: OnPrepareDialogBuilderListener? = null) :
-                DeveloperPasswordDialogFragment {
-            return DeveloperPasswordDialogFragment().apply {
-                onPrepareDialogBuilderListener = listener
-            }
+        // TODO Allow for different message
+        fun newInstance() : DeveloperPasswordDialogFragment {
+            return DeveloperPasswordDialogFragment()
         }
     }
 
@@ -44,13 +37,13 @@ class DeveloperPasswordDialogFragment: AppCompatDialogFragment(),
     // region Properties
 
     private val edit by lazy {
-        dialog.findViewById<EditText>(android.R.id.edit)
+        dialog.findViewById(android.R.id.edit) as? EditText
                 ?: throw IllegalStateException("Dialog view must contain an EditText with id " +
                         "@android:id/edit")
     }
 
     private val layout by lazy {
-        dialog.findOptional<TextInputLayout>(R.id.layout)
+        dialog.findViewById(R.id.layout) as? TextInputLayout
     }
 
     private val negativeBtn by lazy {
@@ -63,8 +56,6 @@ class DeveloperPasswordDialogFragment: AppCompatDialogFragment(),
 
     private val digestUtils = DigestUtils(MessageDigestAlgorithms.SHA_256)
 
-    var onPrepareDialogBuilderListener: OnPrepareDialogBuilderListener? = null
-
     // endregion Properties
 
     // region Inherited methods
@@ -72,13 +63,10 @@ class DeveloperPasswordDialogFragment: AppCompatDialogFragment(),
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         return AlertDialog.Builder(requireContext())
                 .setTitle(R.string.prefs_dev_opts_password_dialog_title)
-                .setMessage(R.string.prefs_dev_opts_password_dialog_message)
+                .setMessage(R.string.prefs_dev_opts_password_dialog_message) // TODO Allow for different message
                 .setView(R.layout.fragment_dialog_developer_password)
                 .setPositiveButton(android.R.string.ok, null)
                 .setNegativeButton(android.R.string.cancel, null)
-                .apply {
-                    onPrepareDialogBuilderListener?.onPrepareDialogBuilder(this)
-                }
                 .create().apply {
                     setOnShowListener(this@DeveloperPasswordDialogFragment)
                 }
@@ -89,7 +77,7 @@ class DeveloperPasswordDialogFragment: AppCompatDialogFragment(),
     // region Implemented methods
     override fun onShow(dialog: DialogInterface?) {
         positiveBtn.setOnClickListener(this)
-// TODO        negativeBtn.setOnClickListener(this)
+// TODO        negativeBtn.setOnClickListener(this) <-- Might need more here if stale password
     }
 
     override fun onClick(view: View?) {
@@ -114,7 +102,7 @@ class DeveloperPasswordDialogFragment: AppCompatDialogFragment(),
             }
             negativeBtn -> {
                 if (isCancelable) {
-                    dialog.cancel()
+                    dialog.cancel() // TODO Stale?
                 }
             }
         }

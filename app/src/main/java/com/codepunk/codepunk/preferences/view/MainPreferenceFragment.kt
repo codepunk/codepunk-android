@@ -6,21 +6,24 @@ import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.preference.Preference
-import android.util.Log
 import android.widget.Toast
 import com.codepunk.codepunk.BuildConfig
 import com.codepunk.codepunk.R
 import com.codepunk.codepunk.developer.DeveloperPasswordDialogFragment
+import com.codepunk.codepunk.developer.DisableDeveloperOptionsDialogFragment
 import com.codepunk.codepunk.preferences.PreferencesActivity
 import com.codepunk.codepunk.preferences.PreferencesActivity.PreferencesType
 import com.codepunk.codepunk.preferences.viewmodel.DeveloperPreferencesViewModel
+import com.codepunk.codepunk.preferences.viewmodel.DeveloperPreferencesViewModel.DeveloperOptionsState
 import com.codepunk.codepunk.util.EXTRA_DEVELOPER_PASSWORD_HASH
+import com.codepunk.codepunk.util.startLaunchActivity
 import com.codepunk.codepunklib.preference.DialogDelegatePreferenceFragment
 import com.codepunk.codepunklibstaging.preference.SwitchTwoTargetPreference
 
 // region Constants
 
-private const val DEVELOPER_PASSWORD_DIALOG_FRAGMENT_REQUEST_CODE = 0
+private const val DEVELOPER_PASSWORD_REQUEST_CODE = 0
+private const val DISABLE_DEVELOPER_OPTIONS_REQUEST_CODE = 1
 
 private const val DEFAULT_STEPS_REMAINING: Int = 7
 private const val STEPS_TO_SHOW_TOAST = 3
@@ -40,6 +43,9 @@ class MainPreferenceFragment:
 
         private val DEVELOPER_PASSWORD_DIALOG_FRAGMENT_TAG =
                 MainPreferenceFragment::class.java.name + ".DEVELOPER_PASSWORD_DIALOG"
+
+        private val DISABLE_DEVELOPER_OPTIONS_DIALOG_FRAGMENT_TAG =
+                MainPreferenceFragment::class.java.name + ".DISABLE_DEVELOPER_OPTIONS_DIALOG"
     }
 
     // endregion Nested classes
@@ -90,13 +96,22 @@ class MainPreferenceFragment:
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         when (requestCode) {
-            DEVELOPER_PASSWORD_DIALOG_FRAGMENT_REQUEST_CODE -> {
+            DEVELOPER_PASSWORD_REQUEST_CODE -> {
                 when (resultCode) {
                     RESULT_OK -> {
                         data?.run {
-                            developerPreferencesViewModel.enableDeveloperOptions(
+                            developerPreferencesViewModel.updateDeveloperOptions(
+                                    true,
                                     getStringExtra(EXTRA_DEVELOPER_PASSWORD_HASH))
                         }
+                    }
+                }
+            }
+            DISABLE_DEVELOPER_OPTIONS_REQUEST_CODE -> {
+                when (resultCode) {
+                    RESULT_OK -> {
+                        developerPreferencesViewModel.updateDeveloperOptions(true)
+                        requireContext().startLaunchActivity()
                     }
                 }
             }
@@ -118,20 +133,10 @@ class MainPreferenceFragment:
                         aboutPreference.summary = getString(R.string.prefs_about_summary, version)
                     })
 
-            developerOptionsAuthenticatedHash.observe(
+            developerOptionsState.observe(
                     this@MainPreferenceFragment,
-                    Observer { hash -> onAuthenticatedDeveloperHashChange(hash) })
-
-            developerOptionsEnabled.observe(
-                    this@MainPreferenceFragment,
-                    Observer { enabled ->
-                        onDeveloperOptionsEnabledChange(enabled == true)
-                    })
-
-            developerOptionsUnlocked.observe(
-                    this@MainPreferenceFragment,
-                    Observer { unlocked ->
-                        onDeveloperOptionsUnlockedChange(unlocked == true)
+                    Observer { state ->
+                        onDeveloperOptionsStateChange(state ?: DeveloperOptionsState.LOCKED)
                     })
         }
     }
@@ -151,9 +156,12 @@ class MainPreferenceFragment:
                 } else {
                     // TODO Dialog to ask if user is sure
                     // TODO TEMP
-                    developerPreferencesViewModel.unlockDeveloperOptions()
+
+                    showDisableDeveloperOptionsDialogFragment()
+
+//                    developerPreferencesViewModel.unlockDeveloperOptions()
                     // END TEMP
-                    true
+                    false
                 }
             }
             else -> { true }
@@ -171,14 +179,21 @@ class MainPreferenceFragment:
                     }
                     stepsRemaining == 1 -> {
                         stepsRemaining = 0
-                        developerPreferencesViewModel.unlockDeveloperOptions()
+                        developerPreferencesViewModel.updateDeveloperOptions(true)
                     }
                     else -> onRedundantShowRequest()
                 }
                 false
             }
             developerOptionsPreference -> {
-                preferencesActivity.startPreferencesActivity(PreferencesType.DEVELOPER_OPTIONS)
+                when (developerPreferencesViewModel.developerOptionsState.value) {
+                    DeveloperOptionsState.ENABLED ->
+                        preferencesActivity.startPreferencesActivity(
+                                PreferencesType.DEVELOPER_OPTIONS)
+                    DeveloperOptionsState.UNLOCKED ->
+                        showDeveloperPasswordDialogFragment()
+                    else -> { /* No action */ }
+                }
                 true
             }
             else -> {
@@ -191,21 +206,12 @@ class MainPreferenceFragment:
 
     // region Private methods
 
-    private fun onAuthenticatedDeveloperHashChange(hash: String?) {
-        Log.d(TAG, "onAuthenticatedDeveloperHashChange!!! hash=$hash")
-    }
-
-    private fun onDeveloperOptionsEnabledChange(enabled: Boolean) {
-        developerOptionsPreference.isChecked = enabled
-    }
-
-    private fun onDeveloperOptionsUnlockedChange(unlocked: Boolean) {
-        preferenceScreen.apply {
-            if (unlocked) {
-                addPreference(developerOptionsPreference)
-            } else {
-                removePreference(developerOptionsPreference)
-            }
+    private fun onDeveloperOptionsStateChange(state: DeveloperOptionsState) {
+        developerOptionsPreference.isChecked = (state == DeveloperOptionsState.ENABLED)
+        when (state) {
+            DeveloperOptionsState.LOCKED ->
+                preferenceScreen.removePreference(developerOptionsPreference)
+            else -> preferenceScreen.addPreference(developerOptionsPreference)
         }
     }
 
@@ -236,8 +242,22 @@ class MainPreferenceFragment:
             DeveloperPasswordDialogFragment.newInstance()
                     .apply { setTargetFragment(
                             this@MainPreferenceFragment,
-                            DEVELOPER_PASSWORD_DIALOG_FRAGMENT_REQUEST_CODE) }
+                            DEVELOPER_PASSWORD_REQUEST_CODE) }
                     .show(this, DEVELOPER_PASSWORD_DIALOG_FRAGMENT_TAG)
+        }
+    }
+
+    private fun showDisableDeveloperOptionsDialogFragment() {
+        with (requireFragmentManager()) {
+            if (findFragmentByTag(DISABLE_DEVELOPER_OPTIONS_DIALOG_FRAGMENT_TAG) != null) {
+                return
+            }
+
+            DisableDeveloperOptionsDialogFragment.newInstance()
+                    .apply { setTargetFragment(
+                            this@MainPreferenceFragment,
+                            DISABLE_DEVELOPER_OPTIONS_REQUEST_CODE) }
+                    .show(this, DISABLE_DEVELOPER_OPTIONS_DIALOG_FRAGMENT_TAG)
         }
     }
 
