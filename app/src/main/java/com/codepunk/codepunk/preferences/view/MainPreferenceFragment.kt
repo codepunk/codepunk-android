@@ -1,6 +1,6 @@
 package com.codepunk.codepunk.preferences.view
 
-import android.app.Activity.RESULT_OK
+import android.app.Activity
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
@@ -18,7 +18,7 @@ import com.codepunk.codepunk.preferences.viewmodel.DeveloperPreferencesViewModel
 import com.codepunk.codepunk.util.EXTRA_DEVELOPER_PASSWORD_HASH
 import com.codepunk.codepunk.util.startLaunchActivity
 import com.codepunk.codepunklib.preference.DialogDelegatePreferenceFragment
-import com.codepunk.codepunklibstaging.preference.SwitchTwoTargetPreference
+import com.codepunk.codepunklib.preference.SwitchTwoTargetPreference
 
 // region Constants
 
@@ -39,6 +39,7 @@ class MainPreferenceFragment:
     // region Nested classes
 
     companion object {
+        @Suppress("unused")
         private val TAG = MainPreferenceFragment::class.java.simpleName
 
         private val DEVELOPER_PASSWORD_DIALOG_FRAGMENT_TAG =
@@ -98,7 +99,7 @@ class MainPreferenceFragment:
         when (requestCode) {
             DEVELOPER_PASSWORD_REQUEST_CODE -> {
                 when (resultCode) {
-                    RESULT_OK -> {
+                    Activity.RESULT_OK -> {
                         data?.run {
                             developerPreferencesViewModel.updateDeveloperOptions(
                                     true,
@@ -109,8 +110,9 @@ class MainPreferenceFragment:
             }
             DISABLE_DEVELOPER_OPTIONS_REQUEST_CODE -> {
                 when (resultCode) {
-                    RESULT_OK -> {
+                    Activity.RESULT_OK -> {
                         developerPreferencesViewModel.updateDeveloperOptions(true)
+                        // TODO Set api environment to "Production"
                         requireContext().startLaunchActivity()
                     }
                 }
@@ -138,6 +140,9 @@ class MainPreferenceFragment:
                     Observer { state ->
                         onDeveloperOptionsStateChange(state ?: DeveloperOptionsState.LOCKED)
                     })
+
+            onDeveloperOptionsStateChange(
+                    developerOptionsState.value ?: DeveloperOptionsState.LOCKED)
         }
     }
 

@@ -21,6 +21,7 @@ class DeveloperPreferencesViewModel(val app: Application) :
     }
 
     companion object {
+        @Suppress("unused")
         private val TAG = DeveloperPreferencesViewModel::class.java.simpleName
     }
 
@@ -30,9 +31,7 @@ class DeveloperPreferencesViewModel(val app: Application) :
 
     var appVersion = MutableLiveData<String>()
 
-    var developerOptionsAuthenticatedHash = MutableLiveData<String>()
-
-    var developerOptionsEnabled = MutableLiveData<Boolean>()
+    private var developerOptionsAuthenticatedHash = MutableLiveData<String>()
 
     var developerOptionsUnlocked = MutableLiveData<Boolean>()
 
@@ -41,11 +40,6 @@ class DeveloperPreferencesViewModel(val app: Application) :
                 addSource(developerOptionsUnlocked) { unlocked ->
                     updateDeveloperOptionsState(
                             unlocked == true,
-                            developerOptionsAuthenticatedHash.value)
-                }
-                addSource(developerOptionsEnabled) {
-                    updateDeveloperOptionsState(
-                            developerOptionsUnlocked.value == true,
                             developerOptionsAuthenticatedHash.value)
                 }
                 addSource(developerOptionsAuthenticatedHash) { hash ->
@@ -71,11 +65,11 @@ class DeveloperPreferencesViewModel(val app: Application) :
             developerOptionsAuthenticatedHash.value =
                     getString(BuildConfig.PREFS_KEY_DEV_OPTS_AUTHENTICATED_HASH, null)
 
-            developerOptionsEnabled.value =
-                    getBoolean(BuildConfig.PREFS_KEY_DEV_OPTS_ENABLED, false)
-
             developerOptionsUnlocked.value =
                     getBoolean(BuildConfig.PREFS_KEY_DEV_OPTS_UNLOCKED, false)
+
+            updateDeveloperOptionsState(developerOptionsUnlocked.value == true,
+                    developerOptionsAuthenticatedHash.value)
 
             registerOnSharedPreferenceChangeListener(this@DeveloperPreferencesViewModel)
         }
@@ -94,9 +88,6 @@ class DeveloperPreferencesViewModel(val app: Application) :
             when (key) {
                 BuildConfig.PREFS_KEY_DEV_OPTS_AUTHENTICATED_HASH ->
                     developerOptionsAuthenticatedHash.value = getString(key, null)
-
-                BuildConfig.PREFS_KEY_DEV_OPTS_ENABLED ->
-                    developerOptionsEnabled.value = getBoolean(key, false)
 
                 BuildConfig.PREFS_KEY_DEV_OPTS_UNLOCKED ->
                     developerOptionsUnlocked.value = getBoolean(key, false)

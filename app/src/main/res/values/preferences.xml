@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-    <string name="preference_key_api_environment"><xliff:g id="preference_key">com.codepunk.codepunk.KEY_API_ENVIRONMENT</xliff:g></string>
-    <string name="preference_key_developer"><xliff:g id="preference_key">com.codepunk.codepunk.KEY_DEVELOPER</xliff:g></string>
-    <string name="preference_key_developer_options"><xliff:g id="preference_key">com.codepunk.codepunk.KEY_DEV_OPTS</xliff:g></string>
-    <string name="preference_key_disable_developer_options"><xliff:g id="preference_key">com.codepunk.codepunk.KEY_DISABLE_DEV_OPTS</xliff:g></string>
-    <string name="preference_key_validated_developer_options_passcode_hash"><xliff:g id="preference_key">com.codepunk.codepunk.KEY_VALIDATED_DEV_OPTS_PASSCODE_HASH</xliff:g></string>
-    <string name="preference_key_version"><xliff:g id="preference_key">com.codepunk.codepunk.KEY_VERSION</xliff:g></string>
-</resources>
