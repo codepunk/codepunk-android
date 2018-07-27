@@ -6,7 +6,7 @@
     <!--
     <com.codepunk.codepunklib.preference.SwitchTwoTargetPreference
     -->
-    <com.codepunk.codepunklib.android.settingslib.TwoTargetSwitchPreference
+    <com.codepunk.codepunklib.preference.TwoTargetSwitchPreference
         android:key="@string/prefs_key_dev_opts_enabled"
         android:icon="@drawable/ic_preference_developer_options"
         android:title="@string/prefs_dev_opts_title"

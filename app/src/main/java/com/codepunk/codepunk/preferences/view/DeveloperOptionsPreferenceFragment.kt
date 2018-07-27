@@ -4,6 +4,7 @@ import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v7.preference.ListPreference
 import android.support.v7.preference.Preference
+import android.support.v7.preference.PreferenceFragmentCompat
 import com.codepunk.codepunk.BuildConfig
 import com.codepunk.codepunk.R
 import com.codepunk.codepunk.api.environment.ApiEnvironment
@@ -12,7 +13,7 @@ import com.codepunk.codepunk.util.populate
 import com.codepunk.codepunklib.preference.DialogDelegatePreferenceFragment
 
 class DeveloperOptionsPreferenceFragment:
-        DialogDelegatePreferenceFragment(),
+        PreferenceFragmentCompat(),
         Preference.OnPreferenceClickListener {
 
     //region Nested classes

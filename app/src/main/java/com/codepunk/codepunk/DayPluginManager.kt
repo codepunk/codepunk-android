@@ -5,8 +5,7 @@ import android.widget.Toast
 import com.codepunk.codepunklib.util.plugin.PluginManager
 import java.util.*
 
-abstract class DayPlugin(_context: Context) {
-    val context: Context = _context
+abstract class DayPlugin(val context: Context) {
     abstract fun showGreeting()
 }
 
@@ -30,21 +29,30 @@ class MondayPlugin(_context: Context): DayPlugin(_context) {
     }
 }
 
+class ThursdayPlugin(_context: Context): DayPlugin(_context) {
+    override fun showGreeting() {
+        Toast.makeText(
+                context,
+                "Hooray, it's Thursday!",
+                Toast.LENGTH_LONG)
+                .show()
+    }
+}
+
 class DayPluginManager(
-        _context: Context,
-        _pluginListener: PluginListener<DayPlugin, Calendar>? = null):
-        PluginManager<DayPlugin, Calendar>(_pluginListener) {
-    private val context: Context = _context
+        val context: Context,
+        val pluginListener: PluginListener<DayPlugin, Calendar>? = null):
+        PluginManager<DayPlugin, Calendar>(pluginListener) {
 
     override fun isPluginStale(state: Calendar): Boolean {
-        return activeState == null || isMonday(activeState!!) != isMonday(state)
+        return activeState?.get(Calendar.DAY_OF_WEEK) != state.get(Calendar.DAY_OF_WEEK)
     }
 
     override fun newPlugin(state: Calendar): DayPlugin {
-        return if (isMonday(state)) MondayPlugin(context) else BaseDayPlugin(context)
-    }
-
-    private fun isMonday(calendar: Calendar): Boolean {
-        return calendar.get(Calendar.DAY_OF_WEEK) == Calendar.MONDAY
+        return when (state.get(Calendar.DAY_OF_WEEK)) {
+            Calendar.MONDAY -> MondayPlugin(context)
+            Calendar.THURSDAY -> ThursdayPlugin(context)
+            else -> BaseDayPlugin(context)
+        }
     }
 }

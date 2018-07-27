@@ -6,6 +6,7 @@ import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.preference.Preference
+import android.support.v7.preference.PreferenceFragmentCompat
 import android.widget.Toast
 import com.codepunk.codepunk.BuildConfig
 import com.codepunk.codepunk.R
@@ -17,8 +18,8 @@ import com.codepunk.codepunk.preferences.viewmodel.DeveloperPreferencesViewModel
 import com.codepunk.codepunk.preferences.viewmodel.DeveloperPreferencesViewModel.DeveloperOptionsState
 import com.codepunk.codepunk.util.EXTRA_DEVELOPER_PASSWORD_HASH
 import com.codepunk.codepunk.util.startLaunchActivity
-import com.codepunk.codepunklib.android.settingslib.TwoTargetSwitchPreference
-import com.codepunk.codepunklib.preference.DialogDelegatePreferenceFragment
+import com.codepunk.codepunklib.preference.DialogFragmentCompatFactory
+import com.codepunk.codepunklib.preference.TwoTargetSwitchPreference
 
 // region Constants
 
@@ -32,7 +33,7 @@ private const val SAVE_STATE_STEPS_REMAINING = "stepsRemaining"
 // endregion Constants
 
 class MainPreferenceFragment:
-        DialogDelegatePreferenceFragment(),
+        PreferenceFragmentCompat(),
         Preference.OnPreferenceChangeListener,
         Preference.OnPreferenceClickListener {
 
@@ -143,6 +144,12 @@ class MainPreferenceFragment:
 
             onDeveloperOptionsStateChange(
                     developerOptionsState.value ?: DeveloperOptionsState.LOCKED)
+        }
+    }
+
+    override fun onDisplayPreferenceDialog(preference: Preference?) {
+        if (!DialogFragmentCompatFactory.onPreferenceDisplayDialog(this, preference)) {
+            super.onDisplayPreferenceDialog(preference)
         }
     }
 

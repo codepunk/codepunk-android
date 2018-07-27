@@ -1,5 +1,6 @@
 package com.codepunk.codepunk.developer
 
+import android.animation.AnimatorInflater
 import android.app.Activity
 import android.app.Dialog
 import android.content.DialogInterface
@@ -13,7 +14,8 @@ import android.widget.EditText
 import com.codepunk.codepunk.BuildConfig
 import com.codepunk.codepunk.R
 import com.codepunk.codepunk.util.EXTRA_DEVELOPER_PASSWORD_HASH
-import com.codepunk.codepunklibstaging.util.shake
+import com.codepunk.codepunklib.view.animation.ShakeInterpolator
+import org.apache.commons.codec.binary.Hex
 import org.apache.commons.codec.digest.DigestUtils
 import org.apache.commons.codec.digest.MessageDigestAlgorithms
 
@@ -56,6 +58,12 @@ class DeveloperPasswordDialogFragment: AppCompatDialogFragment(),
 
     private val digestUtils = DigestUtils(MessageDigestAlgorithms.SHA_256)
 
+    private val shakeAnimator by lazy {
+        AnimatorInflater.loadAnimator(requireContext(), R.animator.shake).apply {
+            interpolator = ShakeInterpolator()
+        }
+    }
+
     // endregion Properties
 
     // region Inherited methods
@@ -69,6 +77,7 @@ class DeveloperPasswordDialogFragment: AppCompatDialogFragment(),
                 .setNegativeButton(android.R.string.cancel, null)
                 .create().apply {
                     setOnShowListener(this@DeveloperPasswordDialogFragment)
+                    shakeAnimator.setTarget(window.decorView)
                 }
     }
 
@@ -84,8 +93,8 @@ class DeveloperPasswordDialogFragment: AppCompatDialogFragment(),
         when (view) {
             positiveBtn -> {
                 val password = edit.text.toString()
-                if (BuildConfig.DEVELOPER_PASSWORD_HASH.equals(
-                                digestUtils.digestAsHex(password), true)) {
+                val hex = String(Hex.encodeHex(digestUtils.digest(password)))
+                if (BuildConfig.DEVELOPER_PASSWORD_HASH.equals(hex, true)) {
                     dialog.dismiss()
                     targetFragment?.onActivityResult(
                             targetRequestCode,
@@ -97,7 +106,7 @@ class DeveloperPasswordDialogFragment: AppCompatDialogFragment(),
                             })
                 } else {
                     layout?.error = getString(R.string.incorrect_password)
-                    dialog.window.decorView.shake()
+                    shakeAnimator.start()
                 }
             }
             negativeBtn -> {
