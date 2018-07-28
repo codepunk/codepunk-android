@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.preference.Preference
 import android.support.v7.preference.PreferenceFragmentCompat
-import android.support.v7.preference.PreferenceFragmentCompat.OnPreferenceDisplayDialogCallback
 import android.view.MenuItem
 import com.codepunk.codepunk.preferences.view.DeveloperOptionsPreferenceFragment
 import com.codepunk.codepunk.preferences.view.MainPreferenceFragment
@@ -17,7 +16,7 @@ import com.codepunk.codepunklib.preference.displayCustomPreferenceDialogFragment
 // since it's basically a wrapper for preference fragments.
 
 class PreferencesActivity: AppCompatActivity(),
-        OnPreferenceDisplayDialogCallback {
+        PreferenceFragmentCompat.OnPreferenceDisplayDialogCallback {
 
     // region Nested classes
 
