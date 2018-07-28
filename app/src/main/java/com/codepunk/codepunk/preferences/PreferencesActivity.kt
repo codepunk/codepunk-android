@@ -3,17 +3,21 @@ package com.codepunk.codepunk.preferences
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.preference.Preference
 import android.support.v7.preference.PreferenceFragmentCompat
+import android.support.v7.preference.PreferenceFragmentCompat.OnPreferenceDisplayDialogCallback
 import android.view.MenuItem
 import com.codepunk.codepunk.preferences.view.DeveloperOptionsPreferenceFragment
 import com.codepunk.codepunk.preferences.view.MainPreferenceFragment
 import com.codepunk.codepunk.util.ACTION_SETTINGS
 import com.codepunk.codepunk.util.EXTRA_PREFERENCES_TYPE
+import com.codepunk.codepunklib.preference.displayCustomPreferenceDialogFragment
 
 // TODO Maybe move this to main preferences package. Doesn't really need to be in "view"
 // since it's basically a wrapper for preference fragments.
 
-class PreferencesActivity: AppCompatActivity() {
+class PreferencesActivity: AppCompatActivity(),
+        OnPreferenceDisplayDialogCallback {
 
     // region Nested classes
 
@@ -63,6 +67,17 @@ class PreferencesActivity: AppCompatActivity() {
     }
 
     // endregion Inherited methods
+
+    // region Implemented methods
+
+    // PreferenceFragmentCompat.OnPreferenceDisplayDialogCallback
+    override fun onPreferenceDisplayDialog(
+            caller: PreferenceFragmentCompat,
+            pref: Preference?): Boolean {
+        return caller.displayCustomPreferenceDialogFragment(pref)
+    }
+
+    // endregion Implemented methods
     
     // region Methods
 

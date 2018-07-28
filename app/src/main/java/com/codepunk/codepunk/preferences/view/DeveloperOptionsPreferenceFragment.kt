@@ -10,7 +10,6 @@ import com.codepunk.codepunk.R
 import com.codepunk.codepunk.api.environment.ApiEnvironment
 import com.codepunk.codepunk.preferences.viewmodel.DeveloperPreferencesViewModel
 import com.codepunk.codepunk.util.populate
-import com.codepunk.codepunklib.preference.DialogDelegatePreferenceFragment
 
 class DeveloperOptionsPreferenceFragment:
         PreferenceFragmentCompat(),

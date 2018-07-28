@@ -3,9 +3,6 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:title="@string/prefs_main_title">
 
-    <!--
-    <com.codepunk.codepunklib.preference.SwitchTwoTargetPreference
-    -->
     <com.codepunk.codepunklib.preference.TwoTargetSwitchPreference
         android:key="@string/prefs_key_dev_opts_enabled"
         android:icon="@drawable/ic_preference_developer_options"
@@ -22,5 +19,16 @@
         android:selectable="true"
         android:enabled="true"
         android:order="300" />
+
+    <com.codepunk.codepunklib.android.preference.YesNoPreference
+        android:key="TEST"
+        android:icon="@drawable/ic_preference_info"
+        android:title="Yes/No Preference"
+        android:dialogTitle="Yes/No Preference"
+        android:dialogMessage="Yes or no?"
+        android:selectable="true"
+        android:enabled="true"
+        android:persistent="false"
+        android:order="400" />
 
 </android.support.v7.preference.PreferenceScreen>

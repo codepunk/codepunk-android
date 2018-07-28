@@ -18,7 +18,6 @@ import com.codepunk.codepunk.preferences.viewmodel.DeveloperPreferencesViewModel
 import com.codepunk.codepunk.preferences.viewmodel.DeveloperPreferencesViewModel.DeveloperOptionsState
 import com.codepunk.codepunk.util.EXTRA_DEVELOPER_PASSWORD_HASH
 import com.codepunk.codepunk.util.startLaunchActivity
-import com.codepunk.codepunklib.preference.DialogFragmentCompatFactory
 import com.codepunk.codepunklib.preference.TwoTargetSwitchPreference
 
 // region Constants
@@ -144,12 +143,6 @@ class MainPreferenceFragment:
 
             onDeveloperOptionsStateChange(
                     developerOptionsState.value ?: DeveloperOptionsState.LOCKED)
-        }
-    }
-
-    override fun onDisplayPreferenceDialog(preference: Preference?) {
-        if (!DialogFragmentCompatFactory.onPreferenceDisplayDialog(this, preference)) {
-            super.onDisplayPreferenceDialog(preference)
         }
     }
 
