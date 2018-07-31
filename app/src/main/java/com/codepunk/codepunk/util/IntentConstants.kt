@@ -18,16 +18,42 @@
 
 package com.codepunk.codepunk.util
 
+import android.content.Intent
 import com.codepunk.codepunk.BuildConfig.APPLICATION_ID
+import com.codepunk.codepunk.preferences.view.MainPreferenceFragment
 
+/**
+ * Prefix for all "action" [Intent] constants.
+ */
 private const val ACTION = "$APPLICATION_ID.intent.action"
+
+/**
+ * Prefix for all "category" [Intent] constants.
+ */
 private const val CATEGORY = "$APPLICATION_ID.intent.category"
+
+/**
+ * Prefix for all "extra" [Intent] constants.
+ */
 private const val EXTRA = "$APPLICATION_ID.intent.extra"
 
-const val ACTION_SETTINGS = "$ACTION.SETTINGS"
+/**
+ * Activity Action: Show application preferences.
+ */
+const val ACTION_PREFERENCES = "$ACTION.PREFERENCES"
 
+/**
+ * Used with [ACTION_PREFERENCES] to show the main preferences screen.
+ */
 const val CATEGORY_MAIN = "$CATEGORY.MAIN"
+
+/**
+ * Used with [ACTION_PREFERENCES] to show the developer preferences screen.
+ */
 const val CATEGORY_DEVELOPER = "$CATEGORY.DEVELOPER"
 
+/**
+ * Used as an extra field in [MainPreferenceFragment] to get the hash of a successful developer
+ * password attempt.
+ */
 const val EXTRA_DEVELOPER_PASSWORD_HASH = "$EXTRA.DEVELOPER_PASSWORD_HASH"
-const val EXTRA_PREFERENCES_TYPE = "$EXTRA.PREFERENCES_TYPE"

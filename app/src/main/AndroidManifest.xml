@@ -23,14 +23,14 @@
             android:name=".preferences.PreferencesActivity"
             android:label="@string/prefs_main_title">
             <intent-filter>
-                <action android:name="${applicationId}.intent.action.SETTINGS" />
+                <action android:name="${applicationId}.intent.action.PREFERENCES" />
 
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="${applicationId}.intent.category.MAIN" />
             </intent-filter>
 
             <intent-filter>
-                <action android:name="${applicationId}.intent.action.SETTINGS" />
+                <action android:name="${applicationId}.intent.action.PREFERENCES" />
 
                 <category android:name="${applicationId}.intent.category.DEVELOPER" />
             </intent-filter>

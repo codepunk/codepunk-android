@@ -16,7 +16,10 @@
 
 package com.codepunk.codepunk.api.environment
 
-class ProdApiEnvironmentPlugin: ApiEnvironmentPlugin() {
+/**
+ * The production API environment plugin.
+ */
+class ProdApiEnvironmentPlugin : ApiEnvironmentPlugin() {
 
     // region Properties
 

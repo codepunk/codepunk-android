@@ -19,15 +19,29 @@ package com.codepunk.codepunk.api.environment
 import android.support.annotation.StringRes
 import com.codepunk.codepunk.R
 
+/**
+ * Indicates the API environment the app is currently using to connect to the back end. Each is
+ * initialized with a [nameResId] that specifies the user-readable name of the environment, and
+ * a [baseUrl] that will be used to construct API calls.
+ */
 enum class ApiEnvironment(@StringRes val nameResId: Int, val baseUrl: String) {
+    /**
+     * The production API environment.
+     */
     PROD(
             R.string.api_env_production,
             "" /* TODO */),
 
+    /**
+     * The development API environment.
+     */
     DEV(
             R.string.api_env_development,
             "" /* TODO */),
 
+    /**
+     * The local API environment, indicating that we are connected to a local/virtual box.
+     */
     LOCAL(
             R.string.api_env_local,
             "https://codepunk.test")

@@ -18,17 +18,26 @@ package com.codepunk.codepunk.api.environment
 
 import com.codepunk.codepunklib.util.plugin.PluginManager
 
-object ApiEnvironmentPluginManager: PluginManager<ApiEnvironmentPlugin, ApiEnvironment>() {
+/**
+ * The API environment plugin manager.
+ */
+object ApiEnvironmentPluginManager : PluginManager<ApiEnvironmentPlugin, ApiEnvironment>() {
 
-    //region Inherited methods
+    // region Inherited methods
 
+    /**
+     * Marks the active plugin as stale whenever the API environment changes.
+     */
     override fun isPluginStale(state: ApiEnvironment): Boolean {
         return activeState != state
     }
 
+    /**
+     * Creates a new API environment plugin based on the API environment passed in as [state].
+     */
     override fun newPlugin(state: ApiEnvironment): ApiEnvironmentPlugin {
         return ApiEnvironmentPlugin.newInstance(state)
     }
 
-    //endregion Inherited methods
+    // endregion Inherited methods
 }

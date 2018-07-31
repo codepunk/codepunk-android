@@ -1,5 +1,22 @@
+/*
+ * Copyright (C) 2018 Codepunk, LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.codepunk.codepunk.preferences.view
 
+import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v7.preference.ListPreference
@@ -9,40 +26,40 @@ import com.codepunk.codepunk.BuildConfig
 import com.codepunk.codepunk.R
 import com.codepunk.codepunk.api.environment.ApiEnvironment
 import com.codepunk.codepunk.preferences.viewmodel.DeveloperPreferencesViewModel
-import com.codepunk.codepunk.util.populate
+import com.codepunk.codepunklib.util.populate
 
-class DeveloperOptionsPreferenceFragment:
+/**
+ * A preference fragment that displays developer options preferences to the user. By default,
+ * developer options are not available to the user until they unlock the developer options
+ * preference and authenticate themselves as a developer.
+ */
+class DeveloperOptionsPreferenceFragment :
         PreferenceFragmentCompat(),
         Preference.OnPreferenceClickListener {
 
-    //region Nested classes
+    // region Properties
 
-    companion object {
-        private val TAG = DeveloperOptionsPreferenceFragment::class.java.simpleName
-    }
-
-    //endregion Nested classes
-
-    //region Fields
-
+    /**
+     * The [ViewModel] that stores developer options-related data used by this fragment.
+     */
     private val developerPreferencesViewModel by lazy {
         ViewModelProviders.of(this).get(DeveloperPreferencesViewModel::class.java)
     }
 
+    /**
+     * The API environment preference.
+     */
     private val apiEnvironmentPreference by lazy {
         findPreference(BuildConfig.PREFS_KEY_API_ENVIRONMENT) as ListPreference
     }
 
-    /*
-    private val disableDeveloperOptionsPreference by lazy {
-        findPreference(BuildConfig.PREFS_KEY_DISABLE_DEV_OPTS)
-    }
-    */
+    // endregion Properties
 
-    //endregion Fields
+    // region Inherited methods
 
-    //region Inherited methods
-
+    /**
+     * Initializes the preference screen.
+     */
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.preferences_developer_options, rootKey)
         requireActivity().title = preferenceScreen.title
@@ -50,70 +67,15 @@ class DeveloperOptionsPreferenceFragment:
         apiEnvironmentPreference.populate(
                 enumClass = ApiEnvironment::class.java,
                 entry = { apiEnvironment -> requireContext().getString(apiEnvironment.nameResId) })
-
-        /*
-        disableDeveloperOptionsPreference.onPreferenceClickListener = this
-        */
     }
 
-    /*
-    override fun onDisplayPreferenceDialog(preference: Preference?) {
-        when (preference) {
-            disableDeveloperOptionsPreference -> {
-                val fragment = TestFragment.newInstance(disableDeveloperOptionsPreference)
-                fragment.setTargetFragment(this, 0)
-//                fragment.show(requireFragmentManager(), "android.support.v7.preference.PreferenceFragment.DIALOG")
-                fragment.show(requireFragmentManager(), TestFragment.FRAGMENT_TAG)
-            }
-            else -> {
-                super.onDisplayPreferenceDialog(preference)
-            }
-        }
-//        when (preference) {
-//            disableDeveloperOptionsPreference -> {
-//                val fragment = TestFragment.newInstance(preference?.key ?: "")
-//                fragment.setTargetFragment(this, 0)
-//                fragment.show(requireFragmentManager(), "android.support.v7.preference.PreferenceFragment.DIALOG")
-//            }
-//            else -> { super.onDisplayPreferenceDialog(preference) }
-//        }
-    }
-    */
+    // endregion Inherited methods
 
-    //endregion Inherited methods
-
-    //region Implemented methods
+    // region Implemented methods
 
     override fun onPreferenceClick(preference: Preference?): Boolean {
         return false
-        /*
-        return when (preference) {
-            disableDeveloperOptionsPreference -> {
-                // TODO Show confirm disable fragment
-//                val fragment = ConfirmDialogFragment.newInstance()
-                .also {
-                    it.alertDialog?.apply {
-                        setTitle(R.string.prefs_dev_confirm_disable_developer_options_title)
-                        setMessage(getString(R.string.prefs_dev_confirm_disable_developer_options_message))
-                        setButton(
-                                DialogInterface.BUTTON_POSITIVE,
-                                getString(R.string.prefs_dev_confirm_disable_developer_options_positive_button)
-                        ) { _, _ -> }
-                    }
-                }
-
-//                val transaction = requireFragmentManager().beginTransaction().addToBackStack(null)
-//                fragment.show(transaction, ConfirmDialogFragment.FRAGMENT_TAG)
-
-//                developerPreferencesViewModel.unregisterDeveloper()
-                true
-            }
-            else -> {
-                false
-            }
-        }
-        */
     }
 
-    //endregion Implemented methods
+    // endregion Implemented methods
 }

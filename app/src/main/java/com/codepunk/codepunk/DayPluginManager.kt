@@ -21,10 +21,16 @@ import android.widget.Toast
 import com.codepunk.codepunklib.util.plugin.PluginManager
 import java.util.*
 
+/**
+ * The DayPlugin class, used to demonstrate [PluginManager] functionality.
+ */
 abstract class DayPlugin(val context: Context) {
     abstract fun showGreeting()
 }
 
+/**
+ * A basic version of the DayPlugin class, which displays an "At least it's not Monday!" Toast.
+ */
 class BaseDayPlugin(_context: Context): DayPlugin(_context) {
     override fun showGreeting() {
         Toast.makeText(
@@ -35,6 +41,10 @@ class BaseDayPlugin(_context: Context): DayPlugin(_context) {
     }
 }
 
+/**
+ * A Monday-specific version of the DayPlugin class, which displays a "Looks like someone has a
+ * case of the Mondays!" Toast.
+ */
 class MondayPlugin(_context: Context): DayPlugin(_context) {
     override fun showGreeting() {
         Toast.makeText(
@@ -45,30 +55,55 @@ class MondayPlugin(_context: Context): DayPlugin(_context) {
     }
 }
 
+/**
+ * A Thursday-specific version of the DayPlugin class, which displays a "Hooray, it's almost the
+ * weekend!" Toast.
+ */
 class ThursdayPlugin(_context: Context): DayPlugin(_context) {
     override fun showGreeting() {
         Toast.makeText(
                 context,
-                "Hooray, it's Thursday!",
+                "Hooray, it's almost the weekend!",
                 Toast.LENGTH_LONG)
                 .show()
     }
 }
 
+/**
+ * A [PluginManager] that manages [DayPlugin]s based on the day of the week.
+ */
 class DayPluginManager(
         private val context: Context,
         pluginListener: PluginListener<DayPlugin, Calendar>? = null) :
         PluginManager<DayPlugin, Calendar>(pluginListener) {
 
+    /**
+     * Marks the active plugin as stale depending on the value returned by [getDayCode].
+     */
     override fun isPluginStale(state: Calendar): Boolean {
-        return activeState?.get(Calendar.DAY_OF_WEEK) != state.get(Calendar.DAY_OF_WEEK)
+        return getDayCode(activeState) != getDayCode(state)
     }
 
+    /**
+     * Creates a new [DayPlugin] instance depending on the day of the week.
+     */
     override fun newPlugin(state: Calendar): DayPlugin {
         return when (state.get(Calendar.DAY_OF_WEEK)) {
             Calendar.MONDAY -> MondayPlugin(context)
             Calendar.THURSDAY -> ThursdayPlugin(context)
             else -> BaseDayPlugin(context)
+        }
+    }
+
+    /**
+     * Returns an integer corresponding to the day of the week if the day is "special" (i.e.
+     * Monday or Thursday); otherwise returns -1.
+     */
+    private fun getDayCode(calendar: Calendar?): Int {
+        return when (calendar?.get(Calendar.DAY_OF_WEEK)) {
+            Calendar.MONDAY -> Calendar.MONDAY
+            Calendar.THURSDAY -> Calendar.THURSDAY
+            else -> -1
         }
     }
 }

@@ -16,6 +16,9 @@
 
 package com.codepunk.codepunk.api.environment
 
+/**
+ * The development API environment plugin.
+ */
 class DevApiEnvironmentPlugin : ApiEnvironmentPlugin() {
 
     // region Properties

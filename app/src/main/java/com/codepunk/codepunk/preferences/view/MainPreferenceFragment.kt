@@ -1,7 +1,24 @@
+/*
+ * Copyright (C) 2018 Codepunk, LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.codepunk.codepunk.preferences.view
 
 import android.app.Activity
 import android.arch.lifecycle.Observer
+import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.os.Bundle
@@ -12,64 +29,82 @@ import com.codepunk.codepunk.BuildConfig
 import com.codepunk.codepunk.R
 import com.codepunk.codepunk.developer.DeveloperPasswordDialogFragment
 import com.codepunk.codepunk.developer.DisableDeveloperOptionsDialogFragment
-import com.codepunk.codepunk.preferences.PreferencesActivity
 import com.codepunk.codepunk.preferences.viewmodel.DeveloperPreferencesViewModel
 import com.codepunk.codepunk.preferences.viewmodel.DeveloperPreferencesViewModel.DeveloperOptionsState
-import com.codepunk.codepunk.util.ACTION_SETTINGS
-import com.codepunk.codepunk.util.CATEGORY_DEVELOPER
-import com.codepunk.codepunk.util.EXTRA_DEVELOPER_PASSWORD_HASH
-import com.codepunk.codepunk.util.startLaunchActivity
+import com.codepunk.codepunk.preferences.viewmodel.DeveloperPreferencesViewModel.DeveloperOptionsState.*
+import com.codepunk.codepunk.preferences.viewmodel.MainPreferencesViewModel
+import com.codepunk.codepunk.util.*
 import com.codepunk.codepunklib.preference.TwoTargetSwitchPreference
+import com.codepunk.codepunklib.util.startLaunchActivity
 
 // region Constants
 
+/**
+ * The request code used by the developer password dialog fragment.
+ */
 private const val DEVELOPER_PASSWORD_REQUEST_CODE = 0
+
+/**
+ * The request code used by the disable developer options dialog fragment.
+ */
 private const val DISABLE_DEVELOPER_OPTIONS_REQUEST_CODE = 1
 
-private const val DEFAULT_STEPS_REMAINING: Int = 7
-private const val STEPS_TO_SHOW_TOAST = 3
-private const val SAVE_STATE_STEPS_REMAINING = "stepsRemaining"
+/**
+ * The total number of clicks required to unlock developer options.
+ */
+private const val DEV_OPTS_CLICKS_TO_UNLOCK: Int = 7
+
+/**
+ * The number of clicks remaining at which to show a [Toast] message.
+ */
+private const val DEV_OPTS_CLICKS_REMAINING_TOAST = 3
+
+/**
+ * The save state key for storing clicks remaining to unlock developer options.
+ */
+private const val SAVE_STATE_CLICKS_REMAINING = "clicksRemaining"
 
 // endregion Constants
 
+/**
+ * A preference fragment that displays the main settings available to the user.
+ */
 class MainPreferenceFragment :
         PreferenceFragmentCompat(),
         Preference.OnPreferenceChangeListener,
         Preference.OnPreferenceClickListener {
 
-    // region Nested classes
-
-    companion object {
-        @Suppress("unused")
-        private val TAG = MainPreferenceFragment::class.java.simpleName
-
-        private val DEVELOPER_PASSWORD_DIALOG_FRAGMENT_TAG =
-                MainPreferenceFragment::class.java.name + ".DEVELOPER_PASSWORD_DIALOG"
-
-        private val DISABLE_DEVELOPER_OPTIONS_DIALOG_FRAGMENT_TAG =
-                MainPreferenceFragment::class.java.name + ".DISABLE_DEVELOPER_OPTIONS_DIALOG"
-    }
-
-    // endregion Nested classes
-
     // region Fields
 
-    private val preferencesActivity by lazy {
-        requireActivity() as? PreferencesActivity
-                ?: throw IllegalStateException("Activity must be an instance of " +
-                        PreferencesActivity::class.java.simpleName)
+    /**
+     * The number of clicks remaining to unlock developer options.
+     */
+    private var clicksToUnlockDeveloperOptions = 0
+
+    /**
+     * The [ViewModel] that stores main/general preference data used by this fragment.
+     */
+    private val mainPreferencesViewModel by lazy {
+        ViewModelProviders.of(this).get(MainPreferencesViewModel::class.java)
     }
 
-    private var stepsRemaining = 0 // TODO Rename?
-
+    /**
+     * The [ViewModel] that stores developer options-related preference data used by this fragment.
+     */
     private val developerPreferencesViewModel by lazy {
         ViewModelProviders.of(this).get(DeveloperPreferencesViewModel::class.java)
     }
 
+    /**
+     * The developer options preference.
+     */
     private val developerOptionsPreference by lazy {
         findPreference(BuildConfig.PREFS_KEY_DEV_OPTS_ENABLED) as TwoTargetSwitchPreference
     }
 
+    /**
+     * The about preference.
+     */
     private val aboutPreference by lazy {
         findPreference(BuildConfig.PREFS_KEY_ABOUT)
     }
@@ -77,25 +112,29 @@ class MainPreferenceFragment :
     // endregion Fields
 
     // region Lifecycle methods
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        stepsRemaining = when {
+        clicksToUnlockDeveloperOptions = when {
             savedInstanceState != null ->
-                savedInstanceState.getInt(SAVE_STATE_STEPS_REMAINING, DEFAULT_STEPS_REMAINING)
+                savedInstanceState.getInt(SAVE_STATE_CLICKS_REMAINING, DEV_OPTS_CLICKS_TO_UNLOCK)
             developerPreferencesViewModel.developerOptionsUnlocked.value == true -> 0
-            else -> DEFAULT_STEPS_REMAINING
+            else -> DEV_OPTS_CLICKS_TO_UNLOCK
         }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putInt(SAVE_STATE_STEPS_REMAINING, stepsRemaining)
+        outState.putInt(SAVE_STATE_CLICKS_REMAINING, clicksToUnlockDeveloperOptions)
     }
 
     // endregion Lifecycle methods
 
     // region Inherited methods
 
+    /**
+     * Processes the results of dialogs launched by preferences in this fragment.
+     */
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         when (requestCode) {
             DEVELOPER_PASSWORD_REQUEST_CODE -> {
@@ -122,6 +161,9 @@ class MainPreferenceFragment :
         }
     }
 
+    /**
+     * Sets listeners and connects to the [ViewModel].
+     */
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.preferences_main, rootKey)
         requireActivity().title = preferenceScreen.title
@@ -129,13 +171,15 @@ class MainPreferenceFragment :
         developerOptionsPreference.onPreferenceClickListener = this
         developerOptionsPreference.onPreferenceChangeListener = this
 
-        with(developerPreferencesViewModel) {
+        with(mainPreferencesViewModel) {
             appVersion.observe(
                     this@MainPreferenceFragment,
                     Observer { version ->
                         aboutPreference.summary = getString(R.string.prefs_about_summary, version)
                     })
+        }
 
+        with(developerPreferencesViewModel) {
             developerOptionsState.observe(
                     this@MainPreferenceFragment,
                     Observer { state ->
@@ -151,6 +195,9 @@ class MainPreferenceFragment :
 
     // region Implemented methods
 
+    /**
+     * Delays turning on/off of developer options until the result of associated dialogs.
+     */
     // Preference.OnPreferenceChangeListener
     override fun onPreferenceChange(preference: Preference?, newValue: Any?): Boolean {
         return when (preference) {
@@ -160,13 +207,7 @@ class MainPreferenceFragment :
                     showDeveloperPasswordDialogFragment()
                     false
                 } else {
-                    // TODO Dialog to ask if user is sure
-                    // TODO TEMP
-
                     showDisableDeveloperOptionsDialogFragment()
-
-//                    developerPreferencesViewModel.unlockDeveloperOptions()
-                    // END TEMP
                     false
                 }
             }
@@ -181,22 +222,22 @@ class MainPreferenceFragment :
         return when (preference) {
             aboutPreference -> {
                 when {
-                    stepsRemaining > 1 -> {
-                        stepsRemaining--
-                        onStepsToShowDeveloperOptionsChange(stepsRemaining)
+                    clicksToUnlockDeveloperOptions > 1 -> {
+                        clicksToUnlockDeveloperOptions--
+                        onStepsToUnlockDeveloperOptionsChange(clicksToUnlockDeveloperOptions)
                     }
-                    stepsRemaining == 1 -> {
-                        stepsRemaining = 0
+                    clicksToUnlockDeveloperOptions == 1 -> {
+                        clicksToUnlockDeveloperOptions = 0
                         developerPreferencesViewModel.updateDeveloperOptions(true)
                     }
-                    else -> onRedundantShowRequest()
+                    else -> onRedundantUnlockRequest()
                 }
                 false
             }
             developerOptionsPreference -> {
                 when (developerPreferencesViewModel.developerOptionsState.value) {
                     DeveloperOptionsState.ENABLED ->
-                        startActivity(Intent(ACTION_SETTINGS).apply {
+                        startActivity(Intent(ACTION_PREFERENCES).apply {
                             addCategory(CATEGORY_DEVELOPER)
                         })
                     DeveloperOptionsState.UNLOCKED ->
@@ -215,6 +256,10 @@ class MainPreferenceFragment :
 
     // region Private methods
 
+    /**
+     * Updates the preference screen based on the state of developer options (i.e.
+     * [LOCKED], [UNLOCKED], or [ENABLED].)
+     */
     private fun onDeveloperOptionsStateChange(state: DeveloperOptionsState) {
         developerOptionsPreference.isChecked = (state == DeveloperOptionsState.ENABLED)
         when (state) {
@@ -224,7 +269,11 @@ class MainPreferenceFragment :
         }
     }
 
-    private fun onRedundantShowRequest() {
+    /**
+     * Handles when the about preference is clicked when developer options have already been
+     * unlocked.
+     */
+    private fun onRedundantUnlockRequest() {
         Toast.makeText(
                 context,
                 R.string.prefs_dev_opts_redundant_show_request,
@@ -232,8 +281,11 @@ class MainPreferenceFragment :
                 .show()
     }
 
-    private fun onStepsToShowDeveloperOptionsChange(steps: Int) {
-        if (steps in 1..STEPS_TO_SHOW_TOAST) {
+    /**
+     * Handles when the number of clicks remaining to unlock developer options changes.
+     */
+    private fun onStepsToUnlockDeveloperOptionsChange(steps: Int) {
+        if (steps in 1..DEV_OPTS_CLICKS_REMAINING_TOAST) {
             Toast.makeText(
                     context,
                     getString(R.string.prefs_dev_opts_steps_from_unlocking, steps),
@@ -242,6 +294,9 @@ class MainPreferenceFragment :
         }
     }
 
+    /**
+     * Shows the developer password dialog.
+     */
     private fun showDeveloperPasswordDialogFragment() {
         with(requireFragmentManager()) {
             if (findFragmentByTag(DEVELOPER_PASSWORD_DIALOG_FRAGMENT_TAG) != null) {
@@ -258,6 +313,9 @@ class MainPreferenceFragment :
         }
     }
 
+    /**
+     * Shows an OK/Cancel dialog confirming that the user wishes to disable developer options.
+     */
     private fun showDisableDeveloperOptionsDialogFragment() {
         with(requireFragmentManager()) {
             if (findFragmentByTag(DISABLE_DEVELOPER_OPTIONS_DIALOG_FRAGMENT_TAG) != null) {
@@ -275,4 +333,24 @@ class MainPreferenceFragment :
     }
 
     // endregion Private methods
+
+    // region Companion object
+
+    companion object {
+        private val TAG = MainPreferenceFragment::class.java.simpleName
+
+        /**
+         * The fragment tag to use for the developer password dialog fragment.
+         */
+        private val DEVELOPER_PASSWORD_DIALOG_FRAGMENT_TAG =
+                MainPreferenceFragment::class.java.name + ".DEVELOPER_PASSWORD_DIALOG"
+
+        /**
+         * The fragment tag to use for the disable developer options dialog fragment.
+         */
+        private val DISABLE_DEVELOPER_OPTIONS_DIALOG_FRAGMENT_TAG =
+                MainPreferenceFragment::class.java.name + ".DISABLE_DEVELOPER_OPTIONS_DIALOG"
+    }
+
+    // endregion Companion object
 }

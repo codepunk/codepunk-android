@@ -16,7 +16,10 @@
 
 package com.codepunk.codepunk.api.environment
 
-class LocalApiEnvironmentPlugin: ApiEnvironmentPlugin() {
+/**
+ * The local API environment plugin.
+ */
+class LocalApiEnvironmentPlugin : ApiEnvironmentPlugin() {
 
     // region Properties
 

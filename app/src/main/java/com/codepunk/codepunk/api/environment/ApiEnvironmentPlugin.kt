@@ -16,6 +16,9 @@
 
 package com.codepunk.codepunk.api.environment
 
+/**
+ * The base API environment plugin class.
+ */
 abstract class ApiEnvironmentPlugin {
 
     // region Properties
@@ -28,10 +31,10 @@ abstract class ApiEnvironmentPlugin {
 
     companion object {
         fun newInstance(apiEnvironment: ApiEnvironment): ApiEnvironmentPlugin {
-            return when(apiEnvironment) {
+            return when (apiEnvironment) {
+                ApiEnvironment.PROD -> ProdApiEnvironmentPlugin()
                 ApiEnvironment.DEV -> DevApiEnvironmentPlugin()
                 ApiEnvironment.LOCAL -> LocalApiEnvironmentPlugin()
-                else -> ProdApiEnvironmentPlugin()
             }
         }
     }

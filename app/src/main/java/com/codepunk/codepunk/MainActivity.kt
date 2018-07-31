@@ -16,23 +16,31 @@
 
 package com.codepunk.codepunk
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
-import com.codepunk.codepunk.util.ACTION_SETTINGS
+import com.codepunk.codepunk.util.ACTION_PREFERENCES
 import java.util.*
 
+/**
+ * The main [Activity] for the Codepunk app.
+ */
 class MainActivity : AppCompatActivity() {
 
-    //region Fields
+    // region Properties
 
+    /**
+     * An instance of [DayPluginManager] that displays helpful toasts depending on the day of the
+     * week.
+     */
     private val dayPluginManager = DayPluginManager(this)
 
-    //endregion Fields
+    // endregion Properties
 
-    //region Lifecycle methods
+    // region Lifecycle methods
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,28 +48,31 @@ class MainActivity : AppCompatActivity() {
         dayPluginManager.get(Calendar.getInstance()).showGreeting()
 
         // TODO TEMP Always open settings
-        startActivity(Intent(ACTION_SETTINGS))
+        startActivity(Intent(ACTION_PREFERENCES))
         // END TEMP
     }
 
-    //endregion Lifecycle methods
+    // endregion Lifecycle methods
 
-    //region Inherited methods
+    // region Inherited methods
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_main, menu)
         return super.onCreateOptionsMenu(menu)
     }
 
+    /**
+     * Handles the various menu options.
+     */
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         return when (item?.itemId) {
             R.id.menu_settings -> {
-                startActivity(Intent(ACTION_SETTINGS))
+                startActivity(Intent(ACTION_PREFERENCES))
                 true
             }
             else -> super.onOptionsItemSelected(item)
         }
     }
 
-    //endregion Inherited methods
+    // endregion Inherited methods
 }
