@@ -1,5 +1,22 @@
+/*
+ * Copyright (C) 2018 Codepunk, LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.codepunk.codepunk.developer
 
+import android.animation.Animator
 import android.animation.AnimatorInflater
 import android.app.Activity
 import android.app.Dialog
@@ -10,6 +27,7 @@ import android.support.design.widget.TextInputLayout
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatDialogFragment
 import android.view.View
+import android.widget.Button
 import android.widget.EditText
 import com.codepunk.codepunk.BuildConfig
 import com.codepunk.codepunk.R
@@ -19,45 +37,50 @@ import org.apache.commons.codec.binary.Hex
 import org.apache.commons.codec.digest.DigestUtils
 import org.apache.commons.codec.digest.MessageDigestAlgorithms
 
-class DeveloperPasswordDialogFragment: AppCompatDialogFragment(),
+/**
+ * Dialog fragment used to get the developer password from the user. The developer password is not
+ * stored anywhere in the app; rather, the SHA-256 hashed password is stored and this class hashes
+ * the user's input in order to compare it with the stored hash.
+ */
+class DeveloperPasswordDialogFragment : AppCompatDialogFragment(),
         DialogInterface.OnShowListener,
         View.OnClickListener {
 
-    // region Nested classes
-
-    companion object {
-        private val TAG = DeveloperPasswordDialogFragment::class.java.simpleName
-
-        // TODO Allow for different message
-        fun newInstance() : DeveloperPasswordDialogFragment {
-            return DeveloperPasswordDialogFragment()
-        }
-    }
-
-    // endregion Nested classes
-
     // region Properties
 
+    /**
+     * The [EditText] in which the user will enter their password. This widget is required and
+     * [DeveloperPasswordDialogFragment] will throw an exception if the layout does not contain
+     * an EditText with the id @android:id/edit.
+     */
     private val edit by lazy {
         dialog.findViewById(android.R.id.edit) as? EditText
                 ?: throw IllegalStateException("Dialog view must contain an EditText with id " +
                         "@android:id/edit")
     }
 
+    /**
+     * The (optional) [TextInputLayout] that contains the password EditText.
+     */
     private val layout by lazy {
         dialog.findViewById(R.id.layout) as? TextInputLayout
     }
 
-    private val negativeBtn by lazy {
-        (dialog as AlertDialog).getButton(AlertDialog.BUTTON_NEGATIVE)
-    }
-
+    /**
+     * The (optional) [Button] that represents a positive response by the user.
+     */
     private val positiveBtn by lazy {
         (dialog as AlertDialog).getButton(AlertDialog.BUTTON_POSITIVE)
     }
 
+    /**
+     * The [DigestUtils] that will be used to create a hash of the user's input.
+     */
     private val digestUtils = DigestUtils(MessageDigestAlgorithms.SHA_256)
 
+    /**
+     * An [Animator] that will run if the user enters an incorrect password.
+     */
     private val shakeAnimator by lazy {
         AnimatorInflater.loadAnimator(requireContext(), R.animator.shake).apply {
             interpolator = ShakeInterpolator()
@@ -68,6 +91,9 @@ class DeveloperPasswordDialogFragment: AppCompatDialogFragment(),
 
     // region Inherited methods
 
+    /**
+     * Builds the [Dialog] in which the user will enter the developer password.
+     */
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         return AlertDialog.Builder(requireContext())
                 .setTitle(R.string.prefs_dev_opts_password_dialog_title)
@@ -84,11 +110,21 @@ class DeveloperPasswordDialogFragment: AppCompatDialogFragment(),
     // endregion Inherited methods
 
     // region Implemented methods
+
+    /**
+     * Sets the positive button's OnClickListener when the dialog is shown so we can perform
+     * custom logic (i.e. check the password entered by the user)
+     */
+    // DialogInterface.OnShowListener
     override fun onShow(dialog: DialogInterface?) {
         positiveBtn.setOnClickListener(this)
-// TODO        negativeBtn.setOnClickListener(this) <-- Might need more here if stale password
     }
 
+    /**
+     * Tests the password entered by the user against the stored hashed password, and
+     * shake the dialog if the user enters the incorrect password.
+     */
+    // View.OnClickListener
     override fun onClick(view: View?) {
         when (view) {
             positiveBtn -> {
@@ -109,13 +145,23 @@ class DeveloperPasswordDialogFragment: AppCompatDialogFragment(),
                     shakeAnimator.start()
                 }
             }
-            negativeBtn -> {
-                if (isCancelable) {
-                    dialog.cancel() // TODO Stale?
-                }
-            }
         }
     }
 
     // endregion Implemented methods
+
+    // region Companion object
+
+    companion object {
+        private val TAG = DeveloperPasswordDialogFragment::class.java.simpleName
+
+        /**
+         * Creates a new instance of the [DeveloperPasswordDialogFragment].
+         */
+        fun newInstance(): DeveloperPasswordDialogFragment {
+            return DeveloperPasswordDialogFragment()
+        }
+    }
+
+    // endregion Companion object
 }

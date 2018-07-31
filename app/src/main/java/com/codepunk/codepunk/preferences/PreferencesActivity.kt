@@ -1,51 +1,53 @@
+/*
+ * Copyright (C) 2018 Codepunk, LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.codepunk.codepunk.preferences
 
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.preference.Preference
+import android.support.v7.preference.PreferenceDialogFragmentCompat
 import android.support.v7.preference.PreferenceFragmentCompat
 import android.view.MenuItem
 import com.codepunk.codepunk.preferences.view.DeveloperOptionsPreferenceFragment
 import com.codepunk.codepunk.preferences.view.MainPreferenceFragment
-import com.codepunk.codepunk.util.ACTION_SETTINGS
-import com.codepunk.codepunk.util.EXTRA_PREFERENCES_TYPE
+import com.codepunk.codepunk.util.CATEGORY_DEVELOPER
 import com.codepunk.codepunklib.preference.displayCustomPreferenceDialogFragment
 
-// TODO Maybe move this to main preferences package. Doesn't really need to be in "view"
-// since it's basically a wrapper for preference fragments.
-
-class PreferencesActivity: AppCompatActivity(),
+/**
+ * The [Activity] that will serve as the container for all preference-related fragments.
+ */
+class PreferencesActivity : AppCompatActivity(),
         PreferenceFragmentCompat.OnPreferenceDisplayDialogCallback {
-
-    // region Nested classes
-
-    enum class PreferencesType(private val clazz: Class<out PreferenceFragmentCompat>) {
-
-        MAIN(MainPreferenceFragment::class.java),
-
-        DEVELOPER_OPTIONS(DeveloperOptionsPreferenceFragment::class.java);
-
-        fun createFragment(): PreferenceFragmentCompat {
-            return clazz.newInstance()
-        }
-    }
-
-    // endregion Nested classes
 
     // region Lifecycle methods
 
+    /**
+     * Creates the appropriate preference fragment based on the category supplied
+     * in the [Intent].
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         if (supportFragmentManager.findFragmentById(android.R.id.content) == null) {
-            val preferencesType =
-                    (intent.extras?.getSerializable(EXTRA_PREFERENCES_TYPE) as PreferencesType?)
-                            ?: PreferencesType.MAIN
             supportFragmentManager
                     .beginTransaction()
-                    .add(android.R.id.content, preferencesType.createFragment())
+                    .add(android.R.id.content, createFragment(intent))
                     .commit()
         }
     }
@@ -54,6 +56,9 @@ class PreferencesActivity: AppCompatActivity(),
 
     // region Inherited methods
 
+    /**
+     * Changes the default "Up" behavior to always go "back" instead of "up".
+     */
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         return when (item?.itemId) {
             android.R.id.home -> {
@@ -69,6 +74,9 @@ class PreferencesActivity: AppCompatActivity(),
 
     // region Implemented methods
 
+    /**
+     * Provides a way to display custom [PreferenceDialogFragmentCompat]s.
+     */
     // PreferenceFragmentCompat.OnPreferenceDisplayDialogCallback
     override fun onPreferenceDisplayDialog(
             caller: PreferenceFragmentCompat,
@@ -77,16 +85,26 @@ class PreferencesActivity: AppCompatActivity(),
     }
 
     // endregion Implemented methods
-    
-    // region Methods
 
-    fun startPreferencesActivity(type: PreferencesType) {
-        startActivity(Intent(ACTION_SETTINGS).apply {
-            putExtras(Bundle().apply {
-                putSerializable(EXTRA_PREFERENCES_TYPE, type)
-            })
-        })
+    // region Companion object
+
+    companion object {
+        private val TAG = PreferencesActivity::class.java.simpleName
+
+        /**
+         * Creates a [PreferenceFragmentCompat] associated with the category passed in the intent.
+         */
+        private fun createFragment(intent: Intent): PreferenceFragmentCompat {
+            intent.categories?.run {
+                for (category in this) {
+                    when (category) {
+                        CATEGORY_DEVELOPER -> return DeveloperOptionsPreferenceFragment()
+                    }
+                }
+            }
+            return MainPreferenceFragment()
+        }
     }
-    
-    // endregion Methods
+
+    // endregion Companion object
 }

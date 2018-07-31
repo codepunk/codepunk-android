@@ -13,9 +13,10 @@ import com.codepunk.codepunk.R
 import com.codepunk.codepunk.developer.DeveloperPasswordDialogFragment
 import com.codepunk.codepunk.developer.DisableDeveloperOptionsDialogFragment
 import com.codepunk.codepunk.preferences.PreferencesActivity
-import com.codepunk.codepunk.preferences.PreferencesActivity.PreferencesType
 import com.codepunk.codepunk.preferences.viewmodel.DeveloperPreferencesViewModel
 import com.codepunk.codepunk.preferences.viewmodel.DeveloperPreferencesViewModel.DeveloperOptionsState
+import com.codepunk.codepunk.util.ACTION_SETTINGS
+import com.codepunk.codepunk.util.CATEGORY_DEVELOPER
 import com.codepunk.codepunk.util.EXTRA_DEVELOPER_PASSWORD_HASH
 import com.codepunk.codepunk.util.startLaunchActivity
 import com.codepunk.codepunklib.preference.TwoTargetSwitchPreference
@@ -31,7 +32,7 @@ private const val SAVE_STATE_STEPS_REMAINING = "stepsRemaining"
 
 // endregion Constants
 
-class MainPreferenceFragment:
+class MainPreferenceFragment :
         PreferenceFragmentCompat(),
         Preference.OnPreferenceChangeListener,
         Preference.OnPreferenceClickListener {
@@ -128,7 +129,7 @@ class MainPreferenceFragment:
         developerOptionsPreference.onPreferenceClickListener = this
         developerOptionsPreference.onPreferenceChangeListener = this
 
-        with (developerPreferencesViewModel) {
+        with(developerPreferencesViewModel) {
             appVersion.observe(
                     this@MainPreferenceFragment,
                     Observer { version ->
@@ -169,7 +170,9 @@ class MainPreferenceFragment:
                     false
                 }
             }
-            else -> { true }
+            else -> {
+                true
+            }
         }
     }
 
@@ -193,8 +196,9 @@ class MainPreferenceFragment:
             developerOptionsPreference -> {
                 when (developerPreferencesViewModel.developerOptionsState.value) {
                     DeveloperOptionsState.ENABLED ->
-                        preferencesActivity.startPreferencesActivity(
-                                PreferencesType.DEVELOPER_OPTIONS)
+                        startActivity(Intent(ACTION_SETTINGS).apply {
+                            addCategory(CATEGORY_DEVELOPER)
+                        })
                     DeveloperOptionsState.UNLOCKED ->
                         showDeveloperPasswordDialogFragment()
                     else -> { /* No action */ }
@@ -239,29 +243,33 @@ class MainPreferenceFragment:
     }
 
     private fun showDeveloperPasswordDialogFragment() {
-        with (requireFragmentManager()) {
+        with(requireFragmentManager()) {
             if (findFragmentByTag(DEVELOPER_PASSWORD_DIALOG_FRAGMENT_TAG) != null) {
                 return
             }
 
             DeveloperPasswordDialogFragment.newInstance()
-                    .apply { setTargetFragment(
-                            this@MainPreferenceFragment,
-                            DEVELOPER_PASSWORD_REQUEST_CODE) }
+                    .apply {
+                        setTargetFragment(
+                                this@MainPreferenceFragment,
+                                DEVELOPER_PASSWORD_REQUEST_CODE)
+                    }
                     .show(this, DEVELOPER_PASSWORD_DIALOG_FRAGMENT_TAG)
         }
     }
 
     private fun showDisableDeveloperOptionsDialogFragment() {
-        with (requireFragmentManager()) {
+        with(requireFragmentManager()) {
             if (findFragmentByTag(DISABLE_DEVELOPER_OPTIONS_DIALOG_FRAGMENT_TAG) != null) {
                 return
             }
 
             DisableDeveloperOptionsDialogFragment.newInstance()
-                    .apply { setTargetFragment(
-                            this@MainPreferenceFragment,
-                            DISABLE_DEVELOPER_OPTIONS_REQUEST_CODE) }
+                    .apply {
+                        setTargetFragment(
+                                this@MainPreferenceFragment,
+                                DISABLE_DEVELOPER_OPTIONS_REQUEST_CODE)
+                    }
                     .show(this, DISABLE_DEVELOPER_OPTIONS_DIALOG_FRAGMENT_TAG)
         }
     }
