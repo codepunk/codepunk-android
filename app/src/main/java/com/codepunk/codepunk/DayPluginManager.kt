@@ -78,10 +78,10 @@ class DayPluginManager(
         PluginManager<DayPlugin, Calendar>(pluginListener) {
 
     /**
-     * Marks the active plugin as stale depending on the value returned by [getDayCode].
+     * Marks the active plugin as stale depending on the value returned by [getValue].
      */
     override fun isPluginStale(state: Calendar): Boolean {
-        return getDayCode(activeState) != getDayCode(state)
+        return activeState == null || getValue(activeState) != getValue(state)
     }
 
     /**
@@ -99,7 +99,7 @@ class DayPluginManager(
      * Returns an integer corresponding to the day of the week if the day is "special" (i.e.
      * Monday or Thursday); otherwise returns -1.
      */
-    private fun getDayCode(calendar: Calendar?): Int {
+    private fun getValue(calendar: Calendar?): Int {
         return when (calendar?.get(Calendar.DAY_OF_WEEK)) {
             Calendar.MONDAY -> Calendar.MONDAY
             Calendar.THURSDAY -> Calendar.THURSDAY
