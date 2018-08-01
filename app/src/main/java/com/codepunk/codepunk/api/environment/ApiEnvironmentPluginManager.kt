@@ -16,7 +16,7 @@
 
 package com.codepunk.codepunk.api.environment
 
-import com.codepunk.codepunklib.util.plugin.PluginManager
+import com.codepunk.doofenschmirtz.util.plugin.PluginManager
 
 /**
  * The API environment plugin manager.

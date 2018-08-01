@@ -34,8 +34,8 @@ import com.codepunk.codepunk.preferences.viewmodel.DeveloperPreferencesViewModel
 import com.codepunk.codepunk.preferences.viewmodel.DeveloperPreferencesViewModel.DeveloperOptionsState.*
 import com.codepunk.codepunk.preferences.viewmodel.MainPreferencesViewModel
 import com.codepunk.codepunk.util.*
-import com.codepunk.codepunklib.preference.TwoTargetSwitchPreference
-import com.codepunk.codepunklib.util.startLaunchActivity
+import com.codepunk.doofenschmirtz.preference.TwoTargetSwitchPreference
+import com.codepunk.doofenschmirtz.util.startLaunchActivity
 
 // region Constants
 

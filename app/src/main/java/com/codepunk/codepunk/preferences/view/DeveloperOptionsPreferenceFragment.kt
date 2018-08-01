@@ -26,7 +26,7 @@ import com.codepunk.codepunk.BuildConfig
 import com.codepunk.codepunk.R
 import com.codepunk.codepunk.api.environment.ApiEnvironment
 import com.codepunk.codepunk.preferences.viewmodel.DeveloperPreferencesViewModel
-import com.codepunk.codepunklib.util.populate
+import com.codepunk.doofenschmirtz.util.populate
 
 /**
  * A preference fragment that displays developer options preferences to the user. By default,

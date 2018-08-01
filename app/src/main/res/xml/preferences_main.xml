@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:title="@string/prefs_main_title">
 
-    <com.codepunk.codepunklib.preference.TwoTargetSwitchPreference
+    <com.codepunk.doofenschmirtz.preference.TwoTargetSwitchPreference
         android:key="@string/prefs_key_dev_opts_enabled"
         android:icon="@drawable/ic_preference_developer_options"
         android:title="@string/prefs_dev_opts_title"
@@ -20,7 +20,7 @@
         android:enabled="true"
         android:order="300" />
 
-    <com.codepunk.codepunklib.android.preference.YesNoPreference
+    <com.codepunk.doofenschmirtz.android.preference.YesNoPreference
         android:key="TEST"
         android:icon="@drawable/ic_preference_info"
         android:title="Yes/No Preference"

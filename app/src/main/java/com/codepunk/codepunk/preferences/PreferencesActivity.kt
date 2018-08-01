@@ -26,7 +26,7 @@ import android.view.MenuItem
 import com.codepunk.codepunk.preferences.view.DeveloperOptionsPreferenceFragment
 import com.codepunk.codepunk.preferences.view.MainPreferenceFragment
 import com.codepunk.codepunk.util.CATEGORY_DEVELOPER
-import com.codepunk.codepunklib.preference.displayCustomPreferenceDialogFragment
+import com.codepunk.doofenschmirtz.preference.displayCustomPreferenceDialogFragment
 
 /**
  * The [Activity] that will serve as the container for all preference-related fragments.

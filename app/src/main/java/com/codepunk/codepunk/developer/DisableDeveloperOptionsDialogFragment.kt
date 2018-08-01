@@ -57,11 +57,7 @@ class DisableDeveloperOptionsDialogFragment: AppCompatDialogFragment(),
         val resultCode =
                 if (which == DialogInterface.BUTTON_POSITIVE) Activity.RESULT_OK
                 else Activity.RESULT_CANCELED
-        targetFragment?.apply {
-            onActivityResult(targetRequestCode, resultCode, null)
-        } ?: activity?.run {
-            onActivityResult(targetRequestCode, resultCode, null)
-        }
+        targetFragment?.onActivityResult(targetRequestCode, resultCode, null)
     }
 
     // endregion Implemented methods

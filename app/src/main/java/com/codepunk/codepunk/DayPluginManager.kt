@@ -18,7 +18,7 @@ package com.codepunk.codepunk
 
 import android.content.Context
 import android.widget.Toast
-import com.codepunk.codepunklib.util.plugin.PluginManager
+import com.codepunk.doofenschmirtz.util.plugin.PluginManager
 import java.util.*
 
 /**

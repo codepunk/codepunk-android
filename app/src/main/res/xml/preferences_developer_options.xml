@@ -11,7 +11,7 @@
         android:order="100" />
 
     <!--
-    <com.codepunk.codepunklibstaging.preference.YesNoPreference
+    <punkubatornce.YesNoPreference
         android:key="@string/prefs_key_disable_dev_opts"
         android:title="@string/prefs_dev_mode_disable_dialog_title"
         android:dialogMessage="@string/prefs_dev_mode_disable_dialog_message"

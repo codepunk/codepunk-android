@@ -32,7 +32,7 @@ import android.widget.EditText
 import com.codepunk.codepunk.BuildConfig
 import com.codepunk.codepunk.R
 import com.codepunk.codepunk.util.EXTRA_DEVELOPER_PASSWORD_HASH
-import com.codepunk.codepunklib.view.animation.ShakeInterpolator
+import com.codepunk.doofenschmirtz.view.animation.ShakeInterpolator
 import org.apache.commons.codec.binary.Hex
 import org.apache.commons.codec.digest.DigestUtils
 import org.apache.commons.codec.digest.MessageDigestAlgorithms
