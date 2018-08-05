@@ -17,8 +17,47 @@
 package com.codepunk.codepunk
 
 import android.app.Application
+import com.codepunk.doofenschmirtz.util.loginator.FormattingLoginator
+import com.codepunk.doofenschmirtz.util.supportProcessName
 
 /**
  * The Application class for the Codepunk app.
  */
-class CodepunkApp: Application()
+class CodepunkApp : Application(), Thread.UncaughtExceptionHandler {
+
+    private var defaultUncaughtExceptionHandler: Thread.UncaughtExceptionHandler? = null
+
+    override fun onCreate() {
+        super.onCreate()
+        defaultUncaughtExceptionHandler = Thread.getDefaultUncaughtExceptionHandler()
+        Thread.setDefaultUncaughtExceptionHandler(this)
+    }
+
+    // region Implemented methods
+
+    override fun uncaughtException(t: Thread?, e: Throwable?) {
+        loginator.logUncaughtException(t, e, supportProcessName)
+        defaultUncaughtExceptionHandler?.uncaughtException(t, e)
+    }
+
+    // endregion Implemented methods
+
+    // region Companion object
+
+    companion object {
+
+        // region Properties
+
+        /**
+         * The loginator to use for logging messages.
+         */
+        val loginator = FormattingLoginator().apply {
+            level = BuildConfig.LOGINATOR_LEVEL
+        }
+
+        // endregion Properties
+    }
+
+    // endregion Companion object
+
+}

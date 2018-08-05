@@ -20,8 +20,10 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import com.codepunk.codepunk.CodepunkApp.Companion.loginator
 import com.codepunk.codepunk.util.ACTION_PREFERENCES
 import java.util.*
 
@@ -50,6 +52,29 @@ class MainActivity : AppCompatActivity() {
         // TODO TEMP Always open settings
         startActivity(Intent(ACTION_PREFERENCES))
         // END TEMP
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        if (loginator.isLoggable(Log.DEBUG)) {
+            loginator.d("This is a debug log entry")
+        }
+        if (loginator.isLoggable(Log.ERROR)) {
+            loginator.e("This is an error log entry", Throwable("Don't do that"))
+        }
+        if (loginator.isLoggable(Log.INFO)) {
+            loginator.i("This is an info log entry")
+        }
+        if (loginator.isLoggable(Log.VERBOSE)) {
+            loginator.v("This is a verbose log entry")
+        }
+        if (loginator.isLoggable(Log.WARN)) {
+            loginator.w("This is a warning log entry")
+        }
+
+        val emptyArray: Array<Int> = arrayOf()
+        val error = emptyArray[1]
     }
 
     // endregion Lifecycle methods
