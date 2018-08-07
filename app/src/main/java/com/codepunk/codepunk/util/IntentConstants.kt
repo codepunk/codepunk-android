@@ -20,7 +20,7 @@ package com.codepunk.codepunk.util
 
 import android.content.Intent
 import com.codepunk.codepunk.BuildConfig.APPLICATION_ID
-import com.codepunk.codepunk.preferences.view.MainPreferenceFragment
+import com.codepunk.codepunk.preferences.MainPreferenceFragment
 
 /**
  * Prefix for all "action" [Intent] constants.

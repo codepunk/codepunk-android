@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.codepunk.codepunk.preferences.view
+package com.codepunk.codepunk.preferences
 
 import android.app.Activity
 import android.arch.lifecycle.Observer
@@ -29,10 +29,8 @@ import com.codepunk.codepunk.BuildConfig
 import com.codepunk.codepunk.R
 import com.codepunk.codepunk.developer.DeveloperPasswordDialogFragment
 import com.codepunk.codepunk.developer.DisableDeveloperOptionsDialogFragment
-import com.codepunk.codepunk.preferences.viewmodel.DeveloperPreferencesViewModel
-import com.codepunk.codepunk.preferences.viewmodel.DeveloperPreferencesViewModel.DeveloperOptionsState
-import com.codepunk.codepunk.preferences.viewmodel.DeveloperPreferencesViewModel.DeveloperOptionsState.*
-import com.codepunk.codepunk.preferences.viewmodel.MainPreferencesViewModel
+import com.codepunk.codepunk.preferences.DeveloperPreferencesViewModel.DeveloperOptionsState
+import com.codepunk.codepunk.preferences.DeveloperPreferencesViewModel.DeveloperOptionsState.*
 import com.codepunk.codepunk.util.*
 import com.codepunk.doofenschmirtz.preference.TwoTargetSwitchPreference
 import com.codepunk.doofenschmirtz.util.startLaunchActivity

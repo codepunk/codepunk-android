@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.codepunk.codepunk.api.environment
+package com.codepunk.codepunk.data.api.environment
 
 import com.codepunk.doofenschmirtz.util.pluginator.Pluginator
 

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.codepunk.codepunk.api.environment
+package com.codepunk.codepunk.data.api.environment
 
 /**
  * The base API environment plugin class.

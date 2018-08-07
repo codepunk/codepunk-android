@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.codepunk.codepunk.preferences.viewmodel
+package com.codepunk.codepunk.preferences
 
 import android.app.Application
 import android.arch.lifecycle.AndroidViewModel

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.codepunk.codepunk.preferences.view
+package com.codepunk.codepunk.preferences
 
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModel
@@ -24,8 +24,7 @@ import android.support.v7.preference.ListPreference
 import android.support.v7.preference.PreferenceFragmentCompat
 import com.codepunk.codepunk.BuildConfig
 import com.codepunk.codepunk.R
-import com.codepunk.codepunk.api.environment.ApiEnvironment
-import com.codepunk.codepunk.preferences.viewmodel.DeveloperPreferencesViewModel
+import com.codepunk.codepunk.data.api.environment.ApiEnvironment
 import com.codepunk.doofenschmirtz.util.populate
 
 /**

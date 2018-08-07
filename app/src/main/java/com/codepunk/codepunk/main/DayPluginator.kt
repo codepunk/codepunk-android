@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.codepunk.codepunk
+package com.codepunk.codepunk.main
 
 import android.content.Context
 import android.widget.Toast

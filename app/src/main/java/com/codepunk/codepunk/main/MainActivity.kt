@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.codepunk.codepunk
+package com.codepunk.codepunk.main
 
 import android.app.Activity
 import android.content.Intent
@@ -24,6 +24,7 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import com.codepunk.codepunk.CodepunkApp.Companion.loginator
+import com.codepunk.codepunk.R
 import com.codepunk.codepunk.util.ACTION_PREFERENCES
 import java.util.*
 

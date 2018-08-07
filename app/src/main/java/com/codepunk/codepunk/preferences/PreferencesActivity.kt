@@ -23,8 +23,6 @@ import android.support.v7.preference.Preference
 import android.support.v7.preference.PreferenceDialogFragmentCompat
 import android.support.v7.preference.PreferenceFragmentCompat
 import android.view.MenuItem
-import com.codepunk.codepunk.preferences.view.DeveloperOptionsPreferenceFragment
-import com.codepunk.codepunk.preferences.view.MainPreferenceFragment
 import com.codepunk.codepunk.util.CATEGORY_DEVELOPER
 import com.codepunk.doofenschmirtz.preference.displayCustomPreferenceDialogFragment
 
