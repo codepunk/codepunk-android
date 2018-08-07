@@ -16,12 +16,12 @@
 
 package com.codepunk.codepunk.api.environment
 
-import com.codepunk.doofenschmirtz.util.plugin.PluginManager
+import com.codepunk.doofenschmirtz.util.pluginator.Pluginator
 
 /**
  * The API environment plugin manager.
  */
-object ApiEnvironmentPluginManager : PluginManager<ApiEnvironmentPlugin, ApiEnvironment>() {
+object ApiEnvironmentPluginator : Pluginator<ApiEnvironmentPlugin, ApiEnvironment>() {
 
     // region Inherited methods
 

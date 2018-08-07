@@ -36,20 +36,28 @@ android {
 
     buildTypes {
         debug {
+            def defaultApiEnvironment = "LOCAL"
+
             applicationIdSuffix ".debug"
             versionNameSuffix "-DEBUG"
             buildConfigField("String", "CLIENT_ID", "\"2\"")
             buildConfigField("String", "CLIENT_SECRET", "\"EWB9n4SkJ9EAjgmzoyCfw3evXXRVaAA8UQacE35d\"")
-            buildConfigField("com.codepunk.codepunk.api.environment.ApiEnvironment", "DEFAULT_API_ENVIRONMENT", "com.codepunk.codepunk.api.environment.ApiEnvironment.valueOf(\"LOCAL\")")
+            buildConfigField("com.codepunk.codepunk.api.environment.ApiEnvironment", "DEFAULT_API_ENVIRONMENT", "com.codepunk.codepunk.api.environment.ApiEnvironment.valueOf(\"" + defaultApiEnvironment + "\")")
             buildConfigField("int", "LOGINATOR_LEVEL", "android.util.Log.VERBOSE")
+
+            resValue "string", "default_api_environment", defaultApiEnvironment
         }
         release {
+            def defaultApiEnvironment = "PROD"
+
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             buildConfigField("String", "CLIENT_ID", "\"2\"")
             buildConfigField("String", "CLIENT_SECRET", "\"EWB9n4SkJ9EAjgmzoyCfw3evXXRVaAA8UQacE35d\"")
-            buildConfigField("com.codepunk.codepunk.api.environment.ApiEnvironment", "DEFAULT_API_ENVIRONMENT", "com.codepunk.codepunk.api.environment.ApiEnvironment.valueOf(\"PROD\")")
+            buildConfigField("com.codepunk.codepunk.api.environment.ApiEnvironment", "DEFAULT_API_ENVIRONMENT", "com.codepunk.codepunk.api.environment.ApiEnvironment.valueOf(\"" + defaultApiEnvironment + "\")")
             buildConfigField("int", "LOGINATOR_LEVEL", "android.util.Log.ERROR")
+
+            resValue "string", "default_api_environment", defaultApiEnvironment
         }
     }
 

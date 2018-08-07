@@ -16,11 +16,11 @@
 
 package com.codepunk.codepunk.preferences.view
 
+import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v7.preference.ListPreference
-import android.support.v7.preference.Preference
 import android.support.v7.preference.PreferenceFragmentCompat
 import com.codepunk.codepunk.BuildConfig
 import com.codepunk.codepunk.R
@@ -34,8 +34,7 @@ import com.codepunk.doofenschmirtz.util.populate
  * preference and authenticate themselves as a developer.
  */
 class DeveloperOptionsPreferenceFragment :
-        PreferenceFragmentCompat(),
-        Preference.OnPreferenceClickListener {
+        PreferenceFragmentCompat() {
 
     // region Properties
 
@@ -67,15 +66,15 @@ class DeveloperOptionsPreferenceFragment :
         apiEnvironmentPreference.populate(
                 enumClass = ApiEnvironment::class.java,
                 entry = { apiEnvironment -> requireContext().getString(apiEnvironment.nameResId) })
+
+        with(developerPreferencesViewModel) {
+            apiEnvironment.observe(this@DeveloperOptionsPreferenceFragment,
+                    Observer { env ->
+                        apiEnvironmentPreference.summary =
+                                env?.let { getString(it.nameResId) } ?: ""
+                    })
+        }
     }
 
     // endregion Inherited methods
-
-    // region Implemented methods
-
-    override fun onPreferenceClick(preference: Preference?): Boolean {
-        return false
-    }
-
-    // endregion Implemented methods
 }

@@ -337,7 +337,8 @@ class MainPreferenceFragment :
     // region Companion object
 
     companion object {
-        private val TAG = MainPreferenceFragment::class.java.simpleName
+
+        // region Properties
 
         /**
          * The fragment tag to use for the developer password dialog fragment.
@@ -350,6 +351,9 @@ class MainPreferenceFragment :
          */
         private val DISABLE_DEVELOPER_OPTIONS_DIALOG_FRAGMENT_TAG =
                 MainPreferenceFragment::class.java.name + ".DISABLE_DEVELOPER_OPTIONS_DIALOG"
+
+        // endregion Properties
+
     }
 
     // endregion Companion object

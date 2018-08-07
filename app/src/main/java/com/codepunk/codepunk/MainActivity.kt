@@ -35,10 +35,10 @@ class MainActivity : AppCompatActivity() {
     // region Properties
 
     /**
-     * An instance of [DayPluginManager] that displays helpful toasts depending on the day of the
+     * An instance of [DayPluginator] that displays helpful toasts depending on the day of the
      * week.
      */
-    private val dayPluginManager = DayPluginManager(this)
+    private val dayPluginManager = DayPluginator(this)
 
     // endregion Properties
 
@@ -72,9 +72,6 @@ class MainActivity : AppCompatActivity() {
         if (loginator.isLoggable(Log.WARN)) {
             loginator.w("This is a warning log entry")
         }
-
-        val emptyArray: Array<Int> = arrayOf()
-        val error = emptyArray[1]
     }
 
     // endregion Lifecycle methods

@@ -18,11 +18,11 @@ package com.codepunk.codepunk
 
 import android.content.Context
 import android.widget.Toast
-import com.codepunk.doofenschmirtz.util.plugin.PluginManager
+import com.codepunk.doofenschmirtz.util.pluginator.Pluginator
 import java.util.*
 
 /**
- * The DayPlugin class, used to demonstrate [PluginManager] functionality.
+ * The DayPlugin class, used to demonstrate [Pluginator] functionality.
  */
 abstract class DayPlugin(val context: Context) {
     abstract fun showGreeting()
@@ -70,12 +70,12 @@ class ThursdayPlugin(_context: Context): DayPlugin(_context) {
 }
 
 /**
- * A [PluginManager] that manages [DayPlugin]s based on the day of the week.
+ * A [Pluginator] that manages [DayPlugin]s based on the day of the week.
  */
-class DayPluginManager(
+class DayPluginator(
         private val context: Context,
         pluginListener: PluginListener<DayPlugin, Calendar>? = null) :
-        PluginManager<DayPlugin, Calendar>(pluginListener) {
+        Pluginator<DayPlugin, Calendar>(pluginListener) {
 
     /**
      * Marks the active plugin as stale depending on the value returned by [getValue].

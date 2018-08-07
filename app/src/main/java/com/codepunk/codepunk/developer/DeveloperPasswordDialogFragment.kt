@@ -153,7 +153,8 @@ class DeveloperPasswordDialogFragment : AppCompatDialogFragment(),
     // region Companion object
 
     companion object {
-        private val TAG = DeveloperPasswordDialogFragment::class.java.simpleName
+
+        // region Methods
 
         /**
          * Creates a new instance of the [DeveloperPasswordDialogFragment].
@@ -161,6 +162,9 @@ class DeveloperPasswordDialogFragment : AppCompatDialogFragment(),
         fun newInstance(): DeveloperPasswordDialogFragment {
             return DeveloperPasswordDialogFragment()
         }
+
+        // endregion Methods
+
     }
 
     // endregion Companion object

@@ -17,27 +17,46 @@
 package com.codepunk.codepunk
 
 import android.app.Application
+import android.support.v7.preference.PreferenceManager
 import com.codepunk.doofenschmirtz.util.loginator.FormattingLoginator
 import com.codepunk.doofenschmirtz.util.supportProcessName
+import java.lang.ref.WeakReference
+import java.lang.Thread.UncaughtExceptionHandler
 
 /**
  * The Application class for the Codepunk app.
  */
-class CodepunkApp : Application(), Thread.UncaughtExceptionHandler {
+class CodepunkApp : Application(), UncaughtExceptionHandler {
 
-    private var defaultUncaughtExceptionHandler: Thread.UncaughtExceptionHandler? = null
+    /**
+     * The default uncaught exception handler when the app is created.
+     */
+    private var defaultUncaughtExceptionHandler: WeakReference<UncaughtExceptionHandler?>? = null
 
+    /**
+     * Captures the existing default uncaught exception handler and sets defaults from
+     * preference XML files.
+     */
     override fun onCreate() {
         super.onCreate()
-        defaultUncaughtExceptionHandler = Thread.getDefaultUncaughtExceptionHandler()
+        defaultUncaughtExceptionHandler =
+                WeakReference(Thread.getDefaultUncaughtExceptionHandler())
         Thread.setDefaultUncaughtExceptionHandler(this)
+
+        val preferenceResIds = arrayOf(R.xml.preferences_main, R.xml.preferences_developer_options)
+        for (resId in preferenceResIds) {
+            PreferenceManager.setDefaultValues(this, resId, false)
+        }
     }
 
     // region Implemented methods
 
+    /**
+     * Handles uncaught exceptions.
+     */
     override fun uncaughtException(t: Thread?, e: Throwable?) {
         loginator.logUncaughtException(t, e, supportProcessName)
-        defaultUncaughtExceptionHandler?.uncaughtException(t, e)
+        defaultUncaughtExceptionHandler?.get()?.uncaughtException(t, e)
     }
 
     // endregion Implemented methods

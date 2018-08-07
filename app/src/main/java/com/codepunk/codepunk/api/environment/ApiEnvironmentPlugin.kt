@@ -23,6 +23,9 @@ abstract class ApiEnvironmentPlugin {
 
     // region Properties
 
+    /**
+     * The [ApiEnvironment] value associated with this [ApiEnvironmentPlugin].
+     */
     abstract val apiEnvironment: ApiEnvironment
 
     // endregion Properties
@@ -30,6 +33,12 @@ abstract class ApiEnvironmentPlugin {
     // region Companion object
 
     companion object {
+
+        // region Methods
+
+        /**
+         * Creates a new [ApiEnvironmentPlugin] based on [apiEnvironment].
+         */
         fun newInstance(apiEnvironment: ApiEnvironment): ApiEnvironmentPlugin {
             return when (apiEnvironment) {
                 ApiEnvironment.PROD -> ProdApiEnvironmentPlugin()
@@ -37,6 +46,8 @@ abstract class ApiEnvironmentPlugin {
                 ApiEnvironment.LOCAL -> LocalApiEnvironmentPlugin()
             }
         }
+
+        // endregion Methods
     }
 
     // endregion Companion object

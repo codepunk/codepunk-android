@@ -10,7 +10,8 @@
         android:summaryOff="@string/disabled"
         android:summaryOn="@string/enabled"
         android:widgetLayout="@layout/android_preference_widget_master_switch"
-        android:order="100" />
+        android:order="100"
+        android:defaultValue="false" />
 
     <android.support.v7.preference.Preference
         android:key="@string/prefs_key_about"
@@ -19,16 +20,5 @@
         android:selectable="true"
         android:enabled="true"
         android:order="300" />
-
-    <com.codepunk.doofenschmirtz.android.preference.YesNoPreference
-        android:key="TEST"
-        android:icon="@drawable/ic_preference_info"
-        android:title="Yes/No Preference"
-        android:dialogTitle="Yes/No Preference"
-        android:dialogMessage="Yes or no?"
-        android:selectable="true"
-        android:enabled="true"
-        android:persistent="false"
-        android:order="400" />
 
 </android.support.v7.preference.PreferenceScreen>

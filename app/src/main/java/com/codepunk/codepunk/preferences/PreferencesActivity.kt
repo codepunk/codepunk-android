@@ -89,7 +89,8 @@ class PreferencesActivity : AppCompatActivity(),
     // region Companion object
 
     companion object {
-        private val TAG = PreferencesActivity::class.java.simpleName
+
+        // region Methods
 
         /**
          * Creates a [PreferenceFragmentCompat] associated with the category passed in the intent.
@@ -104,6 +105,9 @@ class PreferencesActivity : AppCompatActivity(),
             }
             return MainPreferenceFragment()
         }
+
+        // endregion Methods
+
     }
 
     // endregion Companion object

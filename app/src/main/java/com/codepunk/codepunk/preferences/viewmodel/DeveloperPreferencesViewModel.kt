@@ -24,6 +24,8 @@ import android.arch.lifecycle.ViewModel
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
 import com.codepunk.codepunk.BuildConfig
+import com.codepunk.codepunk.api.environment.ApiEnvironment
+import com.codepunk.codepunk.util.getApiEnvironment
 
 /**
  * The [ViewModel] that stores developer options-related preference data.
@@ -33,6 +35,11 @@ class DeveloperPreferencesViewModel(val app: Application) :
         SharedPreferences.OnSharedPreferenceChangeListener {
 
     // region Properties
+
+    /**
+     * The current environment used to configure API calls.
+     */
+    var apiEnvironment = MutableLiveData<ApiEnvironment>()
 
     /**
      * The authenticated hashed developer password. This is set once the user has successfully
@@ -70,6 +77,10 @@ class DeveloperPreferencesViewModel(val app: Application) :
         with(PreferenceManager.getDefaultSharedPreferences(app)) {
             this.registerOnSharedPreferenceChangeListener(this@DeveloperPreferencesViewModel)
 
+            apiEnvironment.value = getApiEnvironment(
+                    BuildConfig.PREFS_KEY_API_ENVIRONMENT,
+                    BuildConfig.DEFAULT_API_ENVIRONMENT)
+
             developerOptionsAuthenticatedHash.value =
                     getString(BuildConfig.PREFS_KEY_DEV_OPTS_AUTHENTICATED_HASH, null)
 
@@ -97,6 +108,11 @@ class DeveloperPreferencesViewModel(val app: Application) :
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
         sharedPreferences?.apply {
             when (key) {
+                BuildConfig.PREFS_KEY_API_ENVIRONMENT ->
+                    apiEnvironment.value = getApiEnvironment(
+                            BuildConfig.PREFS_KEY_API_ENVIRONMENT,
+                            BuildConfig.DEFAULT_API_ENVIRONMENT)
+
                 BuildConfig.PREFS_KEY_DEV_OPTS_AUTHENTICATED_HASH ->
                     developerOptionsAuthenticatedHash.value = getString(key, null)
 
@@ -143,14 +159,6 @@ class DeveloperPreferencesViewModel(val app: Application) :
     }
 
     // endregion Methods
-
-    // region Companion object
-
-    companion object {
-        private val TAG = DeveloperPreferencesViewModel::class.java.simpleName
-    }
-
-    // endregion Companion object
 
     // region Nested classes
 

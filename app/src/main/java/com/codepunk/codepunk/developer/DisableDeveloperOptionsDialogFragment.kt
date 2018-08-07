@@ -65,7 +65,8 @@ class DisableDeveloperOptionsDialogFragment: AppCompatDialogFragment(),
     // region Companion object
 
     companion object {
-        private val TAG = DeveloperPasswordDialogFragment::class.java.simpleName
+
+        // region Methods
 
         /**
          * Creates a new instance of [DisableDeveloperOptionsDialogFragment].
@@ -73,6 +74,9 @@ class DisableDeveloperOptionsDialogFragment: AppCompatDialogFragment(),
         fun newInstance(): DisableDeveloperOptionsDialogFragment {
             return DisableDeveloperOptionsDialogFragment()
         }
+
+        // endregion Methods
+
     }
 
     // endregion Companion object
