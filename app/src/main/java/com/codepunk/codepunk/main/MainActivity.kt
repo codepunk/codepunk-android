@@ -51,7 +51,7 @@ class MainActivity : AppCompatActivity() {
         dayPluginManager.get(Calendar.getInstance()).showGreeting()
 
         // TODO TEMP Always open settings
-        startActivity(Intent(ACTION_PREFERENCES))
+        //startActivity(Intent(ACTION_PREFERENCES))
         // END TEMP
     }
 
