@@ -25,7 +25,7 @@ import android.arch.lifecycle.ViewModel
  * The [ViewModel] that stores developer options-related preference data.
  */
 class MainPreferencesViewModel(val app: Application) :
-        AndroidViewModel(app) {
+    AndroidViewModel(app) {
 
     // region Properties
 
@@ -39,12 +39,11 @@ class MainPreferencesViewModel(val app: Application) :
      */
     init {
         appVersion.value = app
-                .applicationContext
-                .packageManager.getPackageInfo(app.applicationContext.packageName, 0)
-                .versionName
+            .applicationContext
+            .packageManager.getPackageInfo(app.applicationContext.packageName, 0)
+            .versionName
     }
 
     // endregion Properties
-
 
 }

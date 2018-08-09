@@ -20,12 +20,22 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.preference.PreferenceManager
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import com.codepunk.codepunk.BuildConfig
 import com.codepunk.codepunk.CodepunkApp.Companion.loginator
 import com.codepunk.codepunk.R
+import com.codepunk.codepunk.data.api.AuthApi
+import com.codepunk.codepunk.data.api.environment.ApiEnvironmentPluginator
+import com.codepunk.codepunk.data.model.AuthToken
+import com.codepunk.codepunk.data.model.GrantType
 import com.codepunk.codepunk.util.ACTION_PREFERENCES
+import com.codepunk.codepunk.util.getApiEnvironment
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.util.*
 
 /**
@@ -73,6 +83,37 @@ class MainActivity : AppCompatActivity() {
         if (loginator.isLoggable(Log.WARN)) {
             loginator.w("This is a warning log entry")
         }
+
+        // TODO Centralize this and have a listener for api environment preference change?
+        val apiEnvironment = PreferenceManager.getDefaultSharedPreferences(this)
+            .getApiEnvironment(
+                BuildConfig.PREFS_KEY_API_ENVIRONMENT,
+                BuildConfig.DEFAULT_API_ENVIRONMENT
+            )
+        val env = ApiEnvironmentPluginator.get(apiEnvironment)
+
+        // TODO TEMP Maybe temp stuff
+
+        val authApi: AuthApi = env.retrofit.create(AuthApi::class.java)
+        val token = authApi.authToken(
+            GrantType.PASSWORD,
+            "slaterama@gmail.com",
+            "r3stlandC",
+            2,
+            "CgBXoDjB9i5aM9nOdsVGg4TO8yNMoF2Gv1ikWSBJ"
+        )
+        token.enqueue(object : Callback<AuthToken> {
+            override fun onResponse(call: Call<AuthToken>?, response: Response<AuthToken>?) {
+                loginator.d("Made it! :-)")
+            }
+
+            override fun onFailure(call: Call<AuthToken>?, t: Throwable?) {
+                loginator.d("Made it! :-(")
+            }
+        })
+        loginator.d("env=$env")
+
+        // END TEMP
     }
 
     // endregion Lifecycle methods

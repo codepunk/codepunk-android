@@ -29,20 +29,23 @@ enum class ApiEnvironment(@StringRes val nameResId: Int, val baseUrl: String) {
      * The production API environment.
      */
     PROD(
-            R.string.api_env_production,
-            "" /* TODO */),
+        R.string.api_env_production,
+        "" /* TODO */
+    ),
 
     /**
      * The development API environment.
      */
     DEV(
-            R.string.api_env_development,
-            "" /* TODO */),
+        R.string.api_env_development,
+        "" /* TODO */
+    ),
 
     /**
      * The local API environment, indicating that we are connected to a local/virtual box.
      */
     LOCAL(
-            R.string.api_env_local,
-            "https://codepunk.test")
+        R.string.api_env_local,
+        "http://codepunk.test"
+    )
 }

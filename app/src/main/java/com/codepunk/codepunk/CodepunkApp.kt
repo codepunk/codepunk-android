@@ -20,8 +20,8 @@ import android.app.Application
 import android.support.v7.preference.PreferenceManager
 import com.codepunk.doofenschmirtz.util.loginator.FormattingLoginator
 import com.codepunk.doofenschmirtz.util.supportProcessName
-import java.lang.ref.WeakReference
 import java.lang.Thread.UncaughtExceptionHandler
+import java.lang.ref.WeakReference
 
 /**
  * The Application class for the Codepunk app.

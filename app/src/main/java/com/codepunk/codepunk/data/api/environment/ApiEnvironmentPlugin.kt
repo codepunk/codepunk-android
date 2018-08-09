@@ -16,6 +16,14 @@
 
 package com.codepunk.codepunk.data.api.environment
 
+import com.codepunk.codepunk.data.model.GrantType
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
+import retrofit2.Converter
+import retrofit2.Retrofit
+import retrofit2.converter.moshi.MoshiConverterFactory
+import java.lang.reflect.Type
+
 /**
  * The base API environment plugin class.
  */
@@ -28,11 +36,60 @@ abstract class ApiEnvironmentPlugin {
      */
     abstract val apiEnvironment: ApiEnvironment
 
+
+    /**
+     * The [Retrofit] instance to use to make API calls in this [ApiEnvironment].
+     */
+    val retrofit: Retrofit by lazy {
+        Retrofit.Builder()
+            .baseUrl(apiEnvironment.baseUrl)
+            .addConverterFactory(moshiConverterFactory)
+            .addConverterFactory(customConverterFactory)
+            .build()
+    }
+
     // endregion Properties
 
     // region Companion object
 
     companion object {
+
+        // region Properties
+
+        /**
+         * The Moshi [Converter.Factory] to use for Retrofit API calls.
+         */
+        private val moshiConverterFactory: Converter.Factory by lazy {
+            MoshiConverterFactory.create(moshi)
+        }
+
+        /**
+         * The custom [Converter.Factory] to use for Retrofit API calls.
+         * TODO Is there any better way to consolidate these custom converters?
+         */
+        private val customConverterFactory = object : Converter.Factory() {
+            override fun stringConverter(
+                type: Type?,
+                annotations: Array<out Annotation>?,
+                retrofit: Retrofit?
+            ): Converter<*, String>? {
+                return when (type) {
+                    GrantType::class.java -> Converter<GrantType, String> { value ->
+                        value.value
+                    }
+                    else -> null
+                }
+            }
+        }
+
+        /**
+         * The Moshi instance
+         */
+        private val moshi = Moshi.Builder()
+            .add(KotlinJsonAdapterFactory())
+            .build()
+
+        // endregion Properties
 
         // region Methods
 

@@ -31,13 +31,13 @@ abstract class DayPlugin(val context: Context) {
 /**
  * A basic version of the DayPlugin class, which displays an "At least it's not Monday!" Toast.
  */
-class BaseDayPlugin(_context: Context): DayPlugin(_context) {
+class BaseDayPlugin(_context: Context) : DayPlugin(_context) {
     override fun showGreeting() {
         Toast.makeText(
-                context,
-                "At least it's not Monday!",
-                Toast.LENGTH_LONG)
-                .show()
+            context,
+            "At least it's not Monday!",
+            Toast.LENGTH_LONG
+        ).show()
     }
 }
 
@@ -45,13 +45,14 @@ class BaseDayPlugin(_context: Context): DayPlugin(_context) {
  * A Monday-specific version of the DayPlugin class, which displays a "Looks like someone has a
  * case of the Mondays!" Toast.
  */
-class MondayPlugin(_context: Context): DayPlugin(_context) {
+class MondayPlugin(_context: Context) : DayPlugin(_context) {
     override fun showGreeting() {
         Toast.makeText(
-                context,
-                "Looks like someone has a case of the Mondays!",
-                Toast.LENGTH_LONG)
-                .show()
+            context,
+            "Looks like someone has a case of the Mondays!",
+            Toast.LENGTH_LONG
+        )
+            .show()
     }
 }
 
@@ -59,13 +60,14 @@ class MondayPlugin(_context: Context): DayPlugin(_context) {
  * A Thursday-specific version of the DayPlugin class, which displays a "Hooray, it's almost the
  * weekend!" Toast.
  */
-class ThursdayPlugin(_context: Context): DayPlugin(_context) {
+class ThursdayPlugin(_context: Context) : DayPlugin(_context) {
     override fun showGreeting() {
         Toast.makeText(
-                context,
-                "Hooray, it's almost the weekend!",
-                Toast.LENGTH_LONG)
-                .show()
+            context,
+            "Hooray, it's almost the weekend!",
+            Toast.LENGTH_LONG
+        )
+            .show()
     }
 }
 
@@ -73,9 +75,10 @@ class ThursdayPlugin(_context: Context): DayPlugin(_context) {
  * A [Pluginator] that manages [DayPlugin]s based on the day of the week.
  */
 class DayPluginator(
-        private val context: Context,
-        pluginListener: PluginListener<DayPlugin, Calendar>? = null) :
-        Pluginator<DayPlugin, Calendar>(pluginListener) {
+    private val context: Context,
+    pluginListener: PluginListener<DayPlugin, Calendar>? = null
+) :
+    Pluginator<DayPlugin, Calendar>(pluginListener) {
 
     /**
      * Marks the active plugin as stale depending on the value returned by [getValue].

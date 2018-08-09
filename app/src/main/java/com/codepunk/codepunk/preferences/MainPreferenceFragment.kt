@@ -68,9 +68,9 @@ private const val SAVE_STATE_CLICKS_REMAINING = "clicksRemaining"
  * A preference fragment that displays the main settings available to the user.
  */
 class MainPreferenceFragment :
-        PreferenceFragmentCompat(),
-        Preference.OnPreferenceChangeListener,
-        Preference.OnPreferenceClickListener {
+    PreferenceFragmentCompat(),
+    Preference.OnPreferenceChangeListener,
+    Preference.OnPreferenceClickListener {
 
     // region Fields
 
@@ -140,8 +140,9 @@ class MainPreferenceFragment :
                     Activity.RESULT_OK -> {
                         data?.run {
                             developerPreferencesViewModel.updateDeveloperOptions(
-                                    true,
-                                    getStringExtra(EXTRA_DEVELOPER_PASSWORD_HASH))
+                                true,
+                                getStringExtra(EXTRA_DEVELOPER_PASSWORD_HASH)
+                            )
                         }
                     }
                 }
@@ -171,21 +172,22 @@ class MainPreferenceFragment :
 
         with(mainPreferencesViewModel) {
             appVersion.observe(
-                    this@MainPreferenceFragment,
-                    Observer { version ->
-                        aboutPreference.summary = getString(R.string.prefs_about_summary, version)
-                    })
+                this@MainPreferenceFragment,
+                Observer { version ->
+                    aboutPreference.summary = getString(R.string.prefs_about_summary, version)
+                })
         }
 
         with(developerPreferencesViewModel) {
             developerOptionsState.observe(
-                    this@MainPreferenceFragment,
-                    Observer { state ->
-                        onDeveloperOptionsStateChange(state ?: DeveloperOptionsState.LOCKED)
-                    })
+                this@MainPreferenceFragment,
+                Observer { state ->
+                    onDeveloperOptionsStateChange(state ?: DeveloperOptionsState.LOCKED)
+                })
 
             onDeveloperOptionsStateChange(
-                    developerOptionsState.value ?: DeveloperOptionsState.LOCKED)
+                developerOptionsState.value ?: DeveloperOptionsState.LOCKED
+            )
         }
     }
 
@@ -240,7 +242,8 @@ class MainPreferenceFragment :
                         })
                     DeveloperOptionsState.UNLOCKED ->
                         showDeveloperPasswordDialogFragment()
-                    else -> { /* No action */ }
+                    else -> { /* No action */
+                    }
                 }
                 true
             }
@@ -273,10 +276,11 @@ class MainPreferenceFragment :
      */
     private fun onRedundantUnlockRequest() {
         Toast.makeText(
-                context,
-                R.string.prefs_dev_opts_redundant_show_request,
-                Toast.LENGTH_SHORT)
-                .show()
+            context,
+            R.string.prefs_dev_opts_redundant_show_request,
+            Toast.LENGTH_SHORT
+        )
+            .show()
     }
 
     /**
@@ -285,10 +289,11 @@ class MainPreferenceFragment :
     private fun onStepsToUnlockDeveloperOptionsChange(steps: Int) {
         if (steps in 1..DEV_OPTS_CLICKS_REMAINING_TOAST) {
             Toast.makeText(
-                    context,
-                    getString(R.string.prefs_dev_opts_steps_from_unlocking, steps),
-                    Toast.LENGTH_SHORT)
-                    .show()
+                context,
+                getString(R.string.prefs_dev_opts_steps_from_unlocking, steps),
+                Toast.LENGTH_SHORT
+            )
+                .show()
         }
     }
 
@@ -302,12 +307,13 @@ class MainPreferenceFragment :
             }
 
             DeveloperPasswordDialogFragment.newInstance()
-                    .apply {
-                        setTargetFragment(
-                                this@MainPreferenceFragment,
-                                DEVELOPER_PASSWORD_REQUEST_CODE)
-                    }
-                    .show(this, DEVELOPER_PASSWORD_DIALOG_FRAGMENT_TAG)
+                .apply {
+                    setTargetFragment(
+                        this@MainPreferenceFragment,
+                        DEVELOPER_PASSWORD_REQUEST_CODE
+                    )
+                }
+                .show(this, DEVELOPER_PASSWORD_DIALOG_FRAGMENT_TAG)
         }
     }
 
@@ -321,12 +327,13 @@ class MainPreferenceFragment :
             }
 
             DisableDeveloperOptionsDialogFragment.newInstance()
-                    .apply {
-                        setTargetFragment(
-                                this@MainPreferenceFragment,
-                                DISABLE_DEVELOPER_OPTIONS_REQUEST_CODE)
-                    }
-                    .show(this, DISABLE_DEVELOPER_OPTIONS_DIALOG_FRAGMENT_TAG)
+                .apply {
+                    setTargetFragment(
+                        this@MainPreferenceFragment,
+                        DISABLE_DEVELOPER_OPTIONS_REQUEST_CODE
+                    )
+                }
+                .show(this, DISABLE_DEVELOPER_OPTIONS_DIALOG_FRAGMENT_TAG)
         }
     }
 
@@ -342,13 +349,13 @@ class MainPreferenceFragment :
          * The fragment tag to use for the developer password dialog fragment.
          */
         private val DEVELOPER_PASSWORD_DIALOG_FRAGMENT_TAG =
-                MainPreferenceFragment::class.java.name + ".DEVELOPER_PASSWORD_DIALOG"
+            MainPreferenceFragment::class.java.name + ".DEVELOPER_PASSWORD_DIALOG"
 
         /**
          * The fragment tag to use for the disable developer options dialog fragment.
          */
         private val DISABLE_DEVELOPER_OPTIONS_DIALOG_FRAGMENT_TAG =
-                MainPreferenceFragment::class.java.name + ".DISABLE_DEVELOPER_OPTIONS_DIALOG"
+            MainPreferenceFragment::class.java.name + ".DISABLE_DEVELOPER_OPTIONS_DIALOG"
 
         // endregion Properties
 
