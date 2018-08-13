@@ -14,17 +14,38 @@
  * limitations under the License.
  */
 
-package com.codepunk.codepunk.data.api.environment
+package com.codepunk.codepunk.data.api
+
+import com.codepunk.codepunk.util.generateSSLSocketFactory
+import okhttp3.OkHttpClient
+import retrofit2.Retrofit
 
 /**
  * The local API environment plugin.
  */
-class LocalApiEnvironmentPlugin : ApiEnvironmentPlugin() {
+class LocalApiPlugin : ApiPlugin() {
 
     // region Properties
 
     override val apiEnvironment: ApiEnvironment
         get() = ApiEnvironment.LOCAL
 
+    override val baseUrl: String
+        get() = "https://codepunk.test"
+
     // endregion Properties
+
+    // region Inherited methods
+
+    override fun onPrepareRetrofitBuilder(builder: Retrofit.Builder) {
+        super.onPrepareRetrofitBuilder(builder)
+
+        val client = OkHttpClient.Builder()
+            .generateSSLSocketFactory()
+            .build()
+
+        builder.client(client)
+    }
+
+    // endregion Inherited methods
 }

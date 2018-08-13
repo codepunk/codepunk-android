@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-package com.codepunk.codepunk.data.api.environment
+package com.codepunk.codepunk.data.api
 
 import com.codepunk.doofenschmirtz.util.pluginator.Pluginator
 
 /**
  * The API environment plugin manager.
  */
-object ApiEnvironmentPluginator : Pluginator<ApiEnvironmentPlugin, ApiEnvironment>() {
+object ApiPluginator : Pluginator<ApiPlugin, ApiEnvironment>() {
 
     // region Inherited methods
 
@@ -35,8 +35,8 @@ object ApiEnvironmentPluginator : Pluginator<ApiEnvironmentPlugin, ApiEnvironmen
     /**
      * Creates a new API environment plugin based on the API environment passed in as [state].
      */
-    override fun newPlugin(state: ApiEnvironment): ApiEnvironmentPlugin {
-        return ApiEnvironmentPlugin.newInstance(state)
+    override fun newPlugin(state: ApiEnvironment): ApiPlugin {
+        return ApiPlugin.newInstance(state)
     }
 
     // endregion Inherited methods

@@ -1,7 +1,7 @@
 package com.codepunk.codepunk.util
 
 import android.content.SharedPreferences
-import com.codepunk.codepunk.data.api.environment.ApiEnvironment
+import com.codepunk.codepunk.data.api.ApiEnvironment
 import com.codepunk.doofenschmirtz.util.enumValueOf
 
 /**

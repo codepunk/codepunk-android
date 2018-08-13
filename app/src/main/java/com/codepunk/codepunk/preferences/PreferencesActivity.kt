@@ -30,7 +30,7 @@ import com.codepunk.doofenschmirtz.preference.displayCustomPreferenceDialogFragm
  * The [Activity] that will serve as the container for all preference-related fragments.
  */
 class PreferencesActivity : AppCompatActivity(),
-        PreferenceFragmentCompat.OnPreferenceDisplayDialogCallback {
+    PreferenceFragmentCompat.OnPreferenceDisplayDialogCallback {
 
     // region Lifecycle methods
 
@@ -44,9 +44,9 @@ class PreferencesActivity : AppCompatActivity(),
 
         if (supportFragmentManager.findFragmentById(android.R.id.content) == null) {
             supportFragmentManager
-                    .beginTransaction()
-                    .add(android.R.id.content, createFragment(intent))
-                    .commit()
+                .beginTransaction()
+                .add(android.R.id.content, createFragment(intent))
+                .commit()
         }
     }
 
@@ -77,8 +77,9 @@ class PreferencesActivity : AppCompatActivity(),
      */
     // PreferenceFragmentCompat.OnPreferenceDisplayDialogCallback
     override fun onPreferenceDisplayDialog(
-            caller: PreferenceFragmentCompat,
-            pref: Preference?): Boolean {
+        caller: PreferenceFragmentCompat,
+        pref: Preference?
+    ): Boolean {
         return caller.displayCustomPreferenceDialogFragment(pref)
     }
 

@@ -43,8 +43,8 @@ import org.apache.commons.codec.digest.MessageDigestAlgorithms
  * the user's input in order to compare it with the stored hash.
  */
 class DeveloperPasswordDialogFragment : AppCompatDialogFragment(),
-        DialogInterface.OnShowListener,
-        View.OnClickListener {
+    DialogInterface.OnShowListener,
+    View.OnClickListener {
 
     // region Properties
 
@@ -55,8 +55,10 @@ class DeveloperPasswordDialogFragment : AppCompatDialogFragment(),
      */
     private val edit by lazy {
         dialog.findViewById(android.R.id.edit) as? EditText
-                ?: throw IllegalStateException("Dialog view must contain an EditText with id " +
-                        "@android:id/edit")
+            ?: throw IllegalStateException(
+                "Dialog view must contain an EditText with id " +
+                        "@android:id/edit"
+            )
     }
 
     /**
@@ -96,15 +98,15 @@ class DeveloperPasswordDialogFragment : AppCompatDialogFragment(),
      */
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         return AlertDialog.Builder(requireContext())
-                .setTitle(R.string.prefs_dev_opts_password_dialog_title)
-                .setMessage(R.string.prefs_dev_opts_password_dialog_message) // TODO Allow for different message
-                .setView(R.layout.fragment_dialog_developer_password)
-                .setPositiveButton(android.R.string.ok, null)
-                .setNegativeButton(android.R.string.cancel, null)
-                .create().apply {
-                    setOnShowListener(this@DeveloperPasswordDialogFragment)
-                    shakeAnimator.setTarget(window.decorView)
-                }
+            .setTitle(R.string.prefs_dev_opts_password_dialog_title)
+            .setMessage(R.string.prefs_dev_opts_password_dialog_message) // TODO Allow for different message
+            .setView(R.layout.fragment_dialog_developer_password)
+            .setPositiveButton(android.R.string.ok, null)
+            .setNegativeButton(android.R.string.cancel, null)
+            .create().apply {
+                setOnShowListener(this@DeveloperPasswordDialogFragment)
+                shakeAnimator.setTarget(window.decorView)
+            }
     }
 
     // endregion Inherited methods
@@ -133,13 +135,14 @@ class DeveloperPasswordDialogFragment : AppCompatDialogFragment(),
                 if (BuildConfig.DEVELOPER_PASSWORD_HASH.equals(hex, true)) {
                     dialog.dismiss()
                     targetFragment?.onActivityResult(
-                            targetRequestCode,
-                            Activity.RESULT_OK,
-                            Intent().apply {
-                                putExtra(
-                                        EXTRA_DEVELOPER_PASSWORD_HASH,
-                                        BuildConfig.DEVELOPER_PASSWORD_HASH)
-                            })
+                        targetRequestCode,
+                        Activity.RESULT_OK,
+                        Intent().apply {
+                            putExtra(
+                                EXTRA_DEVELOPER_PASSWORD_HASH,
+                                BuildConfig.DEVELOPER_PASSWORD_HASH
+                            )
+                        })
                 } else {
                     layout?.error = getString(R.string.incorrect_password)
                     shakeAnimator.start()

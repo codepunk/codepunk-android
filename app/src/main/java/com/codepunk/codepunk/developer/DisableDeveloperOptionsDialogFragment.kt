@@ -28,8 +28,8 @@ import com.codepunk.codepunk.R
  * A simple "OK/Cancel" dialog fragment that confirms that user wishes to disable developer
  * options.
  */
-class DisableDeveloperOptionsDialogFragment: AppCompatDialogFragment(),
-        DialogInterface.OnClickListener {
+class DisableDeveloperOptionsDialogFragment : AppCompatDialogFragment(),
+    DialogInterface.OnClickListener {
 
     // region Inherited methods
 
@@ -38,11 +38,11 @@ class DisableDeveloperOptionsDialogFragment: AppCompatDialogFragment(),
      */
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         return AlertDialog.Builder(requireContext())
-                .setTitle(R.string.prefs_dev_opts_disable_dialog_title)
-                .setMessage(R.string.prefs_dev_opts_disable_dialog_message)
-                .setPositiveButton(android.R.string.ok, this)
-                .setNegativeButton(android.R.string.cancel, this)
-                .create()
+            .setTitle(R.string.prefs_dev_opts_disable_dialog_title)
+            .setMessage(R.string.prefs_dev_opts_disable_dialog_message)
+            .setPositiveButton(android.R.string.ok, this)
+            .setNegativeButton(android.R.string.cancel, this)
+            .create()
     }
 
     // endregion Inherited methods
@@ -55,8 +55,8 @@ class DisableDeveloperOptionsDialogFragment: AppCompatDialogFragment(),
      */
     override fun onClick(dialog: DialogInterface?, which: Int) {
         val resultCode =
-                if (which == DialogInterface.BUTTON_POSITIVE) Activity.RESULT_OK
-                else Activity.RESULT_CANCELED
+            if (which == DialogInterface.BUTTON_POSITIVE) Activity.RESULT_OK
+            else Activity.RESULT_CANCELED
         targetFragment?.onActivityResult(targetRequestCode, resultCode, null)
     }
 

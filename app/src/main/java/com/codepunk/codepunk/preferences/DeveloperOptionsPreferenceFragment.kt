@@ -24,7 +24,7 @@ import android.support.v7.preference.ListPreference
 import android.support.v7.preference.PreferenceFragmentCompat
 import com.codepunk.codepunk.BuildConfig
 import com.codepunk.codepunk.R
-import com.codepunk.codepunk.data.api.environment.ApiEnvironment
+import com.codepunk.codepunk.data.api.ApiEnvironment
 import com.codepunk.doofenschmirtz.util.populate
 
 /**
@@ -33,7 +33,7 @@ import com.codepunk.doofenschmirtz.util.populate
  * preference and authenticate themselves as a developer.
  */
 class DeveloperOptionsPreferenceFragment :
-        PreferenceFragmentCompat() {
+    PreferenceFragmentCompat() {
 
     // region Properties
 
@@ -63,15 +63,15 @@ class DeveloperOptionsPreferenceFragment :
         requireActivity().title = preferenceScreen.title
 
         apiEnvironmentPreference.populate(
-                enumClass = ApiEnvironment::class.java,
-                entry = { apiEnvironment -> requireContext().getString(apiEnvironment.nameResId) })
+            enumClass = ApiEnvironment::class.java,
+            entry = { apiEnvironment -> requireContext().getString(apiEnvironment.nameResId) })
 
         with(developerPreferencesViewModel) {
             apiEnvironment.observe(this@DeveloperOptionsPreferenceFragment,
-                    Observer { env ->
-                        apiEnvironmentPreference.summary =
-                                env?.let { getString(it.nameResId) } ?: ""
-                    })
+                Observer { env ->
+                    apiEnvironmentPreference.summary =
+                            env?.let { getString(it.nameResId) } ?: ""
+                })
         }
     }
 

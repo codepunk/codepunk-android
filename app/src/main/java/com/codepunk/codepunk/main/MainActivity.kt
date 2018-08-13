@@ -28,7 +28,7 @@ import com.codepunk.codepunk.BuildConfig
 import com.codepunk.codepunk.CodepunkApp.Companion.loginator
 import com.codepunk.codepunk.R
 import com.codepunk.codepunk.data.api.AuthApi
-import com.codepunk.codepunk.data.api.environment.ApiEnvironmentPluginator
+import com.codepunk.codepunk.data.api.ApiPluginator
 import com.codepunk.codepunk.data.model.AuthToken
 import com.codepunk.codepunk.data.model.GrantType
 import com.codepunk.codepunk.util.ACTION_PREFERENCES
@@ -90,11 +90,11 @@ class MainActivity : AppCompatActivity() {
                 BuildConfig.PREFS_KEY_API_ENVIRONMENT,
                 BuildConfig.DEFAULT_API_ENVIRONMENT
             )
-        val env = ApiEnvironmentPluginator.get(apiEnvironment)
+        val api = ApiPluginator.get(apiEnvironment)
 
         // TODO TEMP Maybe temp stuff
 
-        val authApi: AuthApi = env.retrofit.create(AuthApi::class.java)
+        val authApi: AuthApi = api.retrofit.create(AuthApi::class.java)
         val token = authApi.authToken(
             GrantType.PASSWORD,
             "slaterama@gmail.com",
@@ -111,7 +111,7 @@ class MainActivity : AppCompatActivity() {
                 loginator.d("Made it! :-(")
             }
         })
-        loginator.d("env=$env")
+        loginator.d("env=$api")
 
         // END TEMP
     }

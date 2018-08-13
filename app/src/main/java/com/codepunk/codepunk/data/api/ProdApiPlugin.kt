@@ -14,17 +14,21 @@
  * limitations under the License.
  */
 
-package com.codepunk.codepunk.data.api.environment
+package com.codepunk.codepunk.data.api
 
 /**
- * The development API environment plugin.
+ * The production API environment plugin.
  */
-class DevApiEnvironmentPlugin : ApiEnvironmentPlugin() {
+class ProdApiPlugin : ApiPlugin() {
 
     // region Properties
 
     override val apiEnvironment: ApiEnvironment
-        get() = ApiEnvironment.DEV
+        get() = ApiEnvironment.PROD
+
+    override val baseUrl: String
+        get() = TODO("not implemented")
 
     // endregion Properties
+
 }

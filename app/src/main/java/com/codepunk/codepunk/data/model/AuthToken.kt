@@ -23,7 +23,7 @@ class AuthToken {
     // region Properties
 
     @Json(name = "token_type")
-    var tokenType: String? = null
+    var tokenType: TokenType? = null
 
     @Json(name = "expires_in")
     var expiresIn: Long = 0

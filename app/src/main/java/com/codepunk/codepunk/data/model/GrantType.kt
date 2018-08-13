@@ -16,6 +16,8 @@
 
 package com.codepunk.codepunk.data.model
 
+import com.squareup.moshi.Json
+
 /**
  * An enumeration of the various grant types used in OAuth2 calls.
  */
@@ -24,22 +26,26 @@ enum class GrantType(val value: String) {
     /**
      * Used when an application exchanges an authorization code for an access token.
      */
+    @Json(name = "authorization_code")
     AUTHORIZATION_CODE("authorization_code"),
 
     /**
      * Used when applications request an access token to access their own resources, not on behalf
      * of a user.
      */
+    @Json(name = "client_credentials")
     CLIENT_CREDENTIALS("client_credentials"),
 
     /**
      * Used when the application uses a refresh token to obtain a new access token.
      */
+    @Json(name = "refresh_token")
     REFRESH_TOKEN("refresh_token"),
 
     /**
      * Used when the application exchanges the user’s username and password for an access token.
      */
+    @Json(name = "password")
     PASSWORD("password")
 
 }

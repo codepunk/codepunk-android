@@ -24,7 +24,7 @@ import android.arch.lifecycle.ViewModel
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
 import com.codepunk.codepunk.BuildConfig
-import com.codepunk.codepunk.data.api.environment.ApiEnvironment
+import com.codepunk.codepunk.data.api.ApiEnvironment
 import com.codepunk.codepunk.util.getApiEnvironment
 
 /**
