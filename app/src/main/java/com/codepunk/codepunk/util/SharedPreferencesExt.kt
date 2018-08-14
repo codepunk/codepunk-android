@@ -1,6 +1,7 @@
 package com.codepunk.codepunk.util
 
 import android.content.SharedPreferences
+import com.codepunk.codepunk.BuildConfig
 import com.codepunk.codepunk.data.api.ApiEnvironment
 import com.codepunk.doofenschmirtz.util.enumValueOf
 
@@ -16,4 +17,9 @@ fun SharedPreferences.getApiEnvironment(key: String, defaultValue: ApiEnvironmen
  */
 fun SharedPreferences.Editor.putApiEnvironment(key: String, value: ApiEnvironment) {
     putString(key, value.name)
+}
+
+object SharedPreferencesConstants {
+    const val PREFS_KEY_ACCESS_TOKEN =
+        "${BuildConfig.APPLICATION_ID}.PREFS_KEY_ACCESS_TOKEN"
 }

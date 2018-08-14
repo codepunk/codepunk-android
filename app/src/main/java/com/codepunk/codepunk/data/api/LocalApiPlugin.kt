@@ -18,7 +18,6 @@ package com.codepunk.codepunk.data.api
 
 import com.codepunk.codepunk.util.generateSSLSocketFactory
 import okhttp3.OkHttpClient
-import retrofit2.Retrofit
 
 /**
  * The local API environment plugin.
@@ -37,14 +36,9 @@ class LocalApiPlugin : ApiPlugin() {
 
     // region Inherited methods
 
-    override fun onPrepareRetrofitBuilder(builder: Retrofit.Builder) {
-        super.onPrepareRetrofitBuilder(builder)
-
-        val client = OkHttpClient.Builder()
-            .generateSSLSocketFactory()
-            .build()
-
-        builder.client(client)
+    override fun onPrepareOkHttpClientBuilder(builder: OkHttpClient.Builder) {
+        super.onPrepareOkHttpClientBuilder(builder)
+        builder.generateSSLSocketFactory()
     }
 
     // endregion Inherited methods

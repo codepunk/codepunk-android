@@ -19,8 +19,15 @@ buildscript {
 }
 
 android {
+    signingConfigs {
+        config {
+            keyAlias 'CodepunkKey'
+            keyPassword 'x7BQNxJqUQqy'
+            storeFile file('/Users/slaterama/Development/Android/Codepunk/Codepunk.jks')
+            storePassword 'KA1KDoc6XoZw'
+        }
+    }
     compileSdkVersion 28
-
     defaultConfig {
         applicationId "com.codepunk.codepunk"
         minSdkVersion 15
@@ -28,39 +35,36 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        vectorDrawables.useSupportLibrary = true
+        signingConfig signingConfigs.config
 
         def developer_password_hash = "cdb3f12612b12e7993aaa8e2cc7de87a02c18c62fb0e94578cadd1846b20e6c4"
         buildConfigField("String", "DEVELOPER_PASSWORD_HASH", "\"" + developer_password_hash + "\"")
         resValue "string", "developer_password_hash", developer_password_hash
     }
-
     buildTypes {
         debug {
             def defaultApiEnvironment = "LOCAL"
-
             applicationIdSuffix ".debug"
             versionNameSuffix "-DEBUG"
             buildConfigField("String", "CLIENT_ID", "\"2\"")
             buildConfigField("String", "CLIENT_SECRET", "\"EWB9n4SkJ9EAjgmzoyCfw3evXXRVaAA8UQacE35d\"")
             buildConfigField("com.codepunk.codepunk.data.api.ApiEnvironment", "DEFAULT_API_ENVIRONMENT", "com.codepunk.codepunk.data.api.ApiEnvironment.valueOf(\"" + defaultApiEnvironment + "\")")
             buildConfigField("int", "LOGINATOR_LEVEL", "android.util.Log.VERBOSE")
-
             resValue "string", "default_api_environment", defaultApiEnvironment
         }
         release {
             def defaultApiEnvironment = "PROD"
-
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             buildConfigField("String", "CLIENT_ID", "\"2\"")
             buildConfigField("String", "CLIENT_SECRET", "\"EWB9n4SkJ9EAjgmzoyCfw3evXXRVaAA8UQacE35d\"")
             buildConfigField("com.codepunk.codepunk.data.api.ApiEnvironment", "DEFAULT_API_ENVIRONMENT", "com.codepunk.codepunk.data.api.ApiEnvironment.valueOf(\"" + defaultApiEnvironment + "\")")
             buildConfigField("int", "LOGINATOR_LEVEL", "android.util.Log.ERROR")
-
             resValue "string", "default_api_environment", defaultApiEnvironment
+            signingConfig signingConfigs.config
         }
     }
-
     applicationVariants.all { variant ->
         // region Preference keys
 
@@ -84,6 +88,8 @@ android {
 
         // endregion Preference keys
     }
+    productFlavors {
+    }
 }
 
 dokka {
@@ -93,14 +99,15 @@ dokka {
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation "android.arch.lifecycle:extensions:$android_lifecycle_version"
-    implementation "com.android.support:support-v4:$android_support_version"
+    implementation "com.android.support:animated-vector-drawable:$android_support_version"
     implementation "com.android.support:appcompat-v7:$android_support_version"
+    implementation 'com.android.support.constraint:constraint-layout:1.1.2'
     implementation "com.android.support:design:$android_support_version"
     implementation "com.android.support:preference-v7:$android_support_version"
-    implementation 'com.android.support.constraint:constraint-layout:1.1.2'
+    implementation "com.android.support:support-v4:$android_support_version"
     implementation 'com.squareup.moshi:moshi-kotlin:1.6.0'
     implementation 'com.squareup.okhttp3:okhttp:3.11.0'
     implementation "com.squareup.retrofit2:retrofit:$retrofit_version"

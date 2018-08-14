@@ -16,22 +16,27 @@
 
 package com.codepunk.codepunk.main
 
+import android.annotation.SuppressLint
 import android.app.Activity
+import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
+import android.content.SharedPreferences
+import android.graphics.drawable.Animatable
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.preference.PreferenceManager
-import android.util.Log
+import android.support.v7.widget.AppCompatImageView
 import android.view.Menu
 import android.view.MenuItem
 import com.codepunk.codepunk.BuildConfig
 import com.codepunk.codepunk.CodepunkApp.Companion.loginator
 import com.codepunk.codepunk.R
-import com.codepunk.codepunk.data.api.AuthApi
 import com.codepunk.codepunk.data.api.ApiPluginator
+import com.codepunk.codepunk.data.api.AuthApi
 import com.codepunk.codepunk.data.model.AuthToken
 import com.codepunk.codepunk.data.model.GrantType
 import com.codepunk.codepunk.util.ACTION_PREFERENCES
+import com.codepunk.codepunk.util.SharedPreferencesConstants.PREFS_KEY_ACCESS_TOKEN
 import com.codepunk.codepunk.util.getApiEnvironment
 import retrofit2.Call
 import retrofit2.Callback
@@ -51,6 +56,13 @@ class MainActivity : AppCompatActivity() {
      */
     private val dayPluginManager = DayPluginator(this)
 
+    /**
+     * The [ViewModel] that stores main/generaldata used by the app.
+     */
+    private val mainViewModel by lazy {
+        ViewModelProviders.of(this).get(MainViewModel::class.java)
+    }
+
     // endregion Properties
 
     // region Lifecycle methods
@@ -60,14 +72,16 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         dayPluginManager.get(Calendar.getInstance()).showGreeting()
 
-        // TODO TEMP Always open settings
-        //startActivity(Intent(ACTION_PREFERENCES))
-        // END TEMP
+
     }
 
+    @SuppressLint("ApplySharedPref")
     override fun onResume() {
         super.onResume()
 
+        mainViewModel.authenticate()
+
+        /*
         if (loginator.isLoggable(Log.DEBUG)) {
             loginator.d("This is a debug log entry")
         }
@@ -83,19 +97,33 @@ class MainActivity : AppCompatActivity() {
         if (loginator.isLoggable(Log.WARN)) {
             loginator.w("This is a warning log entry")
         }
+        */
 
+        val loadingImage = findViewById<AppCompatImageView>(R.id.loading_dots_image)
+        val drawable = loadingImage.drawable
+        if (drawable is Animatable) {
+            drawable.start()
+        }
+
+        /*
         // TODO Centralize this and have a listener for api environment preference change?
-        val apiEnvironment = PreferenceManager.getDefaultSharedPreferences(this)
-            .getApiEnvironment(
-                BuildConfig.PREFS_KEY_API_ENVIRONMENT,
-                BuildConfig.DEFAULT_API_ENVIRONMENT
-            )
-        val api = ApiPluginator.get(apiEnvironment)
+        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
+        val env = sharedPreferences.getApiEnvironment(
+            BuildConfig.PREFS_KEY_API_ENVIRONMENT,
+            BuildConfig.DEFAULT_API_ENVIRONMENT
+        )
+        val api = ApiPluginator.get(env)
+
+        sharedPreferences.getString(PREFS_KEY_ACCESS_TOKEN, null)?.run {
+
+        } ?: run {
+            // TODO Show a register screen
+        }
 
         // TODO TEMP Maybe temp stuff
 
-        val authApi: AuthApi = api.retrofit.create(AuthApi::class.java)
-        val token = authApi.authToken(
+        //val authApi: AuthApi = api.retrofit.create(AuthApi::class.java)
+        val token = api.authApi.authToken(
             GrantType.PASSWORD,
             "slaterama@gmail.com",
             "r3stlandC",
@@ -111,7 +139,8 @@ class MainActivity : AppCompatActivity() {
                 loginator.d("Made it! :-(")
             }
         })
-        loginator.d("env=$api")
+        loginator.d("api=$api")
+        */
 
         // END TEMP
     }

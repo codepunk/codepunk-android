@@ -27,7 +27,7 @@ class ProdApiPlugin : ApiPlugin() {
         get() = ApiEnvironment.PROD
 
     override val baseUrl: String
-        get() = TODO("not implemented")
+        get() = "https://codepunk.test"
 
     // endregion Properties
 

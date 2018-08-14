@@ -14,21 +14,14 @@
  * limitations under the License.
  */
 
-package com.codepunk.codepunk.data.api
+package com.codepunk.codepunk.data.model
 
-/**
- * The development API environment plugin.
- */
-class DevApiPlugin : ApiPlugin() {
+class User {
 
-    // region Properties
+    var id: Int? = null
 
-    override val apiEnvironment: ApiEnvironment
-        get() = ApiEnvironment.DEV
+    var name: String? = null
 
-    override val baseUrl: String
-        get() = "https://codepunk.test"
-
-    // endregion Properties
+    var email: String? = null
 
 }

@@ -22,10 +22,12 @@ import retrofit2.http.POST
 import retrofit2.Call
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
+import retrofit2.http.Headers
 
 interface AuthApi {
 
     @FormUrlEncoded
+    @Headers("$NO_AUTHORIZATION: true")
     @POST("oauth/token")
     fun authToken(
         @Field("grant_type") grantType: GrantType,

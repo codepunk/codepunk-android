@@ -35,4 +35,5 @@ class AuthToken {
     var refreshToken: String? = null
 
     // endregion Properties
+
 }

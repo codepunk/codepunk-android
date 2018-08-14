@@ -3,14 +3,16 @@
     <!-- Good resource for naming convention:
          https://jeroenmols.com/blog/2016/03/07/resourcenaming/ -->
 
-    <!-- Generic -->
+    <!-- region Generic -->
 
     <string name="disabled">Disabled</string>
     <string name="enabled">Enabled</string>
     <string name="incorrect_password">Incorrect password</string>
     <string name="password">Password</string>
 
-    <!-- Application -->
+    <!-- endregion Generic -->
+
+    <!-- region Application -->
 
     <string name="app_name">Codepunk</string>
 
@@ -18,11 +20,15 @@
     <string name="api_env_development">Development</string>
     <string name="api_env_local">Local</string>
 
-    <!-- Menus -->
+    <!-- endregion Application -->
+
+    <!-- region Menus -->
 
     <string name="menu_prefs_title">Settings</string>
 
-    <!-- Preferences -->
+    <!-- endregion Menus -->
+
+    <!-- region Preferences -->
 
     <string name="prefs_main_title">Settings</string>
     <string name="prefs_about_title">About</string>
@@ -41,30 +47,13 @@
     <string name="prefs_dev_opts_disable_dialog_title">Disable developer options?</string>
     <string name="prefs_dev_opts_disable_dialog_message">All connections will be reset and the app will revert to the launch screen.</string>
 
+    <!-- endregion Preferences -->
 
+    <!-- region Content Descriptions -->
 
+    <string name="content_desc_codepunk_logo">Codepunk logo</string>
+    <string name="content_desc_loading_dots">Loading dots</string>
 
-
-    <!-- Settings -->
-
-    <!--
-    <string name="prefs_disable_dev_opts_title">Disable developer options</string>
-    -->
-
-    <string name="prefs_dev_opts_incorrect_password">Incorrect password</string>
-
-    <string name="prefs_dev_confirm_disable_developer_options_title">Disable developer options?</string>
-    <string name="prefs_dev_confirm_disable_developer_options_message">If you click \'Continue\', all connections will be reset and the app will return to the launch screen.</string>
-    <string name="prefs_dev_confirm_disable_developer_options_positive_button">Continue</string>
-
-    <string name="prefs_dev_mode_disable_dialog_title">Disable developer options?</string>
-    <string name="prefs_dev_mode_disable_dialog_message">If you disable developer options, all connections will be reset and the app will revert to the launch screen.</string>
-
-    <string name="prefs_dev_mode_title">Developer mode</string>
-    <string name="prefs_dev_mode_enter_password">Enter the password to enable developer mode:</string>
-
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <!-- endregion Content Descriptions -->
 
 </resources>

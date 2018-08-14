@@ -31,8 +31,8 @@ import com.codepunk.codepunk.util.getApiEnvironment
  * The [ViewModel] that stores developer options-related preference data.
  */
 class DeveloperPreferencesViewModel(val app: Application) :
-        AndroidViewModel(app),
-        SharedPreferences.OnSharedPreferenceChangeListener {
+    AndroidViewModel(app),
+    SharedPreferences.OnSharedPreferenceChangeListener {
 
     // region Properties
 
@@ -57,18 +57,20 @@ class DeveloperPreferencesViewModel(val app: Application) :
      * LiveData that tracks the current developer options state.
      */
     var developerOptionsState =
-            MediatorLiveData<DeveloperOptionsState>().apply {
-                addSource(developerOptionsUnlocked) { unlocked ->
-                    updateDeveloperOptionsState(
-                            unlocked == true,
-                            developerOptionsAuthenticatedHash.value)
-                }
-                addSource(developerOptionsAuthenticatedHash) { hash ->
-                    updateDeveloperOptionsState(
-                            developerOptionsUnlocked.value == true,
-                            hash)
-                }
+        MediatorLiveData<DeveloperOptionsState>().apply {
+            addSource(developerOptionsUnlocked) { unlocked ->
+                updateDeveloperOptionsState(
+                    unlocked == true,
+                    developerOptionsAuthenticatedHash.value
+                )
             }
+            addSource(developerOptionsAuthenticatedHash) { hash ->
+                updateDeveloperOptionsState(
+                    developerOptionsUnlocked.value == true,
+                    hash
+                )
+            }
+        }
 
     /**
      * Initializes the data maintained by this ViewModel.
@@ -77,18 +79,33 @@ class DeveloperPreferencesViewModel(val app: Application) :
         with(PreferenceManager.getDefaultSharedPreferences(app)) {
             this.registerOnSharedPreferenceChangeListener(this@DeveloperPreferencesViewModel)
 
+            onSharedPreferenceChanged(
+                this,
+                BuildConfig.PREFS_KEY_API_ENVIRONMENT
+            )
+
+            onSharedPreferenceChanged(
+                this,
+                BuildConfig.PREFS_KEY_DEV_OPTS_AUTHENTICATED_HASH
+            )
+
+            /*
             apiEnvironment.value = getApiEnvironment(
-                    BuildConfig.PREFS_KEY_API_ENVIRONMENT,
-                    BuildConfig.DEFAULT_API_ENVIRONMENT)
+                BuildConfig.PREFS_KEY_API_ENVIRONMENT,
+                BuildConfig.DEFAULT_API_ENVIRONMENT
+            )
 
             developerOptionsAuthenticatedHash.value =
                     getString(BuildConfig.PREFS_KEY_DEV_OPTS_AUTHENTICATED_HASH, null)
+            */
 
             developerOptionsUnlocked.value =
                     getBoolean(BuildConfig.PREFS_KEY_DEV_OPTS_UNLOCKED, false)
 
-            updateDeveloperOptionsState(developerOptionsUnlocked.value == true,
-                    developerOptionsAuthenticatedHash.value)
+            updateDeveloperOptionsState(
+                developerOptionsUnlocked.value == true,
+                developerOptionsAuthenticatedHash.value
+            )
 
             registerOnSharedPreferenceChangeListener(this@DeveloperPreferencesViewModel)
         }
@@ -98,6 +115,16 @@ class DeveloperPreferencesViewModel(val app: Application) :
     }
 
     // endregion Properties
+
+    // region Inherited methods
+
+    override fun onCleared() {
+        super.onCleared()
+        PreferenceManager.getDefaultSharedPreferences(app)
+            .unregisterOnSharedPreferenceChangeListener(this)
+    }
+
+    // endregion Inherited methods
 
     // region Implemented methods
 
@@ -110,8 +137,9 @@ class DeveloperPreferencesViewModel(val app: Application) :
             when (key) {
                 BuildConfig.PREFS_KEY_API_ENVIRONMENT ->
                     apiEnvironment.value = getApiEnvironment(
-                            BuildConfig.PREFS_KEY_API_ENVIRONMENT,
-                            BuildConfig.DEFAULT_API_ENVIRONMENT)
+                        BuildConfig.PREFS_KEY_API_ENVIRONMENT,
+                        BuildConfig.DEFAULT_API_ENVIRONMENT
+                    )
 
                 BuildConfig.PREFS_KEY_DEV_OPTS_AUTHENTICATED_HASH ->
                     developerOptionsAuthenticatedHash.value = getString(key, null)
@@ -135,12 +163,14 @@ class DeveloperPreferencesViewModel(val app: Application) :
     fun updateDeveloperOptions(unlocked: Boolean, hash: String? = null) {
         val enabled: Boolean = (unlocked && hash != null)
         PreferenceManager.getDefaultSharedPreferences(app)
-                .edit()
-                .putBoolean(BuildConfig.PREFS_KEY_DEV_OPTS_UNLOCKED, unlocked)
-                .putBoolean(BuildConfig.PREFS_KEY_DEV_OPTS_ENABLED, enabled)
-                .putString(BuildConfig.PREFS_KEY_DEV_OPTS_AUTHENTICATED_HASH,
-                        if (unlocked) hash else null)
-                .apply()
+            .edit()
+            .putBoolean(BuildConfig.PREFS_KEY_DEV_OPTS_UNLOCKED, unlocked)
+            .putBoolean(BuildConfig.PREFS_KEY_DEV_OPTS_ENABLED, enabled)
+            .putString(
+                BuildConfig.PREFS_KEY_DEV_OPTS_AUTHENTICATED_HASH,
+                if (unlocked) hash else null
+            )
+            .apply()
     }
 
     /**
