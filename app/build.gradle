@@ -47,8 +47,8 @@ android {
             def defaultApiEnvironment = "LOCAL"
             applicationIdSuffix ".debug"
             versionNameSuffix "-DEBUG"
-            buildConfigField("String", "CLIENT_ID", "\"2\"")
-            buildConfigField("String", "CLIENT_SECRET", "\"EWB9n4SkJ9EAjgmzoyCfw3evXXRVaAA8UQacE35d\"")
+            buildConfigField("int", "CLIENT_ID", "2")
+            buildConfigField("String", "CLIENT_SECRET", "\"CgBXoDjB9i5aM9nOdsVGg4TO8yNMoF2Gv1ikWSBJ\"")
             buildConfigField("com.codepunk.codepunk.data.api.ApiEnvironment", "DEFAULT_API_ENVIRONMENT", "com.codepunk.codepunk.data.api.ApiEnvironment.valueOf(\"" + defaultApiEnvironment + "\")")
             buildConfigField("int", "LOGINATOR_LEVEL", "android.util.Log.VERBOSE")
             resValue "string", "default_api_environment", defaultApiEnvironment
@@ -57,8 +57,8 @@ android {
             def defaultApiEnvironment = "PROD"
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            buildConfigField("String", "CLIENT_ID", "\"2\"")
-            buildConfigField("String", "CLIENT_SECRET", "\"EWB9n4SkJ9EAjgmzoyCfw3evXXRVaAA8UQacE35d\"")
+            buildConfigField("int", "CLIENT_ID", "2")
+            buildConfigField("String", "CLIENT_SECRET", "\"CgBXoDjB9i5aM9nOdsVGg4TO8yNMoF2Gv1ikWSBJ\"")
             buildConfigField("com.codepunk.codepunk.data.api.ApiEnvironment", "DEFAULT_API_ENVIRONMENT", "com.codepunk.codepunk.data.api.ApiEnvironment.valueOf(\"" + defaultApiEnvironment + "\")")
             buildConfigField("int", "LOGINATOR_LEVEL", "android.util.Log.ERROR")
             resValue "string", "default_api_environment", defaultApiEnvironment

@@ -16,12 +16,9 @@
 
 package com.codepunk.codepunk.data.model
 
-class User {
+import com.squareup.moshi.Json
 
-    var id: Int? = null
-
-    var name: String? = null
-
-    var email: String? = null
-
-}
+data class User(
+    val id: Int? = null,
+    val name: String? = null,
+    val email: String? = null)

@@ -18,22 +18,16 @@ package com.codepunk.codepunk.data.model
 
 import com.squareup.moshi.Json
 
-class AuthToken {
-
-    // region Properties
-
+data class AuthToken(
     @Json(name = "token_type")
-    var tokenType: TokenType? = null
+    val tokenType: TokenType? = null,
 
     @Json(name = "expires_in")
-    var expiresIn: Long = 0
+    val expiresIn: Long = 0,
 
     @Json(name = "access_token")
-    var accessToken: String? = null
+    val accessToken: String? = null,
 
     @Json(name = "refresh_token")
-    var refreshToken: String? = null
-
-    // endregion Properties
-
-}
+    val refreshToken: String? = null
+)

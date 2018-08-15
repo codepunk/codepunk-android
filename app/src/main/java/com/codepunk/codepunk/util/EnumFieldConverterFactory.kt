@@ -1,15 +1,14 @@
 package com.codepunk.codepunk.util
 
-import com.squareup.moshi.Json
 import retrofit2.Converter
 import retrofit2.Retrofit
 import java.lang.reflect.Type
 
 /**
- * A utility class that uses Moshi's [Json] annotation to convert enums to Strings for use in
+ * A utility class that uses the [Field] annotation to convert enums to Strings for use in
  * Retrofit API calls.
  */
-class MoshiJsonEnumConverterFactory : Converter.Factory() {
+class EnumFieldConverterFactory : Converter.Factory() {
 
     // region Inherited methods
 
@@ -24,7 +23,7 @@ class MoshiJsonEnumConverterFactory : Converter.Factory() {
                     try {
                         val enum = value as Enum<*>
                         val field = enum.javaClass.getField(enum.name)
-                        field.getAnnotation(Json::class.java)?.name ?: value.toString()
+                        field.getAnnotation(Field::class.java)?.name ?: value.toString()
                     } catch (e: NoSuchFieldException) {
                         value.toString()
                     }

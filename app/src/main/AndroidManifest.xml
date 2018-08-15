@@ -2,18 +2,18 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.codepunk.codepunk">
 
-    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
         android:name=".CodepunkApp"
         android:allowBackup="true"
-        android:label="@string/app_name"
         android:icon="@mipmap/ic_codepunk_launcher"
+        android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_codepunk_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme" >
-
-        <activity android:name=".main.MainActivity"
+        android:theme="@style/AppTheme">
+        <activity
+            android:name=".auth.MainActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -21,25 +21,39 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-
         <activity
             android:name=".preferences.PreferencesActivity"
             android:label="@string/prefs_main_title">
             <intent-filter>
-                <action android:name="${applicationId}.intent.action.PREFERENCES" />
+                <action android:name="${applicationId}.intent.action.PREFERENCES"/>
 
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="${applicationId}.intent.category.MAIN" />
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="${applicationId}.intent.category.MAIN"/>
             </intent-filter>
-
             <intent-filter>
-                <action android:name="${applicationId}.intent.action.PREFERENCES" />
+                <action android:name="${applicationId}.intent.action.PREFERENCES"/>
 
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="${applicationId}.intent.category.DEVELOPER" />
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="${applicationId}.intent.category.DEVELOPER"/>
             </intent-filter>
         </activity>
+        <activity
+            android:name=".auth.RegisterActivity"
+            android:label="@string/register_title">
+            <intent-filter>
+                <action android:name="${applicationId}.intent.action.REGISTER"/>
 
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
+        <activity android:name=".auth.LoginActivity"
+                  android:label="@string/login_title">
+            <intent-filter>
+                <action android:name="${applicationId}.intent.action.LOGIN"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

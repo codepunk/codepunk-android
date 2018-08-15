@@ -43,6 +43,16 @@ private const val EXTRA = "$APPLICATION_ID.intent.extra"
 const val ACTION_PREFERENCES = "$ACTION.PREFERENCES"
 
 /**
+ * Activity Action: Show registration activity.
+ */
+const val ACTION_REGISTER = "$ACTION.REGISTER"
+
+/**
+ * Activity Action: Show login activity.
+ */
+const val ACTION_LOGIN = "$ACTION.LOGIN"
+
+/**
  * Used with [ACTION_PREFERENCES] to show the main preferences screen.
  */
 const val CATEGORY_MAIN = "$CATEGORY.MAIN"

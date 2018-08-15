@@ -22,4 +22,7 @@ fun SharedPreferences.Editor.putApiEnvironment(key: String, value: ApiEnvironmen
 object SharedPreferencesConstants {
     const val PREFS_KEY_ACCESS_TOKEN =
         "${BuildConfig.APPLICATION_ID}.PREFS_KEY_ACCESS_TOKEN"
+
+    const val PREFS_KEY_REFRESH_TOKEN =
+        "${BuildConfig.APPLICATION_ID}.PREFS_KEY_REFRESH_TOKEN"
 }

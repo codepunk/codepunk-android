@@ -16,13 +16,14 @@
 
 package com.codepunk.codepunk.data.api
 
+import com.codepunk.codepunk.BuildConfig
 import com.codepunk.codepunk.data.model.AuthToken
 import com.codepunk.codepunk.data.model.GrantType
-import retrofit2.http.POST
 import retrofit2.Call
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.Headers
+import retrofit2.http.POST
 
 interface AuthApi {
 
@@ -30,11 +31,11 @@ interface AuthApi {
     @Headers("$NO_AUTHORIZATION: true")
     @POST("oauth/token")
     fun authToken(
-        @Field("grant_type") grantType: GrantType,
-        @Field("username") userName: String,
+        @Field("grant_type") grantType: GrantType = GrantType.PASSWORD,
+        @Field("username") username: String,
         @Field("password") password: String,
-        @Field("client_id") clientId: Int,
-        @Field("client_secret") clientSecret: String,
+        @Field("client_id") clientId: Int = BuildConfig.CLIENT_ID,
+        @Field("client_secret") clientSecret: String = BuildConfig.CLIENT_SECRET,
         @Field("scope") scope: String = "*"
     ): Call<AuthToken>
 

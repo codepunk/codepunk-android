@@ -5,10 +5,15 @@
 
     <!-- region Generic -->
 
+    <string name="confirm_password">Confirm password</string>
     <string name="disabled">Disabled</string>
+    <string name="email">Email</string>
     <string name="enabled">Enabled</string>
     <string name="incorrect_password">Incorrect password</string>
+    <string name="login">Login</string>
+    <string name="name">Name</string>
     <string name="password">Password</string>
+    <string name="register">Register</string>
 
     <!-- endregion Generic -->
 
@@ -27,6 +32,13 @@
     <string name="menu_prefs_title">Settings</string>
 
     <!-- endregion Menus -->
+
+    <!-- region Authentication -->
+
+    <string name="login_title">Login</string>
+    <string name="register_title">Register</string>
+
+    <!-- endregion Authentication -->
 
     <!-- region Preferences -->
 
@@ -51,7 +63,8 @@
 
     <!-- region Content Descriptions -->
 
-    <string name="content_desc_codepunk_logo">Codepunk logo</string>
+    <string name="content_desc_codepunk_icon">Codepunk icon</string>
+    <string name="content_desc_codepunk_font_logo">Codepunk font logo</string>
     <string name="content_desc_loading_dots">Loading dots</string>
 
     <!-- endregion Content Descriptions -->

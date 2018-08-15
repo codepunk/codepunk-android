@@ -16,7 +16,7 @@
 
 package com.codepunk.codepunk.data.api
 
-import com.codepunk.codepunk.util.MoshiJsonEnumConverterFactory
+import com.codepunk.codepunk.util.EnumFieldConverterFactory
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import okhttp3.Interceptor
@@ -52,7 +52,7 @@ abstract class ApiPlugin : Interceptor {
 
         Retrofit.Builder()
             .baseUrl(baseUrl)
-            .addConverterFactory(MoshiJsonEnumConverterFactory())
+            .addConverterFactory(EnumFieldConverterFactory())
             .addConverterFactory(
                 MoshiConverterFactory.create(
                     Moshi.Builder()
@@ -89,6 +89,7 @@ abstract class ApiPlugin : Interceptor {
         val request = chain.request()
         return chain.proceed(
             when (request.header(NO_AUTHORIZATION)) {
+
                 null -> request.newBuilder()
                     .addHeader(AUTHORIZATION, "$BEARER $accessToken")
                     .build()

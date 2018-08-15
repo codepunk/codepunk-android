@@ -13,4 +13,7 @@
     <dimen name="space_baseline">@dimen/space_standard</dimen>
 
     <dimen name="margin_screen">24dp</dimen>
+
+    <dimen name="splash_icon_size">256dp</dimen>
+    <dimen name="login_register_icon_size">160dp</dimen>
 </resources>
