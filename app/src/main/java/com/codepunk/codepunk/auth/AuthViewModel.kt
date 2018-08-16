@@ -6,21 +6,18 @@ import android.arch.lifecycle.MutableLiveData
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
 import com.codepunk.codepunk.BuildConfig
-import com.codepunk.codepunk.CodepunkApp.Companion.loginator
 import com.codepunk.codepunk.data.api.*
-import com.codepunk.codepunk.data.model.User
+import com.codepunk.codepunk.data.api.throwable.LaravelErrorException
 import com.codepunk.codepunk.data.api.wrapper.DataWrapper
 import com.codepunk.codepunk.data.api.wrapper.ErrorWrapper
 import com.codepunk.codepunk.data.api.wrapper.ResultWrapper
-import com.codepunk.codepunk.data.api.throwable.NullResponseException
-import com.codepunk.codepunk.data.api.throwable.UnsuccessfulApiCallException
-import com.codepunk.codepunk.data.api.throwable.UserNotAuthenticatedException
 import com.codepunk.codepunk.data.model.AuthToken
+import com.codepunk.codepunk.data.model.LaravelError
+import com.codepunk.codepunk.data.model.User
 import com.codepunk.codepunk.util.SharedPreferencesConstants.PREFS_KEY_ACCESS_TOKEN
 import com.codepunk.codepunk.util.SharedPreferencesConstants.PREFS_KEY_REFRESH_TOKEN
 import com.codepunk.codepunk.util.getApiEnvironment
 import retrofit2.Call
-import retrofit2.Callback
 import retrofit2.Response
 
 class AuthViewModel(val app: Application) :
@@ -38,7 +35,7 @@ class AuthViewModel(val app: Application) :
         value = ApiStatus.PENDING
     }
 
-    var userResponse = MutableLiveData<ResultWrapper<User?>>()
+    var userResult = MutableLiveData<ResultWrapper<User?>>()
 
     init {
         with(PreferenceManager.getDefaultSharedPreferences(app)) {
@@ -82,37 +79,31 @@ class AuthViewModel(val app: Application) :
 
     // region Methods
 
-    fun authenticate() {
-        val accessToken = PreferenceManager.getDefaultSharedPreferences(app).getString(
-            PREFS_KEY_ACCESS_TOKEN,
-            null
-        )
-        if (accessToken == null) {
-            // TODO Notify activity
-            userResponse.value = ErrorWrapper(UserNotAuthenticatedException())
-        } else {
-            // Attempt to authenticate
-            api.accessToken = accessToken
-            userStatus.value = ApiStatus.RUNNING
-            api.userApi.getUser().enqueue(object : Callback<User> {
-                override fun onResponse(call: Call<User>?, response: Response<User>?) {
-                    userStatus.value = ApiStatus.FINISHED
-                    response?.run {
-                        userResponse.value = when {
-                            isSuccessful -> DataWrapper(body())
-                            else -> ErrorWrapper(UnsuccessfulApiCallException(errorBody()))
-                        }
-                    } ?: run {
-                        userResponse.value = ErrorWrapper(NullResponseException())
-                    }
-                }
+    fun authenticate(accessToken: String) {
+        api.accessToken = accessToken
+        userStatus.value = ApiStatus.RUNNING
+        api.userApi.getUser().enqueue(object : BaseCallback<User, LaravelError>(
+            { string -> api.laravelErrorFromJson(string) }
+        ) {
+            override fun onSuccess(call: Call<User>, response: Response<User>?, body: User?) {
+                userStatus.value = ApiStatus.FINISHED
+                userResult.value = DataWrapper(body)
+            }
 
-                override fun onFailure(call: Call<User>?, t: Throwable?) {
-                    userStatus.value = ApiStatus.FINISHED
-                    userResponse.value = ErrorWrapper(t ?: Throwable())
-                }
-            })
-        }
+            override fun onFailure(
+                call: Call<User>,
+                response: Response<User>?,
+                error: LaravelError?
+            ) {
+                userStatus.value = ApiStatus.FINISHED
+                userResult.value = ErrorWrapper(LaravelErrorException(error))
+            }
+
+            override fun onFailure(call: Call<User>, t: Throwable?) {
+                userStatus.value = ApiStatus.FINISHED
+                userResult.value = ErrorWrapper(t ?: Throwable())
+            }
+        })
     }
 
     fun authenticate(email: String, password: String) {
@@ -120,32 +111,37 @@ class AuthViewModel(val app: Application) :
         api.authApi.authToken(
             username = email,
             password = password
-        ).enqueue(object : Callback<AuthToken> {
-            override fun onResponse(call: Call<AuthToken>?, response: Response<AuthToken>?) {
+        ).enqueue(object : BaseCallback<AuthToken, LaravelError>(
+            { string -> api.laravelErrorFromJson(string) }
+        ) {
+            override fun onSuccess(
+                call: Call<AuthToken>,
+                response: Response<AuthToken>?,
+                body: AuthToken?
+            ) {
                 userStatus.value = ApiStatus.FINISHED
-                response?.run {
-                    if (isSuccessful) {
-                        body()?.run {
-                            PreferenceManager.getDefaultSharedPreferences(app)
-                                .edit()
-                                .putString(PREFS_KEY_ACCESS_TOKEN, accessToken)
-                                .putString(PREFS_KEY_REFRESH_TOKEN, refreshToken)
-                                .commit() // TODO commit or listen for change?
-
-                            authenticate()
-                        }
-                    } else {
-                        userResponse.value = ErrorWrapper(UnsuccessfulApiCallException(errorBody()))
-                    }
-                } ?: run {
-                    userResponse.value = ErrorWrapper(NullResponseException())
+                body?.run {
+                    PreferenceManager.getDefaultSharedPreferences(app)
+                        .edit()
+                        .putString(PREFS_KEY_ACCESS_TOKEN, accessToken)
+                        .putString(PREFS_KEY_REFRESH_TOKEN, refreshToken)
+                        .apply()
+                    authenticate(accessToken)
                 }
             }
 
-            override fun onFailure(call: Call<AuthToken>?, t: Throwable?) {
-                loginator.d(t.toString(), t ?: Throwable())
+            override fun onFailure(
+                call: Call<AuthToken>,
+                response: Response<AuthToken>?,
+                error: LaravelError?
+            ) {
                 userStatus.value = ApiStatus.FINISHED
-                userResponse.value = ErrorWrapper(t ?: Throwable())
+                userResult.value = ErrorWrapper(LaravelErrorException(error))
+            }
+
+            override fun onFailure(call: Call<AuthToken>, t: Throwable?) {
+                userStatus.value = ApiStatus.FINISHED
+                userResult.value = ErrorWrapper(t ?: Throwable())
             }
         })
     }

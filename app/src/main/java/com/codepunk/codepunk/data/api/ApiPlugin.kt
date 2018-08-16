@@ -16,7 +16,9 @@
 
 package com.codepunk.codepunk.data.api
 
+import com.codepunk.codepunk.data.model.LaravelError
 import com.codepunk.codepunk.util.EnumFieldConverterFactory
+import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import okhttp3.Interceptor
@@ -42,6 +44,13 @@ abstract class ApiPlugin : Interceptor {
      */
     abstract val baseUrl: String
 
+    var moshi = Moshi.Builder()
+        .add(KotlinJsonAdapterFactory())
+        .build()
+
+    private val laravelErrorAdapter: JsonAdapter<LaravelError> =
+        moshi.adapter(LaravelError::class.java)
+
     /**
      * The [Retrofit] instance to use to make API calls in this [ApiEnvironment].
      */
@@ -54,11 +63,7 @@ abstract class ApiPlugin : Interceptor {
             .baseUrl(baseUrl)
             .addConverterFactory(EnumFieldConverterFactory())
             .addConverterFactory(
-                MoshiConverterFactory.create(
-                    Moshi.Builder()
-                        .add(KotlinJsonAdapterFactory())
-                        .build()
-                )
+                MoshiConverterFactory.create(moshi)
             )
             .client(client)
             .build()
@@ -101,6 +106,13 @@ abstract class ApiPlugin : Interceptor {
     // endregion Implemented methods
 
     // region Methods
+
+    fun laravelErrorFromJson(string: String?): LaravelError? {
+        return when (string) {
+            null -> null
+            else -> laravelErrorAdapter.fromJson(string)
+        }
+    }
 
     protected open fun onPrepareOkHttpClientBuilder(builder: OkHttpClient.Builder) {
         builder.addInterceptor(this)

@@ -20,14 +20,14 @@ import com.squareup.moshi.Json
 
 data class AuthToken(
     @Json(name = "token_type")
-    val tokenType: TokenType? = null,
+    val tokenType: TokenType = TokenType.BEARER,
 
     @Json(name = "expires_in")
-    val expiresIn: Long = 0,
+    val expiresIn: Long,
 
     @Json(name = "access_token")
-    val accessToken: String? = null,
+    val accessToken: String,
 
     @Json(name = "refresh_token")
-    val refreshToken: String? = null
+    val refreshToken: String
 )

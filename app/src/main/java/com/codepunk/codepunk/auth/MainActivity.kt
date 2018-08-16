@@ -16,7 +16,6 @@
 
 package com.codepunk.codepunk.auth
 
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModel
@@ -24,6 +23,7 @@ import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.graphics.drawable.Animatable
 import android.os.Bundle
+import android.preference.PreferenceManager
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.AppCompatImageView
 import android.view.Menu
@@ -34,6 +34,7 @@ import com.codepunk.codepunk.data.api.ApiStatus
 import com.codepunk.codepunk.data.model.User
 import com.codepunk.codepunk.util.ACTION_PREFERENCES
 import com.codepunk.codepunk.util.ACTION_REGISTER
+import com.codepunk.codepunk.util.SharedPreferencesConstants
 import java.util.*
 
 /**
@@ -74,7 +75,7 @@ class MainActivity : AppCompatActivity() {
                 onUserStatusChange(status ?: ApiStatus.PENDING)
             })
 
-            userResponse.observe(this@MainActivity, Observer { result ->
+            userResult.observe(this@MainActivity, Observer { result ->
                 try {
                     onUserChange(result?.getOrThrow())
                 } catch (e: Throwable) {
@@ -83,7 +84,16 @@ class MainActivity : AppCompatActivity() {
             })
 
             if (userStatus.value == ApiStatus.PENDING) {
-                authViewModel.authenticate()
+                val accessToken = PreferenceManager.getDefaultSharedPreferences(app).getString(
+                    SharedPreferencesConstants.PREFS_KEY_ACCESS_TOKEN,
+                    null
+                )
+                if (accessToken == null) {
+                    startActivity(Intent(ACTION_REGISTER))
+                    finish()
+                } else {
+                    authViewModel.authenticate(accessToken)
+                }
             }
         }
     }
