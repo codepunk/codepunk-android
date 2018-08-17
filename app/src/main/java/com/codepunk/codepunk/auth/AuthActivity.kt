@@ -30,8 +30,8 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import com.codepunk.codepunk.R
-import com.codepunk.codepunk.data.api.ApiStatus
 import com.codepunk.codepunk.data.model.User
+import com.codepunk.codepunk.data.model.UserState
 import com.codepunk.codepunk.util.ACTION_PREFERENCES
 import com.codepunk.codepunk.util.ACTION_REGISTER
 import com.codepunk.codepunk.util.SharedPreferencesConstants
@@ -40,7 +40,7 @@ import java.util.*
 /**
  * The main [Activity] for the Codepunk app.
  */
-class MainActivity : AppCompatActivity() {
+class AuthActivity : AppCompatActivity() {
 
     // region Properties
 
@@ -61,29 +61,25 @@ class MainActivity : AppCompatActivity() {
         findViewById<AppCompatImageView>(R.id.loading_dots_image)
     }
 
+    private val loadingDrawable by lazy {
+        loadingImage.drawable as? Animatable
+    }
+
     // endregion Properties
 
     // region Lifecycle methods
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_auth)
         dayPluginManager.get(Calendar.getInstance()).showGreeting()
 
         with(authViewModel) {
-            userStatus.observe(this@MainActivity, Observer { status ->
-                onUserStatusChange(status ?: ApiStatus.PENDING)
+            userState.observe(this@AuthActivity, Observer { user ->
+                onUserChange(user)
             })
 
-            userResult.observe(this@MainActivity, Observer { result ->
-                try {
-                    onUserChange(result?.getOrThrow())
-                } catch (e: Throwable) {
-                    onUserError(e)
-                }
-            })
-
-            if (userStatus.value == ApiStatus.PENDING) {
+            if (userState.value is UserState.Undefined) {
                 val accessToken = PreferenceManager.getDefaultSharedPreferences(app).getString(
                     SharedPreferencesConstants.PREFS_KEY_ACCESS_TOKEN,
                     null
@@ -125,35 +121,19 @@ class MainActivity : AppCompatActivity() {
 
     // region Methods
 
-    private fun onUserStatusChange(status: ApiStatus) {
-        with(loadingImage.drawable as Animatable) {
-            when (status) {
-                ApiStatus.RUNNING -> start()
-                ApiStatus.FINISHED -> stop()
-                else -> {
-                    /* No action */
-                }
+    private fun onUserChange(user: UserState?) {
+        when (user) {
+            is User -> {
+                loadingDrawable?.stop()
+                Toast.makeText(this, "Oh hi, ${user.name}!", Toast.LENGTH_LONG).show()
+            }
+            is UserState.Loading -> loadingDrawable?.start()
+            is UserState.Failure -> {
+                loadingDrawable?.stop()
+                startActivity(Intent(ACTION_REGISTER))
+                finish()
             }
         }
-    }
-
-    private fun onUserChange(user: User?) {
-        user?.run {
-            Toast.makeText(
-                this@MainActivity,
-                "Oh hi, ${this.name}!",
-                Toast.LENGTH_LONG
-            ).show()
-        } ?: run {
-            startActivity(Intent(ACTION_REGISTER))
-            finish()
-        }
-
-    }
-
-    private fun onUserError(t: Throwable) {
-        startActivity(Intent(ACTION_REGISTER))
-        finish()
     }
 
     // endregion Methods

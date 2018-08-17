@@ -48,6 +48,9 @@ abstract class ApiPlugin : Interceptor {
         .add(KotlinJsonAdapterFactory())
         .build()
 
+    /**
+     * A [JsonAdapter] that generates [LaravelError] instances from JSON strings.
+     */
     private val laravelErrorAdapter: JsonAdapter<LaravelError> =
         moshi.adapter(LaravelError::class.java)
 
@@ -55,8 +58,8 @@ abstract class ApiPlugin : Interceptor {
      * The [Retrofit] instance to use to make API calls in this [ApiEnvironment].
      */
     val retrofit: Retrofit by lazy {
-        val client = OkHttpClient.Builder().apply {
-            onPrepareOkHttpClientBuilder(this)
+        val client = OkHttpClient.Builder().also { builder ->
+            onPrepareOkHttpClientBuilder(builder)
         }.build()
 
         Retrofit.Builder()
@@ -107,6 +110,9 @@ abstract class ApiPlugin : Interceptor {
 
     // region Methods
 
+    /**
+     * Generates a [LaravelError] instance from a JSON string.
+     */
     fun laravelErrorFromJson(string: String?): LaravelError? {
         return when (string) {
             null -> null
@@ -141,5 +147,4 @@ abstract class ApiPlugin : Interceptor {
     }
 
     // endregion Companion object
-
 }
