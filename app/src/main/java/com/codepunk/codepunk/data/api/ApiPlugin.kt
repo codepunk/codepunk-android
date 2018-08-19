@@ -16,9 +16,7 @@
 
 package com.codepunk.codepunk.data.api
 
-import com.codepunk.codepunk.data.model.LaravelError
 import com.codepunk.codepunk.util.EnumFieldConverterFactory
-import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import okhttp3.Interceptor
@@ -26,6 +24,13 @@ import okhttp3.OkHttpClient
 import okhttp3.Response
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
+
+// region Constants
+
+const val AUTHORIZATION = "Authorization"
+const val BEARER = "Bearer"
+
+// endregion Constants
 
 /**
  * The base API environment plugin class.
@@ -44,15 +49,9 @@ abstract class ApiPlugin : Interceptor {
      */
     abstract val baseUrl: String
 
-    var moshi = Moshi.Builder()
+    private var moshi = Moshi.Builder()
         .add(KotlinJsonAdapterFactory())
         .build()
-
-    /**
-     * A [JsonAdapter] that generates [LaravelError] instances from JSON strings.
-     */
-    private val laravelErrorAdapter: JsonAdapter<LaravelError> =
-        moshi.adapter(LaravelError::class.java)
 
     /**
      * The [Retrofit] instance to use to make API calls in this [ApiEnvironment].
@@ -73,17 +72,17 @@ abstract class ApiPlugin : Interceptor {
     }
 
     /**
-     * The [AuthApi] instance for making auth API calls.
+     * The [AuthWebservice] instance for making auth API calls.
      */
-    val authApi: AuthApi by lazy {
-        retrofit.create(AuthApi::class.java)
+    val authWebservice: AuthWebservice by lazy {
+        retrofit.create(AuthWebservice::class.java)
     }
 
     /**
-     * The [UserApi] instance for making user API calls.
+     * The [UserWebservice] instance for making user API calls.
      */
-    val userApi: UserApi by lazy {
-        retrofit.create(UserApi::class.java)
+    val userWebservice: UserWebservice by lazy {
+        retrofit.create(UserWebservice::class.java)
     }
 
     /* TODO TEMP */
@@ -110,41 +109,9 @@ abstract class ApiPlugin : Interceptor {
 
     // region Methods
 
-    /**
-     * Generates a [LaravelError] instance from a JSON string.
-     */
-    fun laravelErrorFromJson(string: String?): LaravelError? {
-        return when (string) {
-            null -> null
-            else -> laravelErrorAdapter.fromJson(string)
-        }
-    }
-
     protected open fun onPrepareOkHttpClientBuilder(builder: OkHttpClient.Builder) {
         builder.addInterceptor(this)
     }
 
     // endregion Methods
-
-    // region Companion object
-
-    companion object {
-
-        // region Methods
-
-        /**
-         * Creates a new [ApiPlugin] based on [apiEnvironment].
-         */
-        fun newInstance(apiEnvironment: ApiEnvironment): ApiPlugin {
-            return when (apiEnvironment) {
-                ApiEnvironment.PROD -> ProdApiPlugin()
-                ApiEnvironment.DEV -> DevApiPlugin()
-                ApiEnvironment.LOCAL -> LocalApiPlugin()
-            }
-        }
-
-        // endregion Methods
-    }
-
-    // endregion Companion object
 }

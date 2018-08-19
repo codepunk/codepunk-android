@@ -36,7 +36,11 @@ object ApiPluginator : Pluginator<ApiPlugin, ApiEnvironment>() {
      * Creates a new API environment plugin based on the API environment passed in as [state].
      */
     override fun newPlugin(state: ApiEnvironment): ApiPlugin {
-        return ApiPlugin.newInstance(state)
+        return when (state) {
+            ApiEnvironment.PROD -> ProdApiPlugin()
+            ApiEnvironment.DEV -> DevApiPlugin()
+            ApiEnvironment.LOCAL -> LocalApiPlugin()
+        }
     }
 
     // endregion Inherited methods

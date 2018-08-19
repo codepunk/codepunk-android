@@ -25,7 +25,7 @@ import retrofit2.http.FormUrlEncoded
 import retrofit2.http.Headers
 import retrofit2.http.POST
 
-interface AuthApi {
+interface AuthWebservice {
 
     @FormUrlEncoded
     @Headers("$NO_AUTHORIZATION: true")

@@ -157,8 +157,7 @@ private fun trustedCertificatesInputStream(): InputStream {
             "njzECm71bdvEclZJa+O4ObHOWskOuGNkyFsjkgUxLThY0fLGG4zWbLFCNTR8sx7M\n" +
             "mFqaAuxm71w0kuoDd6sgInlhiEPLGBQB\n" +
             "-----END CERTIFICATE-----\n"
-    val stream = Buffer()
+    return Buffer()
         .writeUtf8(codepunkRootCertificationAuthority)
         .inputStream()
-    return stream
 }

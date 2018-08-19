@@ -47,7 +47,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
         registerBtn.setOnClickListener(this)
 
         with(authViewModel) {
-            userState.observe(this@LoginActivity, Observer { user ->
+            user.observe(this@LoginActivity, Observer { user ->
                 onUserChange(user)
             })
         }

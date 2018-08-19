@@ -9,7 +9,7 @@ import com.codepunk.codepunk.BuildConfig
 import com.codepunk.codepunk.data.api.ApiEnvironment
 import com.codepunk.codepunk.data.api.ApiPlugin
 import com.codepunk.codepunk.data.api.ApiPluginator
-import com.codepunk.codepunk.data.api.AuthApi
+import com.codepunk.codepunk.data.api.AuthWebservice
 import com.codepunk.codepunk.data.api.HttpResponseException
 import com.codepunk.codepunk.data.model.AuthToken
 import com.codepunk.codepunk.data.model.User
@@ -21,8 +21,9 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class AuthViewModel(val app: Application) :
-    AndroidViewModel(app), SharedPreferences.OnSharedPreferenceChangeListener {
+class AuthViewModel(
+    val app: Application
+) : AndroidViewModel(app), SharedPreferences.OnSharedPreferenceChangeListener {
 
     // region Properties
 
@@ -30,10 +31,10 @@ class AuthViewModel(val app: Application) :
 
     private lateinit var api: ApiPlugin
 
-    private lateinit var authApi: AuthApi
+    private lateinit var authWebservice: AuthWebservice
 
-    val userState = MutableLiveData<UserState>().apply {
-        value = UserState.Undefined
+    val user = MutableLiveData<UserState>().apply {
+        value = UserState.Pending
     }
 
     init {
@@ -65,7 +66,7 @@ class AuthViewModel(val app: Application) :
                     BuildConfig.DEFAULT_API_ENVIRONMENT
                 ) ?: BuildConfig.DEFAULT_API_ENVIRONMENT
                 api = ApiPluginator.get(apiEnvironment)
-                authApi = api.retrofit.create(AuthApi::class.java)
+                authWebservice = api.retrofit.create(AuthWebservice::class.java)
             }
         }
     }
@@ -76,25 +77,25 @@ class AuthViewModel(val app: Application) :
 
     fun authenticate(accessToken: String) {
         api.accessToken = accessToken
-        userState.value = UserState.Loading
-        api.userApi.getUser().enqueue(object : Callback<User> {
+        user.value = UserState.Loading
+        api.userWebservice.getUser().enqueue(object : Callback<User> {
             override fun onResponse(call: Call<User>, response: Response<User>) {
                 if (response.isSuccessful) {
-                    userState.value = response.body()
+                    user.value = response.body()
                 } else {
-                    userState.value = UserState.Failure(HttpResponseException(response))
+                    user.value = UserState.Failure(HttpResponseException(response))
                 }
             }
 
             override fun onFailure(call: Call<User>, t: Throwable) {
-                userState.value = UserState.Failure(t)
+                user.value = UserState.Failure(t)
             }
         })
     }
 
     fun authenticate(email: String, password: String) {
-        userState.value = UserState.Loading
-        api.authApi.authToken(username = email, password = password)
+        user.value = UserState.Loading
+        api.authWebservice.authToken(username = email, password = password)
             .enqueue(object : Callback<AuthToken> {
                 override fun onResponse(call: Call<AuthToken>, response: Response<AuthToken>) {
                     if (response.isSuccessful) {
@@ -107,12 +108,12 @@ class AuthViewModel(val app: Application) :
                             authenticate(accessToken)
                         }
                     } else {
-                        userState.value = UserState.Failure(HttpResponseException(response))
+                        user.value = UserState.Failure(HttpResponseException(response))
                     }
                 }
 
                 override fun onFailure(call: Call<AuthToken>, t: Throwable) {
-                    userState.value = UserState.Failure(t)
+                    user.value = UserState.Failure(t)
                 }
             })
     }

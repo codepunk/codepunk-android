@@ -75,11 +75,11 @@ class AuthActivity : AppCompatActivity() {
         dayPluginManager.get(Calendar.getInstance()).showGreeting()
 
         with(authViewModel) {
-            userState.observe(this@AuthActivity, Observer { user ->
+            user.observe(this@AuthActivity, Observer { user ->
                 onUserChange(user)
             })
 
-            if (userState.value is UserState.Undefined) {
+            if (user.value is UserState.Pending) {
                 val accessToken = PreferenceManager.getDefaultSharedPreferences(app).getString(
                     SharedPreferencesConstants.PREFS_KEY_ACCESS_TOKEN,
                     null

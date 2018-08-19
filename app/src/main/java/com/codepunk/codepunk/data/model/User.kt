@@ -17,14 +17,18 @@
 package com.codepunk.codepunk.data.model
 
 sealed class UserState {
-    object Undefined : UserState()
+    object Pending : UserState()
     object Loading : UserState()
     data class Failure(val t: Throwable) : UserState()
 }
 
 data class User(
+
     val id: Int,
+
     val name: String,
+
     val email: String
+
 ) : UserState()
 
